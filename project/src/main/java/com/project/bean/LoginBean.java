@@ -7,7 +7,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import com.project.dto.UserDto;
-import com.project.entity.Role;
 import com.project.service.UserService;
 import com.project.utility.Message;
 
@@ -93,12 +92,10 @@ public class LoginBean {
 				if (user.getRoliId() == 1) {
 					System.out.println("you are menaxher");
 					userBean.setUserDto(user);
-					Message.addMessage(Message.bundle.getString("user_logged"), "info");
 					return "admin/home?faces-redirect=true";
 				} else if (user.getRoliId() == 2) {
 					System.out.println("you are employee");
 					userBean.setUserDto(user);
-					Message.addMessage(Message.bundle.getString("user_logged"), "info");
 					return "employee/homeEmployee?faces-redirect=true";
 				}
 			}
@@ -106,6 +103,8 @@ public class LoginBean {
 			System.out.println("User failed to log in! (User is null)");
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.addMessage(null, new FacesMessage(null, "Wrong username or password!"));
+			Message.addMessage(Message.bundle.getString("user_notLogged"), "error");
+
 			return "";
 		}
 		return"";
@@ -113,8 +112,6 @@ public class LoginBean {
 
 	public String logOut() {
 		userBean.logOut();
-		FacesContext context = FacesContext.getCurrentInstance();
-		context.addMessage(null, new FacesMessage("Error", "user loged out"));
 		System.out.println("User Logged out!");
 		return "/login1.xhtml?faces-redirect=true";
 	}

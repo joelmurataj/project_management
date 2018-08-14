@@ -4,13 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
-
-import org.primefaces.event.RowEditEvent;
 
 import com.project.dto.ProjectDto;
 import com.project.service.ProjectService;
@@ -52,12 +48,10 @@ public class ProjectBean {
 		if (projectService.existProject(projectDto.getTema()) && existProject == null) {
 			if (projectService.add(projectDto)) {
 				System.out.println("u shtua");
-				// MessagesUtility.addMessage(MessagesUtility.bundle
-				// .getString("USER_ADDED"));
 				refresh();
 				projectDto = new ProjectDto();
-				FacesContext context = FacesContext.getCurrentInstance();
-				context.addMessage(null, new FacesMessage("Project u shtua"));
+				Message.addMessage(Message.bundle.getString("project_added"), "info");
+
 			} else {
 				System.out.println("nuk u shtua");
 				
@@ -71,8 +65,7 @@ public class ProjectBean {
 				System.out.println("u shtua");
 				refresh();
 				projectDto = new ProjectDto();
-				FacesContext context = FacesContext.getCurrentInstance();
-				context.addMessage(null, new FacesMessage("Project u shtua"));
+				Message.addMessage(Message.bundle.getString("project_added"), "info");
 			}
 		} else {
 			System.out.println("ky project ekziston");
@@ -84,14 +77,9 @@ public class ProjectBean {
 
 		if (projectService.remove(projectId)) {
 			refresh();
-			// MessagesUtility.addMessage(MessagesUtility.bundle
-			// .getString("USER_DELETED"));
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage("Ky project u fshi"));
+			Message.addMessage(Message.bundle.getString("project_deleted"), "info");
 		} else {
-			// MessagesUtility.addMessage(MessagesUtility.bundle
-			// .getString("USER_NOT_DELETED"));
-			Message.addMessage(Message.bundle.getString("employee_notDelete"), "error");
+			Message.addMessage(Message.bundle.getString("project_notDeleted"), "error");
 			
 		}
 	}
@@ -112,8 +100,8 @@ public class ProjectBean {
 			if (projectService.update(project)) {
 				refresh();
 				System.out.println("u editua");
-				FacesContext context = FacesContext.getCurrentInstance();
-				context.addMessage(null, new FacesMessage("Project Edited"));
+				Message.addMessage(Message.bundle.getString("project_edited"), "info");
+
 			} else {
 				Message.addMessage(Message.bundle.getString("project_notEdited"), "error");
 
@@ -131,23 +119,11 @@ public class ProjectBean {
 		if (projectService.update(editProject)) {
 			refresh();
 			System.out.println("u editua");
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage("Project Edited"));
-			// MessagesUtility.addMessage(MessagesUtility.bundle
-			// .getString("USER_EDITED"));
+			Message.addMessage(Message.bundle.getString("project_edited")+" me teme: "+editProject.getTema(), "info");
 		} else {
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage("Ky project nuk u editua"));
-			// MessagesUtility.addMessage(MessagesUtility.bundle
-			// .getString("USER_NOT_EDITED"));
-		}
-		// FacesMessage msg = new FacesMessage("Task Edited");
-		// FacesContext.getCurrentInstance().addMessage(null, msg);
-	}
+			Message.addMessage(Message.bundle.getString("project_notEdited")+" me teme: "+editProject.getTema(), "error");
 
-	public void onRowCancel(RowEditEvent event) {
-		FacesMessage msg = new FacesMessage("Edit Cancelled");
-		FacesContext.getCurrentInstance().addMessage(null, msg);
+		}
 	}
 
 	public ProjectDto getProjectDto() {

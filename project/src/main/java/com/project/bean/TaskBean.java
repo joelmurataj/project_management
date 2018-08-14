@@ -17,6 +17,7 @@ import com.project.dto.ProjectDto;
 import com.project.dto.TaskDto;
 import com.project.service.ProjectService;
 import com.project.service.TaskService;
+import com.project.utility.Message;
 
 @ManagedBean(name = "taskBean")
 @ViewScoped
@@ -66,18 +67,14 @@ public class TaskBean {
 		if (taskService.existTask(taskDto.getTema()) && existTask == null) {
 			if (taskService.add(taskDto)) {
 				System.out.println("u shtua");
-				// MessagesUtility.addMessage(MessagesUtility.bundle
-				// .getString("USER_ADDED"));
 				refresh();
 				taskDto = new TaskDto();
-				FacesContext context = FacesContext.getCurrentInstance();
-				context.addMessage(null, new FacesMessage("tasku u shtua"));
+				Message.addMessage(Message.bundle.getString("task_added"), "info");
+
 			} else {
 				System.out.println("nuk u shtua sepse ka date me vone se data e projektit");
-				// MessagesUtility.addMessage(MessagesUtility.bundle
-				// .getString("USER_NOT_ADDED"));
-				FacesContext context = FacesContext.getCurrentInstance();
-				context.addMessage(null, new FacesMessage("task nuk u shtua"));
+				Message.addMessage(Message.bundle.getString("task_notAdded"), "error");
+
 			}
 		} else if (existTask != null) {
 			existTask.setDaysOfWork(taskDto.getDaysOfWork());
@@ -85,25 +82,19 @@ public class TaskBean {
 			if (taskService.update(existTask)) {
 				refresh();
 				System.out.println("u shtua");
-				// MessagesUtility.addMessage(MessagesUtility.bundle
-				// .getString("USER_ADDED"));
 				refresh();
 				taskDto = new TaskDto();
-				FacesContext context = FacesContext.getCurrentInstance();
-				context.addMessage(null, new FacesMessage("tasku u shtua"));
+				Message.addMessage(Message.bundle.getString("task_added"), "info");
+
 			} else {
 				System.out.println("nuk u shtua sepse ka date me vone se data e projektit");
-				// MessagesUtility.addMessage(MessagesUtility.bundle
-				// .getString("USER_NOT_ADDED"));
-				FacesContext context = FacesContext.getCurrentInstance();
-				context.addMessage(null, new FacesMessage("task nuk u shtua"));
+				Message.addMessage(Message.bundle.getString("task_notAdded"), "error");
+
 			}
 		} else {
 			System.out.println("ky task ekziston");
-			// MessagesUtility.addMessage(MessagesUtility.bundle
-			// .getString("EMAIL_EXISTS"));
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage("This project exist"));
+			Message.addMessage(Message.bundle.getString("tema_exist"), "error");
+
 		}
 	}
 
@@ -111,15 +102,11 @@ public class TaskBean {
 
 		if (taskService.remove(taskId)) {
 			refresh();
-			// MessagesUtility.addMessage(MessagesUtility.bundle
-			// .getString("USER_DELETED"));
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage("Ky task u fshi"));
+			Message.addMessage(Message.bundle.getString("task_deleted"), "info");
+
 		} else {
-			// MessagesUtility.addMessage(MessagesUtility.bundle
-			// .getString("USER_NOT_DELETED"));
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage("Ky task nuk ekziston"));
+			Message.addMessage(Message.bundle.getString("task_notDeleted"), "error");
+
 		}
 	}
 
@@ -138,26 +125,17 @@ public class TaskBean {
 			if (taskService.update(taskDto)) {
 				refresh();
 				System.out.println("u editua");
-				FacesContext context = FacesContext.getCurrentInstance();
-				context.addMessage(null, new FacesMessage("Task Edited"));
-				// MessagesUtility.addMessage(MessagesUtility.bundle
-				// .getString("USER_EDITED"));
+				Message.addMessage(Message.bundle.getString("task_edited"), "info");
+
 			} else {
-				FacesContext context = FacesContext.getCurrentInstance();
-				context.addMessage(null,
-						new FacesMessage("Ky task nuk u editua sepse ka probleme me daten e projektit"));
-				// MessagesUtility.addMessage(MessagesUtility.bundle
-				// .getString("USER_NOT_EDITED"));
+				Message.addMessage(Message.bundle.getString("task_notEdited"), "error");
+
 			}
 		} else {
 			System.out.println("ky task ekziston");
-			// MessagesUtility.addMessage(MessagesUtility.bundle
-			// .getString("EMAIL_EXISTS"));
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage("This task exist"));
+			Message.addMessage(Message.bundle.getString("tema_exist"), "error");
+
 		}
-		// FacesMessage msg = new FacesMessage("Task Edited");
-		// FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
 
 	public void onProjectChange(int id) {
@@ -177,18 +155,12 @@ public class TaskBean {
 		if (taskService.update(taskEdit)) {
 			refresh();
 			System.out.println("u editua");
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage("Task Edited"));
-			// MessagesUtility.addMessage(MessagesUtility.bundle
-			// .getString("USER_EDITED"));
+			Message.addMessage(Message.bundle.getString("task_edited"), "info");
+
 		} else {
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage("Ky task nuk u editua"));
-			// MessagesUtility.addMessage(MessagesUtility.bundle
-			// .getString("USER_NOT_EDITED"));
+			Message.addMessage(Message.bundle.getString("task_notEdited"), "error");
+
 		}
-		// FacesMessage msg = new FacesMessage("Task Edited");
-		// FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
 
 	public void onRowCancel(RowEditEvent event) {

@@ -117,9 +117,10 @@ public class UserCrudBean {
 				System.out.println("nuk mund ta editosh ket user");
 				Message.addMessage(Message.bundle.getString("employee_notEdited1"), "info");
 			}
-		} else
+		} else {
 			System.out.println("ky user nuk ekziston");
-		Message.addMessage(Message.bundle.getString("employee_notexist"), "info");
+			Message.addMessage(Message.bundle.getString("employee_notexist"), "info");
+		}
 
 		return null;
 

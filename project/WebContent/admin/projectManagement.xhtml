@@ -62,39 +62,7 @@
 	<div id="wrapper">
 		<!-- Sidebar -->
 		<ul class="sidebar navbar-nav">
-			<li class="nav-item active"><a> <h:form id="form1">
-
-						<p:growl id="growl" sticky="true" />
-
-						<h:panelGrid columns="1" cellpadding="5">
-							
-
-						</h:panelGrid>
-
-						<p:dialog header="Add project" id="dlg1" widgetVar="dlg1"
-							minHeight="40">
-		Tema:
-			<p:inputText value="#{projectBean.projectDto.tema}" label="tema"
-								required="true" id="tema">
-							</p:inputText>
-
-							<p:message for="tema" />
-		Data e fillimit:
-		 <p:calendar id="start" value="#{projectBean.projectDto.start}"
-								mindate="#{projectBean.now}" />
-							<p:message for="start" />
-		Kohezgjatja e punes ne dite:
-			<p:inputNumber id="ditet" maxValue="7000"
-								value="#{projectBean.projectDto.daysOfWork}" decimalPlaces="0">
-								<f:validateLongRange minimum="1" />
-							</p:inputNumber>
-							<p:message for="ditet" />
-							<p:commandButton type="submit"
-								update=":employeesForm:tableStateDT growl" value="Add project"
-								action="#{projectBean.addProject()}"
-								oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg1').hide()"></p:commandButton>
-						</p:dialog>
-					</h:form>
+			<li class="nav-item active"><a> 
 			</a></li>
 
 			<li class="nav-item"><a class="nav-link"
@@ -238,6 +206,39 @@
 
 		</p:dialog>
 	</h:form>
+	<h:form id="form1">
+
+						<p:growl id="growl" sticky="true" />
+
+						<h:panelGrid columns="1" cellpadding="5">
+							
+
+						</h:panelGrid>
+
+						<p:dialog header="Add project" id="dlg1" widgetVar="dlg1"
+							minHeight="40">
+		Tema:
+			<p:inputText value="#{projectBean.projectDto.tema}" label="tema"
+								required="true" id="tema">
+							</p:inputText>
+
+							<p:message for="tema" />
+		Data e fillimit:
+		 <p:calendar id="start" value="#{projectBean.projectDto.start}"
+								mindate="#{projectBean.now}" />
+							<p:message for="start" />
+		Kohezgjatja e punes ne dite:
+			<p:inputNumber id="ditet" maxValue="7000"
+								value="#{projectBean.projectDto.daysOfWork}" decimalPlaces="0">
+								<f:validateLongRange minimum="1" />
+							</p:inputNumber>
+							<p:message for="ditet" />
+							<p:commandButton type="submit"
+								update=":employeesForm:tableStateDT growl" value="Add project"
+								action="#{projectBean.addProject()}"
+								oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg1').hide()"></p:commandButton>
+						</p:dialog>
+					</h:form>
 	<!-- /C O N T E N T -->
 
 	<!-- Logout Modal-->
