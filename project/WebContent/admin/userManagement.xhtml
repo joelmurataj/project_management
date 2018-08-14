@@ -62,48 +62,6 @@
 	<div id="wrapper">
 		<!-- Sidebar -->
 		<ul class="sidebar navbar-nav">
-			<li class="nav-item active"><a> <h:form id="form1">
-
-						<p:growl id="growl" sticky="true" />
-
-						<h:panelGrid columns="1" cellpadding="5">
-
-						</h:panelGrid>
-
-						<p:dialog header="Add employee" widgetVar="dlg1" minHeight="40">
-		Emer:
-			<p:inputText value="#{userCrudBean.userDto.emer}" label="emer"
-								required="true" id="emer" validatorMessage="" requiredMessage="">
-								<f:validateRegex pattern="[a-zA-Z]+" />
-							</p:inputText>
-
-							<p:message for="emer" />
-		Mbiemer:
-		<p:inputText value="#{userCrudBean.userDto.mbiemer}" label="mbiemer"
-								required="true" id="mbiemer">
-								<f:validateRegex pattern="[a-zA-Z]+" />
-							</p:inputText>
-							<p:message for="mbiemer" />
-			Username:
-			<p:inputText value="#{userCrudBean.userDto.username}"
-								label="username" required="true" id="username"></p:inputText>
-							<p:message for="username" />
-			Password:
-			<p:password value="#{userCrudBean.userDto.password}" label="Password"
-								required="true" id="Password" feedback="true" inline="true" />
-							<p:message for="Password" />
-			ConfirmPassword:
-			<p:password value="#{userCrudBean.userDto.confirmPassword}"
-								label="ConfirmPassword" required="true" id="ConfirmPassword"
-								feedback="true" inline="true" />
-							<p:message for="ConfirmPassword" />
-							<p:commandButton type="submit"
-								update=":employeesForm:tableStateDT growl" value="Add employee"
-								action="#{userCrudBean.addUser()}"
-								oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg1').hide()"></p:commandButton>
-						</p:dialog>
-					</h:form>
-			</a></li>
 
 			<li class="nav-item"><a class="nav-link"
 				href="http://localhost:8084/project/admin/projectManagement.xhtml">
@@ -233,21 +191,21 @@
 				<h:inputHidden class="modalId" id="userId"
 					value="#{userCrudBean.userDto.id}" />
 		Emer:
-			<p:inputText value="#{userCrudBean.userDto.emer}" label="emer"
-					required="true" id="emer">
+			<p:inputText value="#{userCrudBean.userDto.emer}" label="emer" maxlength="45"
+					required="true" id="emer" requiredMessage="Ju lutem plotesoni emrin" validatorMessage="Ju lutem perdorni vetem shkronja">
 					<f:validateRegex pattern="[a-zA-Z]+" />
 				</p:inputText>
 
 				<p:message for="emer" />
 		Mbiemer:
-		<p:inputText value="#{userCrudBean.userDto.mbiemer}" label="mbiemer"
-					required="true" id="mbiemer">
+		<p:inputText value="#{userCrudBean.userDto.mbiemer}" label="mbiemer" maxlength="45"
+					required="true" id="mbiemer" requiredMessage="Ju lutem plotesoni mbiemrin" validatorMessage="Ju lutem perdorni vetem shkronja">
 					<f:validateRegex pattern="[a-zA-Z]+" />
 				</p:inputText>
 				<p:message for="mbiemer" />
 				Username:
-			<p:inputText value="#{userCrudBean.userDto.username}"
-					label="username" required="true" id="username"></p:inputText>
+			<p:inputText value="#{userCrudBean.userDto.username}" maxlength="45"
+					label="username" required="true" id="username" requiredMessage="Ju lutem plotesoni usernamin"></p:inputText>
 				<p:message for="username" />
 
 			</p:outputPanel>
@@ -258,6 +216,47 @@
 
 		</p:dialog>
 	</h:form>
+	<h:form id="form1">
+
+						<p:growl id="growl" sticky="true" />
+
+						<h:panelGrid columns="1" cellpadding="5">
+
+						</h:panelGrid>
+
+						<p:dialog header="Add employee" widgetVar="dlg1" minHeight="40">
+		Emer:
+			<p:inputText value="#{userCrudBean.userDto.emer}" label="emer" maxlength="45"
+								required="true" id="emer" validatorMessage="Ju lutem perdorni vetem shkronja" requiredMessage="Ju lutem plotesoni emrin">
+								<f:validateRegex pattern="[a-zA-Z]+" />
+							</p:inputText>
+
+							<p:message for="emer" />
+		Mbiemer:
+		<p:inputText value="#{userCrudBean.userDto.mbiemer}" label="mbiemer" maxlength="45"
+								required="true" id="mbiemer" requiredMessage="Ju lutem plotesoni mbiemrin" validatorMessage="Ju lutem perdorni vetem shkronja">
+								<f:validateRegex pattern="[a-zA-Z]+" />
+							</p:inputText>
+							<p:message for="mbiemer" />
+			Username:
+			<p:inputText value="#{userCrudBean.userDto.username}" maxlength="45"
+								label="username" required="true" id="username" requiredMessage="Ju lutem plotesoni usernamin"></p:inputText>
+							<p:message for="username" />
+			Password:
+			<p:password value="#{userCrudBean.userDto.password}" label="Password" maxlength="45"
+								required="true" id="Password" feedback="true" inline="true" requiredMessage="Ju lutem plotesoni passwordin"/>
+							<p:message for="Password" />
+			ConfirmPassword:
+			<p:password value="#{userCrudBean.userDto.confirmPassword}" maxlength="45"
+								label="ConfirmPassword" required="true" id="ConfirmPassword"
+								feedback="true" inline="true" requiredMessage="Ju lutem plotesoni confirmPasswordin"/>
+							<p:message for="ConfirmPassword" />
+							<p:commandButton type="submit"
+								update=":employeesForm:tableStateDT growl" value="Add employee"
+								action="#{userCrudBean.addUser()}"
+								oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg1').hide()"></p:commandButton>
+						</p:dialog>
+					</h:form>
 
 	<!-- /C O N T E N T -->
 

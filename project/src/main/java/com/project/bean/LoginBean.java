@@ -98,15 +98,12 @@ public class LoginBean {
 					userBean.setUserDto(user);
 					return "employee/homeEmployee?faces-redirect=true";
 				}
+			}else {
+				System.out.println("User failed to log in! (User is null)");
+				Message.addMessage(Message.bundle.getString("USER_NOTLOGGED"), "error");
+				return "";
 			}
-		} else {
-			System.out.println("User failed to log in! (User is null)");
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage(null, "Wrong username or password!"));
-			Message.addMessage(Message.bundle.getString("user_notLogged"), "error");
-
-			return "";
-		}
+		} 
 		return"";
 	}
 

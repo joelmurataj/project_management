@@ -59,16 +59,16 @@ public class UserCrudBean {
 					System.out.println("u shtua");
 					refresh();
 					userDto = new UserDto();
-					Message.addMessage(Message.bundle.getString("employee_added"), "info");
+					Message.addMessage(Message.bundle.getString("EMPLOYEE_ADDED"), "info");
 				} else {
 					System.out.println("nuk u shtua");
-					Message.addMessage(Message.bundle.getString("employee_notAdded"), "info");
+					Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTADDED"), "info");
 				}
 			} else if (existUser != null) {
 				userDeleted(existUser);
 			} else {
 				System.out.println("ky user ekziston");
-				Message.addMessage(Message.bundle.getString("employee_exist"), "info");
+				Message.addMessage(Message.bundle.getString("EMPLOYEE_EXIST"), "info");
 			}
 		}
 	}
@@ -77,9 +77,9 @@ public class UserCrudBean {
 
 		if (userService.remove(userId)) {
 			refresh();
-			Message.addMessage(Message.bundle.getString("employee_delete"), "info");
+			Message.addMessage(Message.bundle.getString("EMPLOYEE_DELETE"), "info");
 		} else {
-			Message.addMessage(Message.bundle.getString("employee_notDelete"), "error");
+			Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTDELETE"), "error");
 		}
 		return null;
 	}
@@ -105,21 +105,21 @@ public class UserCrudBean {
 					if (userService.update(user)) {
 						refresh();
 						System.out.println("u editua");
-						Message.addMessage(Message.bundle.getString("employee_edit"), "info");
+						Message.addMessage(Message.bundle.getString("EMPLOYEE_EDIT"), "info");
 					} else {
-						Message.addMessage(Message.bundle.getString("employee_notEdited"), "info");
+						Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTEDITED"), "info");
 					}
 				} else {
 					System.out.println("ky username ekziston");
-					Message.addMessage(Message.bundle.getString("employee_exist"), "error");
+					Message.addMessage(Message.bundle.getString("EMPLOYEE_EXIST"), "error");
 				}
 			} else {
 				System.out.println("nuk mund ta editosh ket user");
-				Message.addMessage(Message.bundle.getString("employee_notEdited1"), "info");
+				Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTEDITED1"), "info");
 			}
 		} else {
 			System.out.println("ky user nuk ekziston");
-			Message.addMessage(Message.bundle.getString("employee_notexist"), "info");
+			Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTEXIST"), "info");
 		}
 
 		return null;
@@ -133,14 +133,12 @@ public class UserCrudBean {
 		if (userService.update(existUser)) {
 			refresh();
 			System.out.println("u shtua");
-			// MessagesUtility.addMessage(MessagesUtility.bundle
-			// .getString("USER_ADDED"));
 			refresh();
 			userDto = new UserDto();
-			Message.addMessage(Message.bundle.getString("employee_added"), "info");
+			Message.addMessage(Message.bundle.getString("EMPLOYEE_ADDED"), "info");
 
 		} else
-			Message.addMessage(Message.bundle.getString("employee_notAdded"), "info");
+			Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTADDED"), "info");
 	}
 
 	public void changePassword() {
@@ -149,14 +147,14 @@ public class UserCrudBean {
 			userBean.getUserDto().setPassword(encryptor.encryptPassword(userDto.getPassword()));
 			if (userService.update(userBean.getUserDto())) {
 				System.out.println("user updated");
-				Message.addMessage(Message.bundle.getString("employee_edit"), "info");
+				Message.addMessage(Message.bundle.getString("EMPLOYEE_EDIT"), "info");
 
 			} else
-				Message.addMessage(Message.bundle.getString("employee_notEdited"), "info");
+				Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTEDITED"), "info");
 
 		} else
 			System.out.println("duhet qe confirmpassword te jete njesoj me password");
-		Message.addMessage(Message.bundle.getString("password_notequal"), "info");
+		Message.addMessage(Message.bundle.getString("PASSWORD_NOTEQUAL"), "info");
 
 	}
 	// GETTERS AND SETTERS

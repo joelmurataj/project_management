@@ -62,8 +62,6 @@
 	<div id="wrapper">
 		<!-- Sidebar -->
 		<ul class="sidebar navbar-nav">
-			<li class="nav-item active"><a> 
-			</a></li>
 
 			<li class="nav-item"><a class="nav-link"
 				href="http://localhost:8084/project/admin/userManagement.xhtml">
@@ -105,11 +103,11 @@
 								update=":form1:growl" />
 							<p:ajax event="rowEditCancel"
 								listener="#{projectBean.onRowCancel}" update=":form1:growl" />
-								
-								<f:facet name="header">
-								<p:outputPanel >
+
+							<f:facet name="header">
+								<p:outputPanel>
 									<p:commandButton value="Add project" type="button"
-								onclick="PF('dlg1').show();" />
+										onclick="PF('dlg1').show();" />
 								</p:outputPanel>
 							</f:facet>
 
@@ -182,25 +180,30 @@
 		<p:dialog header="Edit project" widgetVar="dlg2" minHeight="40"
 			id="dlge">
 			<p:outputPanel id="dlg2">
+			<h:messages style="color:red" id="message" />
 				<h:inputHidden class="modalId" id="projectId"
 					value="#{projectBean.projectDto.id}" />
 		Tema:
 			<p:inputText value="#{projectBean.projectDto.tema}" label="tema"
-					required="true" id="tema">
+					required="true" id="tema" maxlength="45"
+					requiredMessage="Ju lutem plotesoni temen">
 				</p:inputText>
 
 				<p:message for="tema" />
 						Data e fillimit:
 		 				<p:calendar id="start" value="#{projectBean.projectDto.start}"
-					mindate="#{projectBean.projectDto.start}" />
+					mindate="#{projectBean.projectDto.start}" required="true"
+					requiredMessage="Ju lutem plotesoni daten" />
 				<p:message for="start" />
 						Kohezgjatja e pujnes ne dite:
 			<p:inputNumber id="ditet"
-					value="#{projectBean.projectDto.daysOfWork}" />
+					value="#{projectBean.projectDto.daysOfWork}" decimalPlaces="0"
+					requiredMessage="Ju lutem plotesoni ditet e punes" maxValue="3000"
+					validatorMessage="Ju lutem vendosni numer me te madh se 0" />
 				<p:message for="ditet" />
 			</p:outputPanel>
 			<p:commandButton type="submit"
-				update=":employeesForm:tableStateDT :form1:growl"
+				update=":employeesForm:tableStateDT :form1:growl message"
 				value="Edit project" action="#{projectBean.editProject()}"
 				oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg2').hide()"></p:commandButton>
 
@@ -208,37 +211,43 @@
 	</h:form>
 	<h:form id="form1">
 
-						<p:growl id="growl" sticky="true" />
+		<p:growl id="growl" life="1500" severity="info" />
 
-						<h:panelGrid columns="1" cellpadding="5">
-							
+		<h:panelGrid columns="1" cellpadding="5">
 
-						</h:panelGrid>
 
-						<p:dialog header="Add project" id="dlg1" widgetVar="dlg1"
-							minHeight="40">
+		</h:panelGrid>
+
+		<p:dialog header="Add project" id="dlg1" widgetVar="dlg1"
+			minHeight="40">
+			<h:messages style="color:red" id="message" />
 		Tema:
 			<p:inputText value="#{projectBean.projectDto.tema}" label="tema"
-								required="true" id="tema">
-							</p:inputText>
+				required="true" id="tema" requiredMessage="Ju lutem plotesoni temen"
+				maxlength="45">
+				<p:message for="tema" />
+			</p:inputText>
 
-							<p:message for="tema" />
+			<p:message for="tema" />
 		Data e fillimit:
 		 <p:calendar id="start" value="#{projectBean.projectDto.start}"
-								mindate="#{projectBean.now}" />
-							<p:message for="start" />
+				mindate="#{projectBean.now}" required="true"
+				requiredMessage="Ju lutem plotesoni daten" />
+			<p:message for="start" />
 		Kohezgjatja e punes ne dite:
-			<p:inputNumber id="ditet" maxValue="7000"
-								value="#{projectBean.projectDto.daysOfWork}" decimalPlaces="0">
-								<f:validateLongRange minimum="1" />
-							</p:inputNumber>
-							<p:message for="ditet" />
-							<p:commandButton type="submit"
-								update=":employeesForm:tableStateDT growl" value="Add project"
-								action="#{projectBean.addProject()}"
-								oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg1').hide()"></p:commandButton>
-						</p:dialog>
-					</h:form>
+			<p:inputNumber id="ditet" maxValue="3000"
+				value="#{projectBean.projectDto.daysOfWork}" decimalPlaces="0"
+				required="true" requiredMessage="Ju lutem plotesoni ditet e punes"
+				validatorMessage="Ju lutem jepni nr me te madh se 0">
+				<f:validateLongRange minimum="1" />
+			</p:inputNumber>
+			<p:message for="ditet" />
+			<p:commandButton type="submit"
+				update=":employeesForm:tableStateDT growl message" value="Add project"
+				action="#{projectBean.addProject()}"
+				oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg1').hide()"></p:commandButton>
+		</p:dialog>
+	</h:form>
 	<!-- /C O N T E N T -->
 
 	<!-- Logout Modal-->

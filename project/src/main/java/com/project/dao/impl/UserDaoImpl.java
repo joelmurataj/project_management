@@ -140,7 +140,7 @@ public class UserDaoImpl implements UserDao {
 	public User exist(String username, String password) {
 		try {
 			User user = (User) entityManager
-					.createQuery("Select user From User user Where user.username=:username", User.class)
+					.createQuery("Select user From User user Where user.username=:username and user.active=0", User.class)
 					.setParameter("username", username).getSingleResult();
 			BasicPasswordEncryptor encryptor = new BasicPasswordEncryptor();
 			if (encryptor.checkPassword(password, user.getPassword())) {

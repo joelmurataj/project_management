@@ -5,10 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 
 import org.primefaces.event.RowEditEvent;
@@ -69,11 +67,11 @@ public class TaskBean {
 				System.out.println("u shtua");
 				refresh();
 				taskDto = new TaskDto();
-				Message.addMessage(Message.bundle.getString("task_added"), "info");
+				Message.addMessage(taskDto.getTema()+" :"+Message.bundle.getString("TASK_ADDED"), "info");
 
 			} else {
 				System.out.println("nuk u shtua sepse ka date me vone se data e projektit");
-				Message.addMessage(Message.bundle.getString("task_notAdded"), "error");
+				Message.addMessage(Message.bundle.getString("TASK_NOTADDED"), "error");
 
 			}
 		} else if (existTask != null) {
@@ -84,16 +82,16 @@ public class TaskBean {
 				System.out.println("u shtua");
 				refresh();
 				taskDto = new TaskDto();
-				Message.addMessage(Message.bundle.getString("task_added"), "info");
+				Message.addMessage(existTask.getTema()+" :"+Message.bundle.getString("TASK_ADDED"), "info");
 
 			} else {
 				System.out.println("nuk u shtua sepse ka date me vone se data e projektit");
-				Message.addMessage(Message.bundle.getString("task_notAdded"), "error");
+				Message.addMessage(Message.bundle.getString("TASK_NOTADDED"), "error");
 
 			}
 		} else {
 			System.out.println("ky task ekziston");
-			Message.addMessage(Message.bundle.getString("tema_exist"), "error");
+			Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "error");
 
 		}
 	}
@@ -102,10 +100,10 @@ public class TaskBean {
 
 		if (taskService.remove(taskId)) {
 			refresh();
-			Message.addMessage(Message.bundle.getString("task_deleted"), "info");
+			Message.addMessage(Message.bundle.getString("TASK_DELETED"), "info");
 
 		} else {
-			Message.addMessage(Message.bundle.getString("task_notDeleted"), "error");
+			Message.addMessage(Message.bundle.getString("TASK_NOTDELETED"), "error");
 
 		}
 	}
@@ -125,15 +123,15 @@ public class TaskBean {
 			if (taskService.update(taskDto)) {
 				refresh();
 				System.out.println("u editua");
-				Message.addMessage(Message.bundle.getString("task_edited"), "info");
+				Message.addMessage(Message.bundle.getString("TASK_EDITED"), "info");
 
 			} else {
-				Message.addMessage(Message.bundle.getString("task_notEdited"), "error");
+				Message.addMessage(Message.bundle.getString("TASK_NOTEDITED"), "error");
 
 			}
 		} else {
 			System.out.println("ky task ekziston");
-			Message.addMessage(Message.bundle.getString("tema_exist"), "error");
+			Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "error");
 
 		}
 	}
@@ -155,17 +153,17 @@ public class TaskBean {
 		if (taskService.update(taskEdit)) {
 			refresh();
 			System.out.println("u editua");
-			Message.addMessage(Message.bundle.getString("task_edited"), "info");
+			Message.addMessage(Message.bundle.getString("TASK_EDITED"), "info");
 
 		} else {
-			Message.addMessage(Message.bundle.getString("task_notEdited"), "error");
+			Message.addMessage(Message.bundle.getString("TASK_NOTEDITED"), "error");
 
 		}
 	}
 
 	public void onRowCancel(RowEditEvent event) {
-		FacesMessage msg = new FacesMessage("Edit Cancelled");
-		FacesContext.getCurrentInstance().addMessage(null, msg);
+		Message.addMessage(Message.bundle.getString("CANCELED"), "info");
+
 	}
 
 	public TaskDto getTaskDto() {

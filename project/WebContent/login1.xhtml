@@ -24,6 +24,7 @@
 
     <!-- Custom styles for this template-->
     <link href="resources/css/sb-admin.css" rel="stylesheet"/>
+    
 </h:head>
 <h:body  class="bg-dark">
 <div class="container">
@@ -32,12 +33,14 @@
         <div class="card-body">
 
 	<h:form id="form1" style="width:100%">
-		<p:growl id="growl" sticky="true" />    
+	
+		<p:growl id="growl" sticky="true" severity="info"/>  
+		<h:messages style="color:red" id="message" />  
 		<div class="form-group">
               <div class="form-label-group">
 				<p:inputText value="#{loginBean.username}" label="username"
 					required="true" id="username" align="middle"  class="form-control"  requiredMessage="Ju lutem plotesoni username"></p:inputText>
-				<p:message for="username" />
+				<h:message for="username"/>
 	 		 <label for="inputEmail">Username</label>
              </div>
            </div>
@@ -45,11 +48,12 @@
               <div class="form-label-group">
 			    <p:password value="#{loginBean.password}" label="Password"  class="form-control"
 					required="true" id="Password" requiredMessage="Ju lutem plotesoni passwordin"/>
+					<h:message for="Password"/>
 				<label for="inputPassword">Password</label>
               </div>
             </div>
 		<p:commandLink class="btn btn-primary btn-block" 
-			type="submit" update="growl" value="Log in"
+			type="submit" update="growl message" value="Log in"
 			action="#{loginBean.logIn()}" align="middle"/>
 	
 	</h:form>

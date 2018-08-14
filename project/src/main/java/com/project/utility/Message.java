@@ -7,7 +7,7 @@ import javax.faces.context.FacesContext;
 
 public class Message {
 
-	 public final static ResourceBundle bundle = ResourceBundle.getBundle("message");
+	 public final static ResourceBundle bundle = ResourceBundle.getBundle("com.project.message");
 
 	    public static void addMessage(String summary, String type) {
 	        FacesMessage message = new FacesMessage(summary, null);

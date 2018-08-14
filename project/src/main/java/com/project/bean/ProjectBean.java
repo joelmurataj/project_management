@@ -8,6 +8,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.view.ViewScoped;
 
+import org.primefaces.event.RowEditEvent;
+
 import com.project.dto.ProjectDto;
 import com.project.service.ProjectService;
 import com.project.utility.Message;
@@ -50,12 +52,12 @@ public class ProjectBean {
 				System.out.println("u shtua");
 				refresh();
 				projectDto = new ProjectDto();
-				Message.addMessage(Message.bundle.getString("project_added"), "info");
+				Message.addMessage(Message.bundle.getString("PROJECT_ADDED"), "info");
 
 			} else {
 				System.out.println("nuk u shtua");
 				
-				Message.addMessage(Message.bundle.getString("employee_notAdded"), "error");
+				Message.addMessage(projectDto.getTema()+" :"+Message.bundle.getString("PROJECT_NOTADDED"), "error");
 			}
 		} else if (existProject != null) {
 			existProject.setDaysOfWork(projectDto.getDaysOfWork());
@@ -65,11 +67,11 @@ public class ProjectBean {
 				System.out.println("u shtua");
 				refresh();
 				projectDto = new ProjectDto();
-				Message.addMessage(Message.bundle.getString("project_added"), "info");
+				Message.addMessage(Message.bundle.getString("PROJECT_ADDED"), "info");
 			}
 		} else {
 			System.out.println("ky project ekziston");
-			Message.addMessage(Message.bundle.getString("tema_exist"), "error");
+			Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "error");
 		}
 	}
 
@@ -77,9 +79,9 @@ public class ProjectBean {
 
 		if (projectService.remove(projectId)) {
 			refresh();
-			Message.addMessage(Message.bundle.getString("project_deleted"), "info");
+			Message.addMessage(Message.bundle.getString("PROJECT_DELETED"), "info");
 		} else {
-			Message.addMessage(Message.bundle.getString("project_notDeleted"), "error");
+			Message.addMessage(Message.bundle.getString("PROJECT_NOTDELETED"), "error");
 			
 		}
 	}
@@ -100,16 +102,16 @@ public class ProjectBean {
 			if (projectService.update(project)) {
 				refresh();
 				System.out.println("u editua");
-				Message.addMessage(Message.bundle.getString("project_edited"), "info");
+				Message.addMessage(project.getTema()+" :"+Message.bundle.getString("PROJECT_EDITED"), "info");
 
 			} else {
-				Message.addMessage(Message.bundle.getString("project_notEdited"), "error");
+				Message.addMessage(Message.bundle.getString("PROJECT_NOTEDITED"), "error");
 
 			}
 		} else {
 			System.out.println("ky project ekziston");
 			
-			Message.addMessage(Message.bundle.getString("tema_exist"), "error");
+			Message.addMessage(project.getTema()+" :"+Message.bundle.getString("TEMA_EXIST"), "error");
 		}
 	}
 
@@ -119,11 +121,14 @@ public class ProjectBean {
 		if (projectService.update(editProject)) {
 			refresh();
 			System.out.println("u editua");
-			Message.addMessage(Message.bundle.getString("project_edited")+" me teme: "+editProject.getTema(), "info");
+			Message.addMessage(editProject.getTema()+" :"+Message.bundle.getString("PROJECT_EDITED"), "info");
 		} else {
-			Message.addMessage(Message.bundle.getString("project_notEdited")+" me teme: "+editProject.getTema(), "error");
+			Message.addMessage(Message.bundle.getString("PROJECT_NOTEDITED"), "error");
 
 		}
+	}
+	public void onRowCancel(RowEditEvent event) {
+		Message.addMessage(Message.bundle.getString("CANCELED"), "info");
 	}
 
 	public ProjectDto getProjectDto() {
