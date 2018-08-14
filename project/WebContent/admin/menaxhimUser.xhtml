@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>MenxhimUsers</title>
+</h:head>
+<h:body>
+	<h:form id="form1">
+
+		<p:growl id="growl" sticky="true" />
+
+		<h:panelGrid columns="1" cellpadding="5">
+			<p:commandButton value="Add employee" type="button"
+				onclick="PF('dlg1').show();" />
+
+		</h:panelGrid>
+
+		<p:dialog header="Add user" widgetVar="dlg1" minHeight="40">
+		Emer:
+			<p:inputText value="#{userCrudBean.userDto.emer}" label="emer"
+				required="true" id="emer" validatorMessage="" requiredMessage="">
+				<f:validateRegex pattern="[a-zA-Z]+" />
+			</p:inputText>
+
+			<p:message for="emer" />
+		Mbiemer:
+		<p:inputText value="#{userCrudBean.userDto.mbiemer}" label="mbiemer"
+				required="true" id="mbiemer">
+				<f:validateRegex pattern="[a-zA-Z]+" />
+			</p:inputText>
+			<p:message for="mbiemer" />
+			Username:
+			<p:inputText value="#{userCrudBean.userDto.username}"
+				label="username" required="true" id="username"></p:inputText>
+			<p:message for="username" />
+			Password:
+			<p:password value="#{userCrudBean.userDto.password}" label="Password"
+				required="true" id="Password" feedback="true" inline="true" />
+			<p:message for="Password" />
+			ConfirmPassword:
+			<p:password value="#{userCrudBean.userDto.confirmPassword}" label="ConfirmPassword"
+				required="true" id="ConfirmPassword" feedback="true" inline="true" />
+			<p:message for="ConfirmPassword" />
+			<p:commandButton type="submit" update=":employeesForm:tableStateDT growl" value="Add employee"
+				action="#{userCrudBean.addUser()}"
+				oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg1').hide()"></p:commandButton>
+		</p:dialog>
+	</h:form>
+	<h:form id="logout">
+		<p:commandButton type="submit" value="Log out"
+			action="#{loginBean.logOut()}"></p:commandButton>
+	</h:form>
+	<h:form id="employeesForm">
+		<p:dataTable id="tableStateDT" var="userDto"
+			value="#{userCrudBean.userDtoList}" widgetVar="usersTable"
+			multiViewState="true" rows="10" paginator="true"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			rowsPerPageTemplate="5,10,15" selectionMode="single"
+			selection="#{userCrudBean.selectedUser}" rowKey="#{userDto.id}"
+			emptyMessage="No user found with given criteria"
+			filteredValue="#{userCrudBean.filteredUsers}">
+
+			<f:facet name="header">
+				<p:outputPanel>
+					<h:outputText value="Search all fields:" />
+					<p:inputText id="globalFilter" onkeyup="PF('usersTable').filter()"
+						style="width:150px" placeholder="Enter keyword" />
+				</p:outputPanel>
+			</f:facet>
+
+			<p:ajax event="rowSelect" update=":employeesForm:userDetail"
+				oncomplete="PF('userDialog').show()" />
+
+			<p:column headerText="Emer" filterBy="#{userDto.emer}"
+				sortBy="#{userDto.emer}" filterMatchMode="contains">
+				<f:facet name="filter">
+					<p:selectOneMenu onchange="PF('usersTable').filter()"
+						style="width:100px;">
+						<f:selectItem itemLabel="Select One" itemValue="#{null}"
+							noSelectionOption="true" />
+						<f:selectItems value="#{userCrudBean.userDtoList}" var="userDto"
+							itemValue="#{userDto.emer}" itemLabel="#{userDto.emer}" />
+					</p:selectOneMenu>
+				</f:facet>
+				<h:outputText value="#{userDto.emer}" />
+			</p:column>
+
+			<p:column headerText="Mbiemer" filterBy="#{userDto.mbiemer}"
+				sortBy="#{userDto.mbiemer}" filterMatchMode="startsWith">
+				<h:outputText value="#{userDto.mbiemer}" />
+			</p:column>
+
+			<p:column headerText="Username" filterBy="#{userDto.username}"
+				sortBy="#{userDto.username}" filterMatchMode="exact">
+
+				<h:outputText value="#{userDto.username}" />
+			</p:column>
+			<p:column headerText="Fshi">
+
+				<p:commandButton value="Fshi" style="color:red"
+					action="#{userCrudBean.deleteUser(userDto.id)}"
+					update=":employeesForm:tableStateDT :form1:growl"
+					oncomplete="PF('usersTable').filter()">
+
+					<p:confirm header="konfirmim" message="Jeni i sigurte ?"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+
+					<p:commandButton value="Po" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Jo" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+
+				</p:confirmDialog>
+
+			</p:column>
+
+
+			<p:column headerText="Edit inside the page">
+
+				<p:commandButton id="edit" value="Edit"
+					update=":editForm:dlg2" oncomplete="PF('dlg2').show();"
+					type="submit" >
+					<f:setPropertyActionListener target="#{userCrudBean.userDto}" value="#{userDto}" />
+					</p:commandButton>
+			</p:column>
+
+			<p:column headerText="Edit in another page">
+
+				<p:button id="edit1" value="Edit" outcome="editUser">
+					<f:param name="employeeId" value="#{userDto.id}" />
+
+				</p:button>
+			</p:column>
+
+		</p:dataTable>
+
+		<p:dialog header="User Info" widgetVar="userDialog" modal="true"
+			showEffect="fade" hideEffect="fade" resizable="false">
+			<p:outputPanel id="userDetail" style="text-align:center;">
+				<p:panelGrid columns="2"
+					rendered="#{not empty userCrudBean.selectedUser}"
+					columnClasses="label,value">
+
+					<h:outputText value="Emer:" />
+					<h:outputText value="#{userCrudBean.selectedUser.emer}" />
+
+					<h:outputText value="Mbiemer" />
+					<h:outputText value="#{userCrudBean.selectedUser.mbiemer}" />
+
+					<h:outputText value="Username" />
+					<h:outputText value="#{userCrudBean.selectedUser.username}" />
+
+				</p:panelGrid>
+			</p:outputPanel>
+		</p:dialog>
+	</h:form>
+	<h:form id="editForm">
+		<p:dialog header="Edit employee" widgetVar="dlg2" minHeight="40"
+			id="dlge">
+			<p:outputPanel id="dlg2">
+				<h:inputHidden class="modalId" id="userId"
+					value="#{userCrudBean.userDto.id}" />
+		Emer:
+			<p:inputText value="#{userCrudBean.userDto.emer}" label="emer"
+					required="true" id="emer">
+					<f:validateRegex pattern="[a-zA-Z]+" />
+				</p:inputText>
+
+				<p:message for="emer" />
+		Mbiemer:
+		<p:inputText value="#{userCrudBean.userDto.mbiemer}" label="mbiemer"
+					required="true" id="mbiemer">
+					<f:validateRegex pattern="[a-zA-Z]+" />
+				</p:inputText>
+				<p:message for="mbiemer" />
+				Username:
+			<p:inputText value="#{userCrudBean.userDto.username}"
+				label="username" required="true" id="username"></p:inputText>
+			<p:message for="username" />
+
+			</p:outputPanel>
+			<p:commandButton type="submit"
+				update=":employeesForm:tableStateDT :form1:growl"
+				value="Edit employee" action="#{userCrudBean.editUser()}"
+				oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg2').hide()"></p:commandButton>
+
+		</p:dialog>
+	</h:form>
+
+</h:body>
+</html>
