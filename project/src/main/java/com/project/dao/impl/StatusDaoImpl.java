@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
@@ -16,6 +18,7 @@ import com.project.entity.Status;
 @Scope("singleton")
 @Component
 public class StatusDaoImpl implements StatusDao{
+	private static final Logger logger = LogManager.getLogger(StatusDaoImpl.class.getName());
 
 	@PersistenceContext
 	EntityManager entityManager;
@@ -23,14 +26,19 @@ public class StatusDaoImpl implements StatusDao{
 	@Override
 	public ArrayList<Status> getAllStatus() {
 		try {
+			logger.debug("finding all status");
 			ArrayList<Status> status = (ArrayList<Status>) entityManager
 					.createQuery("select status from Status status where active=0",Status.class)
 					.getResultList();
-			
-			return status;
+			if(status.isEmpty()) {
+				logger.debug("no status found");
+				return null;
+			}else {
+				logger.debug("list of status retrieved:"+status);
+			return status;}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error finding status:"+e.getMessage());
 			return null;
 		}
 	}

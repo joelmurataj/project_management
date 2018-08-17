@@ -10,20 +10,16 @@ import javax.faces.view.ViewScoped;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 
 import com.project.dto.UserDto;
-import com.project.entity.User;
 import com.project.service.UserService;
 import com.project.utility.Message;
 
 @ManagedBean(name = "userCrudBean")
 @ViewScoped
-public class UserCrudBean {
+public class UserManagementBean {
 
 	private UserDto userDto;
 	private ArrayList<UserDto> userDtoList;
-	private ArrayList<UserDto> filteredUsers;
 	private UserDto selectedUser;
-	private String name;
-	private User userEditable;
 	private int id;
 
 	@ManagedProperty(value = "#{userService}")
@@ -47,30 +43,29 @@ public class UserCrudBean {
 		}
 	}
 
-	public void addUser() {
+	public String addUser() {
 		UserDto existUser = userService.findByUsername(userDto.getUsername());
 		if (userDto.getConfirmPassword().equals(userDto.getPassword())) {
-			if (userService.existUser(userDto.getUsername()) && existUser == null) {
+			if (userService.existUsername(userDto.getUsername()) && existUser == null) {
 				userDto.setManagedBy(userBean.getUserDto().getId());
 				userDto.setRoliId(2);
 				BasicPasswordEncryptor encryptor = new BasicPasswordEncryptor();
 				userDto.setPassword(encryptor.encryptPassword(userDto.getPassword()));
 				if (userService.add(userDto)) {
-					System.out.println("u shtua");
 					refresh();
 					userDto = new UserDto();
 					Message.addMessage(Message.bundle.getString("EMPLOYEE_ADDED"), "info");
 				} else {
 					System.out.println("nuk u shtua");
-					Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTADDED"), "info");
+					Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTADDED"), "warn");
 				}
 			} else if (existUser != null) {
 				userDeleted(existUser);
 			} else {
-				System.out.println("ky user ekziston");
-				Message.addMessage(Message.bundle.getString("EMPLOYEE_EXIST"), "info");
+				Message.addMessage(Message.bundle.getString("EMPLOYEE_EXIST"), "warn");
 			}
 		}
+		return "";
 	}
 
 	public String deleteUser(int userId) {
@@ -79,14 +74,12 @@ public class UserCrudBean {
 			refresh();
 			Message.addMessage(Message.bundle.getString("EMPLOYEE_DELETE"), "info");
 		} else {
-			Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTDELETE"), "error");
+			Message.addMessage(Message.bundle.getString("TASK_EXIST"), "warn");
 		}
 		return null;
 	}
 
 	public String editUser() {
-		UserDto existUser = new UserDto();
-		existUser = userService.findByUsername(userDto.getUsername());
 		UserDto user = new UserDto();
 		if (userDto.getId() != 0) {
 			user = userService.findById(userDto.getId());
@@ -95,35 +88,40 @@ public class UserCrudBean {
 			user = userService.findById(id);
 		}
 		if (user != null) {
+			System.out.println(selectedUser);
+			System.out.println(user);
+			System.out.println(userDto);
 			if (user.getRoliId() == 2) {
-				user.setEmer(userDto.getEmer());
-				user.setMbiemer(userDto.getMbiemer());
-				user.setManagedBy(userBean.getUserDto().getId());
-				if ((user.getUsername().equals(userDto.getUsername()) && !userService.existUser(userDto.getUsername()))
-						|| userService.existUser(userDto.getUsername()) && existUser == null) {
-					user.setUsername(userDto.getUsername());
+				if (!userDto.equals(user)) {
+					user.setEmer(userDto.getEmer());
+					user.setMbiemer(userDto.getMbiemer());
 					if (userService.update(user)) {
 						refresh();
 						System.out.println("u editua");
-						Message.addMessage(Message.bundle.getString("EMPLOYEE_EDIT"), "info");
+						Message.addFlushMessage(Message.bundle.getString("EMPLOYEE_EDIT"), "info");
+						return "userManagement?faces-redirect=true";
+
 					} else {
-						Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTEDITED"), "info");
+						Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTEDITED"), "warn");
 					}
+
 				} else {
-					System.out.println("ky username ekziston");
-					Message.addMessage(Message.bundle.getString("EMPLOYEE_EXIST"), "error");
+					System.out.println("jan te njejta");
+					Message.addFlushMessage(Message.bundle.getString("NO_CHANGES"), "warn");
+					return "userManagement?faces-redirect=true";
 				}
 			} else {
 				System.out.println("nuk mund ta editosh ket user");
-				Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTEDITED1"), "info");
+				Message.addFlushMessage(Message.bundle.getString("EMPLOYEE_NOTEDITED1"), "warn");
+				return "userManagement?faces-redirect=true";
 			}
+
 		} else {
 			System.out.println("ky user nuk ekziston");
-			Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTEXIST"), "info");
+			Message.addFlushMessage(Message.bundle.getString("EMPLOYEE_NOTEXIST"), "warn");
+			return "userManagement?faces-redirect=true";
 		}
-
-		return null;
-
+		return "";
 	}
 
 	public void userDeleted(UserDto existUser) {
@@ -138,7 +136,7 @@ public class UserCrudBean {
 			Message.addMessage(Message.bundle.getString("EMPLOYEE_ADDED"), "info");
 
 		} else
-			Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTADDED"), "info");
+			Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTADDED"), "warn");
 	}
 
 	public void changePassword() {
@@ -150,11 +148,11 @@ public class UserCrudBean {
 				Message.addMessage(Message.bundle.getString("EMPLOYEE_EDIT"), "info");
 
 			} else
-				Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTEDITED"), "info");
+				Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTEDITED"), "warn");
 
 		} else
 			System.out.println("duhet qe confirmpassword te jete njesoj me password");
-		Message.addMessage(Message.bundle.getString("PASSWORD_NOTEQUAL"), "info");
+		Message.addMessage(Message.bundle.getString("PASSWORD_NOTEQUAL"), "warn");
 
 	}
 	// GETTERS AND SETTERS
@@ -191,28 +189,12 @@ public class UserCrudBean {
 		this.userBean = userBean;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public UserDto getSelectedUser() {
 		return selectedUser;
 	}
 
 	public void setSelectedUser(UserDto selectedUser) {
 		this.selectedUser = selectedUser;
-	}
-
-	public ArrayList<UserDto> getFilteredUsers() {
-		return filteredUsers;
-	}
-
-	public void setFilteredUsers(ArrayList<UserDto> filteredUsers) {
-		this.filteredUsers = filteredUsers;
 	}
 
 	public void setId(Integer id) {
@@ -225,14 +207,6 @@ public class UserCrudBean {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public User getUserEditable() {
-		return userEditable;
-	}
-
-	public void setUserEditable(User userEditable) {
-		this.userEditable = userEditable;
 	}
 
 }

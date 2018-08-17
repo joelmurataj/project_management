@@ -59,6 +59,38 @@ public class ProjectDto implements Serializable{
 	public void setStatusName(String statusName) {
 		this.statusName = statusName;
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + daysOfWork;
+		result = prime * result + ((start == null) ? 0 : start.hashCode());
+		result = prime * result + ((tema == null) ? 0 : tema.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProjectDto other = (ProjectDto) obj;
+		if (daysOfWork != other.daysOfWork)
+			return false;
+		if (start == null) {
+			if (other.start != null)
+				return false;
+		} else if (!start.equals(other.start))
+			return false;
+		if (tema == null) {
+			if (other.tema != null)
+				return false;
+		} else if (!tema.equals(other.tema))
+			return false;
+		return true;
+	}
 	
 	
 }

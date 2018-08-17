@@ -42,19 +42,23 @@
 		id="sidebarToggle" href="#">
 		<i class="fas fa-bars"></i>
 	</button>
+	<!-- Navbar Search --> <h:form
+		class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+		
+	</h:form>
 
 	<!-- Navbar -->
-	<ul class="navbar-nav ml-auto ml-md-0" >
+	<ul class="navbar-nav ml-auto ml-md-0">
 
-		<li class="nav-item dropdown no-arrow" ><a
+		<li class="nav-item dropdown no-arrow"><a
 			class="nav-link dropdown-toggle" href="#" id="userDropdown"
 			role="button" data-toggle="dropdown" aria-haspopup="true"
-			aria-expanded="false" > <i class="fas fa-user-circle fa-fw"></i>
+			aria-expanded="false"> <i class="fas fa-user-circle fa-fw"></i>
 		</a>
 			<div class="dropdown-menu dropdown-menu-right"
-				aria-labelledby="userDropdown" >
+				aria-labelledby="userDropdown">
 				<a class="dropdown-item" href="#" data-toggle="modal"
-					data-target="#logoutModal" >Logout</a>
+					data-target="#logoutModal">Logout</a>
 			</div></li>
 	</ul>
 
@@ -93,24 +97,23 @@
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15" selectionMode="single"
 							selection="#{userCrudBean.selectedUser}" rowKey="#{userDto.id}"
-							emptyMessage="No user found with given criteria"
-							filteredValue="#{userCrudBean.filteredUsers}">
+							emptyMessage="No user found with given criteria">
 
 							<p:ajax event="rowSelect" update=":employeesForm:userDetail"
 								oncomplete="PF('userDialog').show()" />
 							<f:facet name="header">
-								<p:outputPanel >
+								<p:outputPanel style="text-align:right">
 									<p:commandButton value="Add user" type="button"
-								onclick="PF('dlg1').show();"/>
+										onclick="PF('dlg1').show();" />
 								</p:outputPanel>
 							</f:facet>
 
-							<p:column headerText="Emer">
+							<p:column headerText="FirstName">
 
 								<h:outputText value="#{userDto.emer}" />
 							</p:column>
 
-							<p:column headerText="Mbiemer">
+							<p:column headerText="LastName">
 								<h:outputText value="#{userDto.mbiemer}" />
 							</p:column>
 
@@ -118,44 +121,35 @@
 
 								<h:outputText value="#{userDto.username}" />
 							</p:column>
-							<p:column>
+							<p:column style="width:50px">
 
-								<p:commandButton value="Delete" style="color:red"
+								<p:commandLink style="color:red"
 									action="#{userCrudBean.deleteUser(userDto.id)}"
 									update=":employeesForm:tableStateDT :form1:growl"
 									oncomplete="PF('usersTable').filter()">
+									<i class="fas fa-trash-alt"></i>
 
-									<p:confirm header="konfirmim" message="Jeni i sigurte ?"
+									<p:confirm header="konfirmim" message="Are you sure?"
 										icon="ui-icon-alert" />
-								</p:commandButton>
+								</p:commandLink>
 								<p:confirmDialog global="true" showEffect="fade"
 									hideEffect="fade">
 
-									<p:commandButton value="Po" type="button"
+									<p:commandButton value="Yes" type="button"
 										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-									<p:commandButton value="Jo" type="button"
+									<p:commandButton value="No" type="button"
 										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
 
 								</p:confirmDialog>
 
-							</p:column>
 
-
-							<p:column headerText="Edit inside the page">
-
-								<p:commandButton id="edit" value="Edit" update=":editForm:dlg2"
+								<p:commandLink id="edit" update=":editForm:dlg2"
 									oncomplete="PF('dlg2').show();" type="submit">
+									<i class="fas fa-pencil-alt"></i>
+
 									<f:setPropertyActionListener target="#{userCrudBean.userDto}"
 										value="#{userDto}" />
-								</p:commandButton>
-							</p:column>
-
-							<p:column headerText="Edit in another page">
-
-								<p:button id="edit1" value="Edit" outcome="UserEdit">
-									<f:param name="employeeId" value="#{userDto.id}" />
-
-								</p:button>
+								</p:commandLink>
 							</p:column>
 
 						</p:dataTable>
@@ -168,49 +162,64 @@
 				<p:outputPanel id="userDetail" style="text-align:center;">
 					<p:panelGrid columns="2"
 						rendered="#{not empty userCrudBean.selectedUser}"
-						columnClasses="label,value">
+						columnClasses="label,value" styleClass="ui-noborder">
 
-						<h:outputText value="Emer:" />
+						<h:outputText value="FirstName:" />
 						<h:outputText value="#{userCrudBean.selectedUser.emer}" />
 
-						<h:outputText value="Mbiemer" />
+						<h:outputText value="LastName" />
 						<h:outputText value="#{userCrudBean.selectedUser.mbiemer}" />
 
 						<h:outputText value="Username" />
 						<h:outputText value="#{userCrudBean.selectedUser.username}" />
+						<h:panelGroup layout="block" rendered="#{exampleBean.hidden}"
+							id="panel1">
+							<div></div>
 
+						</h:panelGroup>
+						<p:button id="edit1" value="Edit employee" outcome="UserEdit">
+							<f:param name="employeeId"
+								value="#{userCrudBean.selectedUser.id}" />
+
+						</p:button>
 					</p:panelGrid>
+
 				</p:outputPanel>
 			</p:dialog>
 		</h:form>
 	</div>
 	<h:form id="editForm">
 		<p:dialog header="Edit employee" widgetVar="dlg2" minHeight="40"
-			id="dlge">
+			id="dlge" modal="true">
 			<p:outputPanel id="dlg2">
+				<h:messages style="color:red" id="message" infoStyle="display:none"
+					warnStyle="display:none" />
+
 				<h:inputHidden class="modalId" id="userId"
 					value="#{userCrudBean.userDto.id}" />
-		Emer:
-			<p:inputText value="#{userCrudBean.userDto.emer}" label="emer" maxlength="45"
-					required="true" id="emer" requiredMessage="Ju lutem plotesoni emrin" validatorMessage="Ju lutem perdorni vetem shkronja">
-					<f:validateRegex pattern="[a-zA-Z]+" />
-				</p:inputText>
+				<p:panelGrid columns="2" styleClass="ui-noborder">
 
-				<p:message for="emer" />
-		Mbiemer:
-		<p:inputText value="#{userCrudBean.userDto.mbiemer}" label="mbiemer" maxlength="45"
-					required="true" id="mbiemer" requiredMessage="Ju lutem plotesoni mbiemrin" validatorMessage="Ju lutem perdorni vetem shkronja">
-					<f:validateRegex pattern="[a-zA-Z]+" />
-				</p:inputText>
-				<p:message for="mbiemer" />
-				Username:
-			<p:inputText value="#{userCrudBean.userDto.username}" maxlength="45"
-					label="username" required="true" id="username" requiredMessage="Ju lutem plotesoni usernamin"></p:inputText>
-				<p:message for="username" />
+					<h:outputText value="FirstName:" />
+					<p:inputText value="#{userCrudBean.userDto.emer}" label="emer"
+						maxlength="45" required="true" id="emer"
+						requiredMessage="Ju lutem plotesoni emrin"
+						validatorMessage="Ju lutem perdorni vetem shkronja">
+						<f:validateRegex pattern="[a-zA-Z]+" />
+					</p:inputText>
+
+					<h:outputText value="LastName:" />
+					<p:inputText value="#{userCrudBean.userDto.mbiemer}"
+						label="mbiemer" maxlength="45" required="true" id="mbiemer"
+						requiredMessage="Ju lutem plotesoni mbiemrin"
+						validatorMessage="Ju lutem perdorni vetem shkronja">
+						<f:validateRegex pattern="[a-zA-Z]+" />
+					</p:inputText>
+
+				</p:panelGrid>
 
 			</p:outputPanel>
 			<p:commandButton type="submit"
-				update=":employeesForm:tableStateDT :form1:growl"
+				update=":employeesForm:tableStateDT :form1:growl message"
 				value="Edit employee" action="#{userCrudBean.editUser()}"
 				oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg2').hide()"></p:commandButton>
 
@@ -218,45 +227,53 @@
 	</h:form>
 	<h:form id="form1">
 
-						<p:growl id="growl" sticky="true" />
+		<p:growl id="growl" life="2500" severity="info warn" />
 
-						<h:panelGrid columns="1" cellpadding="5">
+		<p:dialog header="Add employee" widgetVar="dlg1" minHeight="40">
+			<h:messages style="color:red" id="message" errorStyle="true"
+				infoStyle="display:none" warnStyle="display:none" />
+			<p:panelGrid columns="2" styleClass="ui-noborder">
 
-						</h:panelGrid>
+				<h:outputText value="Name:" />
+				<p:inputText value="#{userCrudBean.userDto.emer}" label="emer"
+					maxlength="45" required="true" id="emer"
+					validatorMessage="Ju lutem perdorni vetem shkronja"
+					requiredMessage="Ju lutem plotesoni emrin">
+					<f:validateRegex pattern="[a-zA-Z]+" />
+				</p:inputText>
 
-						<p:dialog header="Add employee" widgetVar="dlg1" minHeight="40">
-		Emer:
-			<p:inputText value="#{userCrudBean.userDto.emer}" label="emer" maxlength="45"
-								required="true" id="emer" validatorMessage="Ju lutem perdorni vetem shkronja" requiredMessage="Ju lutem plotesoni emrin">
-								<f:validateRegex pattern="[a-zA-Z]+" />
-							</p:inputText>
+				<h:outputText value="LastName:" />
+				<p:inputText value="#{userCrudBean.userDto.mbiemer}" label="mbiemer"
+					maxlength="45" required="true" id="mbiemer"
+					requiredMessage="Ju lutem plotesoni mbiemrin"
+					validatorMessage="Ju lutem perdorni vetem shkronja">
+					<f:validateRegex pattern="[a-zA-Z]+" />
+				</p:inputText>
 
-							<p:message for="emer" />
-		Mbiemer:
-		<p:inputText value="#{userCrudBean.userDto.mbiemer}" label="mbiemer" maxlength="45"
-								required="true" id="mbiemer" requiredMessage="Ju lutem plotesoni mbiemrin" validatorMessage="Ju lutem perdorni vetem shkronja">
-								<f:validateRegex pattern="[a-zA-Z]+" />
-							</p:inputText>
-							<p:message for="mbiemer" />
-			Username:
-			<p:inputText value="#{userCrudBean.userDto.username}" maxlength="45"
-								label="username" required="true" id="username" requiredMessage="Ju lutem plotesoni usernamin"></p:inputText>
-							<p:message for="username" />
-			Password:
-			<p:password value="#{userCrudBean.userDto.password}" label="Password" maxlength="45"
-								required="true" id="Password" feedback="true" inline="true" requiredMessage="Ju lutem plotesoni passwordin"/>
-							<p:message for="Password" />
-			ConfirmPassword:
-			<p:password value="#{userCrudBean.userDto.confirmPassword}" maxlength="45"
-								label="ConfirmPassword" required="true" id="ConfirmPassword"
-								feedback="true" inline="true" requiredMessage="Ju lutem plotesoni confirmPasswordin"/>
-							<p:message for="ConfirmPassword" />
-							<p:commandButton type="submit"
-								update=":employeesForm:tableStateDT growl" value="Add employee"
-								action="#{userCrudBean.addUser()}"
-								oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg1').hide()"></p:commandButton>
-						</p:dialog>
-					</h:form>
+				<h:outputText value="Username:" />
+				<p:inputText value="#{userCrudBean.userDto.username}" maxlength="45"
+					label="username" required="true" id="username"
+					requiredMessage="Ju lutem plotesoni usernamin"></p:inputText>
+
+				<h:outputText value="Password:" />
+				<p:password value="#{userCrudBean.userDto.password}"
+					label="Password" maxlength="45" required="true" id="Password"
+					feedback="true" inline="true"
+					requiredMessage="Ju lutem plotesoni passwordin" />
+
+				<h:outputText value="ConfirmPassword:" />
+				<p:password value="#{userCrudBean.userDto.confirmPassword}"
+					maxlength="45" label="ConfirmPassword" required="true"
+					id="ConfirmPassword" feedback="true" inline="true"
+					requiredMessage="Ju lutem plotesoni confirmPasswordin" />
+
+			</p:panelGrid>
+			<p:commandButton type="submit"
+				update=":employeesForm:tableStateDT growl message"
+				value="Add employee" action="#{userCrudBean.addUser()}"
+				oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg1').hide()"></p:commandButton>
+		</p:dialog>
+	</h:form>
 
 	<!-- /C O N T E N T -->
 
@@ -294,14 +311,11 @@
 	<!-- Page level plugin JavaScript-->
 	<script src="../resources/vendor/chart.js/Chart.min.js"></script>
 	<script src="../resources/vendor/datatables/jquery.dataTables.js"></script>
-	<script>
-		src = "../resources/vendor/datatables/dataTables.bootstrap4.js">
+	<script src="../resources/vendor/datatables/dataTables.bootstrap4.js">
+		
 	</script>
 
 	<!-- Custom scripts for all pages-->
 	<script src="../resources/js/sb-admin.min.js"></script>
-	<!-- Demo scripts for this page-->
-	<script src="../resources/js/demo/datatables-demo.js"></script>
-	<script src="../resources/js/demo/chart-area-demo.js"></script>
 </h:body>
 </html>

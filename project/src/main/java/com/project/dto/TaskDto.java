@@ -79,5 +79,47 @@ public class TaskDto implements Serializable{
 	public void setStatusName(String statusName) {
 		this.statusName = statusName;
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((daysOfWork == null) ? 0 : daysOfWork.hashCode());
+		result = prime * result + employeeId;
+		result = prime * result + projectId;
+		result = prime * result + ((start == null) ? 0 : start.hashCode());
+		result = prime * result + ((tema == null) ? 0 : tema.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TaskDto other = (TaskDto) obj;
+		if (daysOfWork == null) {
+			if (other.daysOfWork != null)
+				return false;
+		} else if (!daysOfWork.equals(other.daysOfWork))
+			return false;
+		if (employeeId != other.employeeId)
+			return false;
+		if (projectId != other.projectId)
+			return false;
+		if (start == null) {
+			if (other.start != null)
+				return false;
+		} else if (!start.equals(other.start))
+			return false;
+		if (tema == null) {
+			if (other.tema != null)
+				return false;
+		} else if (!tema.equals(other.tema))
+			return false;
+		return true;
+	}
+	
 	
 }

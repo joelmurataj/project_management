@@ -73,19 +73,6 @@ public class TaskServiceImpl implements TaskService {
 			return null;
 	}
 
-	@Override
-	public ArrayList<TaskDto> getAllTaskDtoFromProject(int idProject) {
-		ArrayList<TaskDto> taskDtoList = new ArrayList<TaskDto>();
-		ArrayList<Task> taskList = taskDao.getAllTasksFromProject(idProject);
-		if (taskList != null) {
-			for (int i = 0; i < taskList.size(); i++) {
-				taskDtoList.add(TaskConverter.toTaskDto(taskList.get(i)));
-			}
-
-			return taskDtoList;
-		} else
-			return null;
-	}
 
 	@Override
 	public ArrayList<TaskDto> filter(String employeeUsername, int managerId, String projectTema) {

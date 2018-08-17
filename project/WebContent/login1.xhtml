@@ -40,7 +40,6 @@
               <div class="form-label-group">
 				<p:inputText value="#{loginBean.username}" label="username"
 					required="true" id="username" align="middle"  class="form-control"  requiredMessage="Ju lutem plotesoni username"></p:inputText>
-				<h:message for="username"/>
 	 		 <label for="inputEmail">Username</label>
              </div>
            </div>
@@ -48,13 +47,12 @@
               <div class="form-label-group">
 			    <p:password value="#{loginBean.password}" label="Password"  class="form-control"
 					required="true" id="Password" requiredMessage="Ju lutem plotesoni passwordin"/>
-					<h:message for="Password"/>
 				<label for="inputPassword">Password</label>
               </div>
             </div>
 		<p:commandLink class="btn btn-primary btn-block" 
 			type="submit" update="growl message" value="Log in"
-			action="#{loginBean.logIn()}" align="middle"/>
+			action="#{loginBean.logIn()}"/>
 	
 	</h:form>
 	

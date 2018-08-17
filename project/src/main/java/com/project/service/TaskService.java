@@ -17,5 +17,4 @@ public interface TaskService {
 	
 	public TaskDto findById(int id);
 	public ArrayList<TaskDto> getAllTasks( UserDto userDto);
-	public ArrayList<TaskDto> getAllTaskDtoFromProject(int idProject);
 }

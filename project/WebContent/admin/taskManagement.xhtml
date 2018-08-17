@@ -32,6 +32,7 @@
 	<link href="../resources/css/sb-admin.css" rel="stylesheet" />
 </h:head>
 <h:body>
+
 	<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
 	<a class="navbar-brand mr-1"
@@ -45,30 +46,7 @@
 
 	<!-- Navbar Search --> <h:form
 		class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
-		<div class="input-group">
-			<p:inputText id="globalFilter" style="width:150px"
-				placeholder="Search username" value="#{taskBean.employeeName}">
-
-			</p:inputText>
-			<p:selectOneMenu id="project" value="#{taskBean.projectTema}"
-				style="width:150px">
-
-				<f:selectItem itemLabel="Select Project" itemValue=""
-					noSelectionOption="true" />
-				<f:selectItems value="#{projectBean.projectDtoList}" var="project"
-					itemValue="#{project.tema}" itemLabel="#{project.tema}" />
-
-			</p:selectOneMenu>
-
-			<div class="input-group-append">
-
-				<p:commandLink class="btn btn-primary"
-					actionListener="#{taskBean.filterByName()}"
-					update=":employeesForm:tableStateDT">
-					<i class="fas fa-search"></i>
-				</p:commandLink>
-			</div>
-		</div>
+		
 	</h:form> <!-- Navbar -->
 	<ul class="navbar-nav ml-auto ml-md-0">
 
@@ -111,24 +89,50 @@
 		<h:form id="employeesForm">
 			<!-- DataTables Example -->
 			<div class="card mb-3">
+
 				<div class="card-header">
 					<i class="fas fa-table"></i> Tasks
 				</div>
+
 				<div class="card-body">
-					<div class="table-responsive">
+					<div >
 						<p:dataTable id="tableStateDT" var="taskDto"
 							value="#{taskBean.taskDtoList}" widgetVar="usersTable"
 							multiViewState="true" rows="10" paginator="true"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15" rowKey="#{taskDto.id}"
 							emptyMessage="No task found with given criteria"
-							selectionMode="single" selection="#{taskBean.selectedTask}">
+							selectionMode="single" selection="#{taskBean.selectedTask}" class="table table-responsive">
 
 							<p:ajax event="rowSelect" update=":employeesForm:userDetail"
 								oncomplete="PF('userDialog').show()" />
 
 							<f:facet name="header">
-								<p:outputPanel>
+							
+								<div class="row" style="margin-left:35%">
+								
+								<p:inputText id="globalFilter" style="width:150px"
+									placeholder="Search username" value="#{taskBean.employeeName}">
+
+								</p:inputText>
+								<p:selectOneMenu id="project" value="#{taskBean.projectTema}" >
+
+									<f:selectItem itemLabel="Select Project" itemValue=""
+										noSelectionOption="true" />
+									<f:selectItems value="#{projectBean.projectDtoList}"
+										var="project" itemValue="#{project.tema}"
+										itemLabel="#{project.tema}" />
+
+								</p:selectOneMenu>
+								<p:commandLink class="btn btn-primary"
+									actionListener="#{taskBean.filterByName()}"
+									update=":employeesForm:tableStateDT">
+									<i class="fas fa-search"></i>
+								</p:commandLink>
+								</div>
+
+
+								<p:outputPanel style="text-align:right">
 									<p:commandButton value="Add task" type="button"
 										onclick="PF('dlg1').show();" />
 								</p:outputPanel>
@@ -138,29 +142,16 @@
 								<h:outputText value="#{taskDto.tema}" />
 							</p:column>
 
-							<p:column headerText="Data e fillimit">
+							<p:column headerText="Start Date">
 								<h:outputText value="#{taskDto.start}" />
 							</p:column>
 
-							<p:column headerText="Ditet e punes:">
+							<p:column headerText="WorkDays:">
 
 								<h:outputText value="#{taskDto.daysOfWork}" />
 							</p:column>
 
-							<p:column headerText="Project:" filterBy="#{taskDto.projectId}">
-								<f:facet name="filter">
-									<p:selectOneMenu id="project" value="#{taskBean.projectId}"
-										style="width:150px" onchange="#{taskBean.refresh()}"
-										update="tableStateDT">
-										<p:ajax listener="#{taskBean.refresh()}" update="tableStateDT" />
-										<f:selectItem itemLabel="Select Project" itemValue=""
-											noSelectionOption="true" />
-										<f:selectItems value="#{projectBean.projectDtoList}"
-											var="project" itemValue="#{project.id}"
-											itemLabel="#{project.tema}" />
-
-									</p:selectOneMenu>
-								</f:facet>
+							<p:column headerText="Project:">
 								<h:outputText value="#{taskDto.projectName}" />
 							</p:column>
 							<p:column headerText="Employee:">
@@ -170,15 +161,15 @@
 							<p:column headerText="Status:">
 								<h:outputText id="status" value="#{taskDto.statusName}" />
 							</p:column>
-							<p:column>
+							<p:column style="width:50px">
 
-								<p:commandButton value="Delete" style="color:red"
+								<p:commandLink style="color:red"
 									action="#{taskBean.deleteTask(taskDto.id)}"
 									update=":employeesForm:tableStateDT :form1:growl">
-
+									<i class="fas fa-trash-alt"></i>
 									<p:confirm header="konfirmim" message="Are you sure ?"
 										icon="ui-icon-alert" />
-								</p:commandButton>
+								</p:commandLink>
 								<p:confirmDialog global="true" showEffect="fade"
 									hideEffect="fade">
 
@@ -189,13 +180,12 @@
 
 								</p:confirmDialog>
 
-							</p:column>
-							<p:column>
-
-								<p:commandButton id="edit" value="Edit"
+								<p:commandLink id="edit" icon="fas fa-pencil-alt"
 									action="#{taskBean.saveTaskForEdit(taskDto.id)}"
 									update=":editForm:dlg2" oncomplete="PF('dlg2').show();"
-									type="submit" />
+									type="submit">
+									<i class="fas fa-pencil-alt"></i>
+								</p:commandLink>
 							</p:column>
 
 						</p:dataTable>
@@ -207,16 +197,22 @@
 				<p:outputPanel id="userDetail" style="text-align:center;">
 					<p:panelGrid columns="2"
 						rendered="#{not empty taskBean.selectedTask}"
-						columnClasses="label,value">
+						columnClasses="label,value" styleClass="ui-noborder">
 
 						<h:outputText value="Tema:" />
 						<h:outputText value="#{taskBean.selectedTask.tema}" />
 
-						<h:outputText value="Data e fillimit:" />
+						<h:outputText value="Start Date:" />
 						<h:outputText value="#{taskBean.selectedTask.start}" />
 
-						<h:outputText value="Ditet e punes" />
+						<h:outputText value="WorkDays:" />
 						<h:outputText value="#{taskBean.selectedTask.daysOfWork}" />
+
+						<h:outputText value="Project:" />
+						<h:outputText value="#{taskBean.selectedTask.projectName}" />
+
+						<h:outputText value="Status:" />
+						<h:outputText value="#{taskBean.selectedTask.statusName}" />
 
 					</p:panelGrid>
 				</p:outputPanel>
@@ -226,14 +222,18 @@
 	<h:form id="editForm">
 		<p:dialog header="Edit task" widgetVar="dlg2" minHeight="40" id="dlge">
 			<p:outputPanel id="dlg2">
+				<h:messages style="color:red" id="message" infoStyle="display:none"
+					warnStyle="display:none" />
 				<h:inputHidden class="modalId" id="taskId"
 					value="#{taskBean.taskDto.id}" />
-				<p:panelGrid columns="2">
+				<p:panelGrid columns="2" styleClass="ui-noborder">
 
 					<h:outputText value="Tema:" />
 					<p:inputText value="#{taskBean.taskDto.tema}" label="tema"
 						required="true" id="tema" maxlength="45"
-						requiredMessage="Ju lutem plotesoni temen" />
+						requiredMessage="Ju lutem plotesoni temen">
+					</p:inputText>
+
 
 					<h:outputText value="Project:" />
 					<p:selectOneMenu id="project" value="#{taskBean.taskDto.projectId}"
@@ -249,11 +249,11 @@
 							itemLabel="#{projectDto.tema}" />
 					</p:selectOneMenu>
 
-					<h:outputText value="Data e fillimit:" />
+					<h:outputText value="Start Date:" />
 					<p:calendar id="start" value="#{taskBean.taskDto.start}"
 						mindate="#{taskBean.now}" maxdate="#{taskBean.finishDate}"
 						required="true" requiredMessage="Ju lutem plotesoni daten" />
-					<h:outputText value="Kohezgjatja e pujnes ne dite:" />
+					<h:outputText value="WorkDays:" />
 
 					<p:inputNumber id="ditet" value="#{taskBean.taskDto.daysOfWork}"
 						required="true" requiredMessage="Ju lutem plotesoni ditet"
@@ -276,70 +276,65 @@
 			</p:outputPanel>
 
 			<p:commandButton type="submit"
-				update=":employeesForm:tableStateDT :form1:growl" value="Edit task"
-				action="#{taskBean.editTask()}"
+				update=":employeesForm:tableStateDT :form1:growl message"
+				value="Edit task" action="#{taskBean.editTask()}"
 				oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg2').hide()"></p:commandButton>
 
 		</p:dialog>
 	</h:form>
 	<h:form id="form1">
-		<h:messages globalOnly="true"></h:messages>
-		<p:growl id="growl" sticky="true" />
-
-
-		<h:panelGrid columns="1" cellpadding="5">
-
-
-		</h:panelGrid>
+		<p:growl id="growl" life="2500" severity="info warn" />
 
 		<p:dialog header="Add task" widgetVar="dlg1" minHeight="40">
-		Tema:
-			<p:inputText value="#{taskBean.taskDto.tema}" label="tema"
-				required="true" id="tema" requiredMessage="Ju lutem plotesoni temen"
-				maxlength="45">
-			</p:inputText>
+			<h:messages style="color:red" id="message" infoStyle="display:none"
+				warnStyle="display:none" />
+			<p:panelGrid columns="2" styleClass="ui-noborder">
+				<h:outputText value="Tema:" />
+				<p:inputText value="#{taskBean.taskDto.tema}" label="tema"
+					required="true" id="tema"
+					requiredMessage="Ju lutem plotesoni temen" maxlength="45">
+				</p:inputText>
 
-			<p:message for="tema" />
-			Project:
-			<p:selectOneMenu id="project" value="#{taskBean.taskDto.projectId}"
-				style="width:150px" required="true"
-				requiredMessage="Ju lutem plotesoni zgjidhni projektin">
-				<p:ajax
-					listener="#{taskBean.onProjectChange(taskBean.taskDto.projectId)}"
-					update="start" />
-				<f:selectItem itemLabel="Select Project" itemValue=""
-					noSelectionOption="true" />
-				<f:selectItems value="#{projectBean.projectDtoList}"
-					var="projectDto" itemValue="#{projectDto.id}"
-					itemLabel="#{projectDto.tema}" />
-			</p:selectOneMenu>
-			<p:message for="project" />
-		Data e fillimit:
-		 <p:calendar id="start" value="#{taskBean.taskDto.start}"
-				mindate="#{taskBean.now}" maxdate="#{taskBean.finishDate}"
-				required="true" requiredMessage="Ju lutem plotesoni daten" />
-			<p:message for="start" />
-		Kohezgjatja e punes ne dite:
-			<p:inputNumber id="ditet" value="#{taskBean.taskDto.daysOfWork}"
-				required="true" decimalPlaces="0" maxValue="3000"
-				requiredMessage="Ju lutem plotesoni ditet e punes"
-				validatorMessage="Ju lutem vendosni numer me te madh se 0">
-				<f:validateLongRange minimum="1" />
-			</p:inputNumber>
-			<p:message for="ditet" />
-			
-			Employee:
-			<p:selectOneMenu id="employee" value="#{taskBean.taskDto.employeeId}"
-				style="width:150px" required="true"
-				requiredMessage="Ju lutem zgjidhni punonjesin">
-				<f:selectItem itemLabel="Select Employee" itemValue=""
-					noSelectionOption="true" />
-				<f:selectItems value="#{userCrudBean.userDtoList}" var="employeeDto"
-					itemValue="#{employeeDto.id}" itemLabel="#{employeeDto.username}" />
-			</p:selectOneMenu>
-			<p:message for="employee" />
+				<h:outputText value="Project:" />
+				<p:selectOneMenu id="project" value="#{taskBean.taskDto.projectId}"
+					style="width:150px" required="true"
+					requiredMessage="Ju lutem plotesoni zgjidhni projektin">
+					<p:ajax
+						listener="#{taskBean.onProjectChange(taskBean.taskDto.projectId)}"
+						update="start" />
+					<f:selectItem itemLabel="Select Project" itemValue=""
+						noSelectionOption="true" />
+					<f:selectItems value="#{projectBean.projectDtoList}"
+						var="projectDto" itemValue="#{projectDto.id}"
+						itemLabel="#{projectDto.tema}" />
+				</p:selectOneMenu>
+
+				<h:outputText value="Start Date:" />
+				<p:calendar id="start" value="#{taskBean.taskDto.start}"
+					mindate="#{taskBean.now}" maxdate="#{taskBean.finishDate}"
+					required="true" requiredMessage="Ju lutem plotesoni daten" />
+
+				<h:outputText value="WorkDays:" />
+				<p:inputNumber id="ditet" value="#{taskBean.taskDto.daysOfWork}"
+					required="true" decimalPlaces="0" maxValue="3000"
+					requiredMessage="Ju lutem plotesoni ditet e punes"
+					validatorMessage="Ju lutem vendosni numer me te madh se 0">
+					<f:validateLongRange minimum="1" />
+				</p:inputNumber>
+
+				<h:outputText value="Employee:" />
+				<p:selectOneMenu id="employee"
+					value="#{taskBean.taskDto.employeeId}" style="width:150px"
+					required="true" requiredMessage="Ju lutem zgjidhni punonjesin">
+					<f:selectItem itemLabel="Select Employee" itemValue=""
+						noSelectionOption="true" />
+					<f:selectItems value="#{userCrudBean.userDtoList}"
+						var="employeeDto" itemValue="#{employeeDto.id}"
+						itemLabel="#{employeeDto.username}" />
+				</p:selectOneMenu>
+			</p:panelGrid>
 			<p:commandButton type="submit"
-				update=":employeesForm:tableStateDT growl" value="Add task"
+				update=":employeesForm:tableStateDT growl message" value="Add task"
 				action="#{taskBean.addTask()}"
 				oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg1').hide()"></p:commandButton>
 		</p:dialog>
@@ -380,11 +375,10 @@
 	<!-- Page level plugin JavaScript-->
 	<script src="../resources/vendor/datatables/jquery.dataTables.js"></script>
 	<script src="../resources/vendor/datatables/dataTables.bootstrap4.js">
+		
 	</script>
 
 	<!-- Custom scripts for all pages-->
 	<script src="../resources/js/sb-admin.min.js"></script>
-	<!-- Demo scripts for this page-->
-	<script src="../resources/js/demo/datatables-demo.js"></script>
 </h:body>
 </html>

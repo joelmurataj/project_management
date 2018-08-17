@@ -16,7 +16,7 @@ import com.project.utility.Message;
 
 @ManagedBean(name = "projectBean")
 @ViewScoped
-public class ProjectBean {
+public class ProjectManagementBean {
 
 	private ProjectDto projectDto;
 	private ProjectDto selectedProject;
@@ -56,8 +56,8 @@ public class ProjectBean {
 
 			} else {
 				System.out.println("nuk u shtua");
-				
-				Message.addMessage(projectDto.getTema()+" :"+Message.bundle.getString("PROJECT_NOTADDED"), "error");
+
+				Message.addMessage(projectDto.getTema() + " :" + Message.bundle.getString("PROJECT_NOTADDED"), "warn");
 			}
 		} else if (existProject != null) {
 			existProject.setDaysOfWork(projectDto.getDaysOfWork());
@@ -71,7 +71,7 @@ public class ProjectBean {
 			}
 		} else {
 			System.out.println("ky project ekziston");
-			Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "error");
+			Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "warn");
 		}
 	}
 
@@ -81,8 +81,8 @@ public class ProjectBean {
 			refresh();
 			Message.addMessage(Message.bundle.getString("PROJECT_DELETED"), "info");
 		} else {
-			Message.addMessage(Message.bundle.getString("PROJECT_NOTDELETED"), "error");
-			
+			Message.addMessage(Message.bundle.getString("PROJECT_NOTDELETED"), "warn");
+
 		}
 	}
 
@@ -94,39 +94,51 @@ public class ProjectBean {
 		ProjectDto existProject = new ProjectDto();
 		existProject = projectService.findByTema(projectDto.getTema());
 		ProjectDto project = projectService.findById(projectDto.getId());
-		project.setDaysOfWork(projectDto.getDaysOfWork());
-		project.setStart(projectDto.getStart());
-		if ((project.getTema().equals(projectDto.getTema()) && !projectService.existProject(projectDto.getTema()))
-				|| projectService.existProject(projectDto.getTema()) && existProject == null) {
-			project.setTema(projectDto.getTema());
-			if (projectService.update(project)) {
-				refresh();
-				System.out.println("u editua");
-				Message.addMessage(project.getTema()+" :"+Message.bundle.getString("PROJECT_EDITED"), "info");
 
+		if (!project.equals(projectDto)) {
+			project.setDaysOfWork(projectDto.getDaysOfWork());
+			project.setStart(projectDto.getStart());
+			if ((project.getTema().equals(projectDto.getTema()) && !projectService.existProject(projectDto.getTema()))
+					|| projectService.existProject(projectDto.getTema()) && existProject == null) {
+				project.setTema(projectDto.getTema());
+				if (projectService.update(project)) {
+					refresh();
+					System.out.println("u editua");
+					Message.addMessage(project.getTema() + " :" + Message.bundle.getString("PROJECT_EDITED"), "info");
+
+				} else {
+					Message.addMessage(Message.bundle.getString("PROJECT_NOTEDITED"), "warn");
+
+				}
 			} else {
-				Message.addMessage(Message.bundle.getString("PROJECT_NOTEDITED"), "error");
+				System.out.println("ky project ekziston");
 
+				Message.addMessage(project.getTema() + " :" + Message.bundle.getString("TEMA_EXIST"), "warn");
 			}
 		} else {
-			System.out.println("ky project ekziston");
-			
-			Message.addMessage(project.getTema()+" :"+Message.bundle.getString("TEMA_EXIST"), "error");
+			Message.addMessage(Message.bundle.getString("NO_CHANGES"), "warn");
+
 		}
 	}
 
 	public void onRowEdit(int projectId) {
 		ProjectDto editProject = projectService.findById(projectId);
-		editProject.setStatus(projectDto.getStatus());
-		if (projectService.update(editProject)) {
-			refresh();
-			System.out.println("u editua");
-			Message.addMessage(editProject.getTema()+" :"+Message.bundle.getString("PROJECT_EDITED"), "info");
+		if (editProject.getStatus() != projectDto.getStatus()) {
+			editProject.setStatus(projectDto.getStatus());
+			if (projectService.update(editProject)) {
+				refresh();
+				System.out.println("u editua");
+				Message.addMessage(editProject.getTema() + " :" + Message.bundle.getString("PROJECT_EDITED"), "info");
+			} else {
+				Message.addMessage(Message.bundle.getString("PROJECT_NOTEDITED"), "warn");
+
+			}
 		} else {
-			Message.addMessage(Message.bundle.getString("PROJECT_NOTEDITED"), "error");
+			Message.addMessage(Message.bundle.getString("NO_CHANGES"), "warn");
 
 		}
 	}
+
 	public void onRowCancel(RowEditEvent event) {
 		Message.addMessage(Message.bundle.getString("CANCELED"), "info");
 	}

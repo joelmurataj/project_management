@@ -19,7 +19,7 @@ import com.project.utility.Message;
 
 @ManagedBean(name = "taskBean")
 @ViewScoped
-public class TaskBean {
+public class TaskManagementBean {
 
 	private TaskDto taskDto;
 	private TaskDto selectedTask;
@@ -27,7 +27,6 @@ public class TaskBean {
 	private ProjectDto projectDto;
 	private Date now;
 	private Date finishDate;
-	private int projectId;
 	private String projectTema;
 	private String employeeName;
 
@@ -53,9 +52,7 @@ public class TaskBean {
 	}
 
 	public void refresh() {
-		if (projectId != 0) {
-			this.taskDtoList = taskService.getAllTaskDtoFromProject(projectId);
-		} else
+		
 			this.taskDtoList = taskService.getAllTasks(userBean.getUserDto());
 	}
 
@@ -67,11 +64,11 @@ public class TaskBean {
 				System.out.println("u shtua");
 				refresh();
 				taskDto = new TaskDto();
-				Message.addMessage(taskDto.getTema()+" :"+Message.bundle.getString("TASK_ADDED"), "info");
+				Message.addMessage(taskDto.getTema() + " :" + Message.bundle.getString("TASK_ADDED"), "info");
 
 			} else {
 				System.out.println("nuk u shtua sepse ka date me vone se data e projektit");
-				Message.addMessage(Message.bundle.getString("TASK_NOTADDED"), "error");
+				Message.addMessage(Message.bundle.getString("TASK_NOTADDED"), "warn");
 
 			}
 		} else if (existTask != null) {
@@ -82,16 +79,16 @@ public class TaskBean {
 				System.out.println("u shtua");
 				refresh();
 				taskDto = new TaskDto();
-				Message.addMessage(existTask.getTema()+" :"+Message.bundle.getString("TASK_ADDED"), "info");
+				Message.addMessage(existTask.getTema() + " :" + Message.bundle.getString("TASK_ADDED"), "info");
 
 			} else {
 				System.out.println("nuk u shtua sepse ka date me vone se data e projektit");
-				Message.addMessage(Message.bundle.getString("TASK_NOTADDED"), "error");
+				Message.addMessage(Message.bundle.getString("TASK_NOTADDED"), "warn");
 
 			}
 		} else {
 			System.out.println("ky task ekziston");
-			Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "error");
+			Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "warn");
 
 		}
 	}
@@ -103,7 +100,7 @@ public class TaskBean {
 			Message.addMessage(Message.bundle.getString("TASK_DELETED"), "info");
 
 		} else {
-			Message.addMessage(Message.bundle.getString("TASK_NOTDELETED"), "error");
+			Message.addMessage(Message.bundle.getString("TASK_NOTDELETED"), "warn");
 
 		}
 	}
@@ -116,22 +113,28 @@ public class TaskBean {
 		TaskDto existTask = new TaskDto();
 		existTask = taskService.findByTema(taskDto.getTema());
 		TaskDto task = taskService.findById(taskDto.getId());
-		taskDto.setId(task.getId());
-		taskDto.setStatus(task.getStatus());
-		if ((task.getTema().equals(taskDto.getTema()) && !taskService.existTask(taskDto.getTema()))
-				|| taskService.existTask(taskDto.getTema()) && existTask == null) {
-			if (taskService.update(taskDto)) {
-				refresh();
-				System.out.println("u editua");
-				Message.addMessage(Message.bundle.getString("TASK_EDITED"), "info");
 
+		if (!taskDto.equals(task)) {
+			taskDto.setId(task.getId());
+			taskDto.setStatus(task.getStatus());
+			if ((task.getTema().equals(taskDto.getTema()) && !taskService.existTask(taskDto.getTema()))
+					|| taskService.existTask(taskDto.getTema()) && existTask == null) {
+				if (taskService.update(taskDto)) {
+					refresh();
+					System.out.println("u editua");
+					Message.addMessage(Message.bundle.getString("TASK_EDITED"), "info");
+
+				} else {
+					Message.addMessage(Message.bundle.getString("TASK_NOTEDITED"), "warn");
+
+				}
 			} else {
-				Message.addMessage(Message.bundle.getString("TASK_NOTEDITED"), "error");
+				System.out.println("ky task ekziston");
+				Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "warn");
 
 			}
 		} else {
-			System.out.println("ky task ekziston");
-			Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "error");
+			Message.addMessage(Message.bundle.getString("NO_CHANGES"), "info");
 
 		}
 	}
@@ -149,14 +152,19 @@ public class TaskBean {
 
 	public void onRowEdit(int taskId) {
 		TaskDto taskEdit = taskService.findById(taskId);
-		taskEdit.setStatus(taskDto.getStatus());
-		if (taskService.update(taskEdit)) {
-			refresh();
-			System.out.println("u editua");
-			Message.addMessage(Message.bundle.getString("TASK_EDITED"), "info");
+		if (taskEdit.getStatus() != taskDto.getStatus()) {
+			taskEdit.setStatus(taskDto.getStatus());
+			if (taskService.update(taskEdit)) {
+				refresh();
+				System.out.println("u editua");
+				Message.addMessage(Message.bundle.getString("TASK_EDITED"), "info");
 
+			} else {
+				Message.addMessage(Message.bundle.getString("TASK_NOTEDITED"), "warn");
+
+			}
 		} else {
-			Message.addMessage(Message.bundle.getString("TASK_NOTEDITED"), "error");
+			Message.addMessage(Message.bundle.getString("NO_CHANGES"), "warn");
 
 		}
 	}
@@ -220,14 +228,6 @@ public class TaskBean {
 
 	public void setProjectService(ProjectService projectService) {
 		this.projectService = projectService;
-	}
-
-	public int getProjectId() {
-		return projectId;
-	}
-
-	public void setProjectId(int projectId) {
-		this.projectId = projectId;
 	}
 
 	public ProjectDto getProjectDto() {

@@ -17,6 +17,7 @@ public class UserDto implements Serializable{
 	private int managedBy;
 	private String confirmPassword;
 	
+	
 	public String getConfirmPassword() {
 		return confirmPassword;
 	}
@@ -80,6 +81,38 @@ public class UserDto implements Serializable{
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((emer == null) ? 0 : emer.hashCode());
+		result = prime * result + ((mbiemer == null) ? 0 : mbiemer.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserDto other = (UserDto) obj;
+		if (emer == null) {
+			if (other.emer != null)
+				return false;
+		} else if (!emer.equals(other.emer))
+			return false;
+		if (mbiemer == null) {
+			if (other.mbiemer != null)
+				return false;
+		} else if (!mbiemer.equals(other.mbiemer))
+			return false;
+		return true;
 	}
 
 	@Override

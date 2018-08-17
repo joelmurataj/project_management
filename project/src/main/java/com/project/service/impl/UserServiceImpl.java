@@ -68,30 +68,8 @@ public class UserServiceImpl implements UserService {
 
 	}
 	@Override
-	public boolean existUser(String username) {
-		return userDao.existUser(username);
-	}
-
-	@Override
-	public UserDto getLoggedUser(String username) {
-		User user = userDao.getLoggedUser(username);
-		if (user != null) {
-			return UserConverter.toUserDto(user);
-		} else {
-			return null;
-		}
-	}
-
-
-	@Override
-	public ArrayList<UserDto> getAllUsers(int id) {
-		ArrayList<UserDto> userDtoList = new ArrayList<>();
-		ArrayList<User> userList = userDao.getAllUsers(id);
-		for (int i = 0; i < userList.size(); i++) {
-			userDtoList.add(UserConverter.toUserDto(userList.get(i)));
-		}
-
-		return userDtoList;
+	public boolean existUsername(String username) {
+		return userDao.existUsername(username);
 	}
 
 	@Override

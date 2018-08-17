@@ -1,10 +1,8 @@
 package com.project.bean;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 
 import com.project.dto.UserDto;
 import com.project.service.UserService;
@@ -90,11 +88,9 @@ public class LoginBean {
 			UserDto user = userService.exist(username, password);
 			if (user != null) {
 				if (user.getRoliId() == 1) {
-					System.out.println("you are menaxher");
 					userBean.setUserDto(user);
 					return "admin/home?faces-redirect=true";
 				} else if (user.getRoliId() == 2) {
-					System.out.println("you are employee");
 					userBean.setUserDto(user);
 					return "employee/homeEmployee?faces-redirect=true";
 				}
@@ -109,7 +105,6 @@ public class LoginBean {
 
 	public String logOut() {
 		userBean.logOut();
-		System.out.println("User Logged out!");
 		return "/login1.xhtml?faces-redirect=true";
 	}
 

@@ -42,6 +42,10 @@
 		id="sidebarToggle" href="#">
 		<i class="fas fa-bars"></i>
 	</button>
+	<!-- Navbar Search --> <h:form
+		class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+		
+	</h:form>
 
 	<!-- Navbar -->
 	<ul class="navbar-nav ml-auto ml-md-0">
@@ -105,7 +109,7 @@
 								listener="#{projectBean.onRowCancel}" update=":form1:growl" />
 
 							<f:facet name="header">
-								<p:outputPanel>
+								<p:outputPanel style="text-align:right">
 									<p:commandButton value="Add project" type="button"
 										onclick="PF('dlg1').show();" />
 								</p:outputPanel>
@@ -116,11 +120,11 @@
 								<h:outputText value="#{projectDto.tema}" />
 							</p:column>
 
-							<p:column headerText="Data e fillimit">
+							<p:column headerText="Start Date">
 								<h:outputText value="#{projectDto.start}" />
 							</p:column>
 
-							<p:column headerText="Ditet e punes:">
+							<p:column headerText="WorkDays:">
 
 								<h:outputText value="#{projectDto.daysOfWork}" />
 							</p:column>
@@ -132,42 +136,41 @@
 									<f:facet name="input">
 										<h:selectOneMenu value="#{projectBean.projectDto.status}"
 											style="width:100%">
-											<f:selectItems value="#{statusBean.statusDtoList}"
-												var="statusDto" itemLabel="#{statusDto.name}"
-												itemValue="#{statusDto.id}" />
+											<f:selectItems value="#{statusDao.getAllStatus()}"
+												var="status" itemLabel="#{status.name}"
+												itemValue="#{status.id}" />
 										</h:selectOneMenu>
 									</f:facet>
 								</p:cellEditor>
+								<p:rowEditor />
 							</p:column>
-							<p:column>
+							<p:column style="width:50px">
 
-								<p:commandButton value="Delete" style="color:red"
+								<p:commandLink style="color:red"
 									action="#{projectBean.deleteProject(projectDto.id)}"
 									update=":employeesForm:tableStateDT :form1:growl">
-
-									<p:confirm header="konfirmim" message="Jeni i sigurte ?"
+									<i class="fas fa-trash-alt"></i>
+									<p:confirm header="konfirmim" message="Are you sure?"
 										icon="ui-icon-alert" />
-								</p:commandButton>
+								</p:commandLink>
 								<p:confirmDialog global="true" showEffect="fade"
 									hideEffect="fade">
 
-									<p:commandButton value="Po" type="button"
+									<p:commandButton value="Yes" type="button"
 										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-									<p:commandButton value="Jo" type="button"
+									<p:commandButton value="No" type="button"
 										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
 
 								</p:confirmDialog>
 
-							</p:column>
-							<p:column>
-
-								<p:commandButton id="edit" value="Edit"
+								<p:commandLink id="edit"
 									action="#{projectBean.saveProjectForEdit(projectDto.id)}"
 									update=":editForm:dlge" oncomplete="PF('dlg2').show();"
-									type="submit" />
-							</p:column>
-							<p:column headerText="Edit the status">
-								<p:rowEditor />
+									type="submit">
+									<i class="fas fa-pencil-alt"></i>
+								</p:commandLink>
+
+
 							</p:column>
 						</p:dataTable>
 					</div>
@@ -180,28 +183,31 @@
 		<p:dialog header="Edit project" widgetVar="dlg2" minHeight="40"
 			id="dlge">
 			<p:outputPanel id="dlg2">
-			<h:messages style="color:red" id="message" />
+				<h:messages style="color:red" id="message" infoStyle="display:none"
+					warnStyle="display:none" />
 				<h:inputHidden class="modalId" id="projectId"
 					value="#{projectBean.projectDto.id}" />
-		Tema:
-			<p:inputText value="#{projectBean.projectDto.tema}" label="tema"
-					required="true" id="tema" maxlength="45"
-					requiredMessage="Ju lutem plotesoni temen">
-				</p:inputText>
+				<p:panelGrid columns="2" styleClass="ui-noborder">
 
-				<p:message for="tema" />
-						Data e fillimit:
-		 				<p:calendar id="start" value="#{projectBean.projectDto.start}"
-					mindate="#{projectBean.projectDto.start}" required="true"
-					requiredMessage="Ju lutem plotesoni daten" />
-				<p:message for="start" />
-						Kohezgjatja e pujnes ne dite:
-			<p:inputNumber id="ditet"
-					value="#{projectBean.projectDto.daysOfWork}" decimalPlaces="0"
-					requiredMessage="Ju lutem plotesoni ditet e punes" maxValue="3000"
-					validatorMessage="Ju lutem vendosni numer me te madh se 0" />
-				<p:message for="ditet" />
+					<h:outputText value="Tema:" />
+					<p:inputText value="#{projectBean.projectDto.tema}" label="tema"
+						required="true" id="tema" maxlength="45"
+						requiredMessage="Ju lutem plotesoni temen">
+					</p:inputText>
+
+					<h:outputText value="Start Date:" />
+					<p:calendar id="start" value="#{projectBean.projectDto.start}"
+						mindate="#{projectBean.projectDto.start}" required="true"
+						requiredMessage="Ju lutem plotesoni daten" />
+
+					<h:outputText value="WorkDays:" />
+					<p:inputNumber id="ditet"
+						value="#{projectBean.projectDto.daysOfWork}" decimalPlaces="0"
+						requiredMessage="Ju lutem plotesoni ditet e punes" maxValue="3000"
+						validatorMessage="Ju lutem vendosni numer me te madh se 0" />
+				</p:panelGrid>
 			</p:outputPanel>
+
 			<p:commandButton type="submit"
 				update=":employeesForm:tableStateDT :form1:growl message"
 				value="Edit project" action="#{projectBean.editProject()}"
@@ -211,40 +217,38 @@
 	</h:form>
 	<h:form id="form1">
 
-		<p:growl id="growl" life="1500" severity="info" />
-
-		<h:panelGrid columns="1" cellpadding="5">
-
-
-		</h:panelGrid>
+		<p:growl id="growl" life="2500" severity="info warn" />
 
 		<p:dialog header="Add project" id="dlg1" widgetVar="dlg1"
 			minHeight="40">
-			<h:messages style="color:red" id="message" />
-		Tema:
-			<p:inputText value="#{projectBean.projectDto.tema}" label="tema"
-				required="true" id="tema" requiredMessage="Ju lutem plotesoni temen"
-				maxlength="45">
-				<p:message for="tema" />
-			</p:inputText>
+			<h:messages style="color:red" id="message" infoStyle="display:none"
+				warnStyle="display:none" />
+			<p:panelGrid columns="2" styleClass="ui-noborder">
 
-			<p:message for="tema" />
-		Data e fillimit:
-		 <p:calendar id="start" value="#{projectBean.projectDto.start}"
-				mindate="#{projectBean.now}" required="true"
-				requiredMessage="Ju lutem plotesoni daten" />
-			<p:message for="start" />
-		Kohezgjatja e punes ne dite:
-			<p:inputNumber id="ditet" maxValue="3000"
-				value="#{projectBean.projectDto.daysOfWork}" decimalPlaces="0"
-				required="true" requiredMessage="Ju lutem plotesoni ditet e punes"
-				validatorMessage="Ju lutem jepni nr me te madh se 0">
-				<f:validateLongRange minimum="1" />
-			</p:inputNumber>
-			<p:message for="ditet" />
+				<h:outputText value="Tema:" />
+				<p:inputText value="#{projectBean.projectDto.tema}" label="tema"
+					required="true" id="tema"
+					requiredMessage="Ju lutem plotesoni temen" maxlength="45">
+				</p:inputText>
+
+				<h:outputText value="Date Start:" />
+				<p:calendar id="start" value="#{projectBean.projectDto.start}"
+					mindate="#{projectBean.now}" required="true"
+					requiredMessage="Ju lutem plotesoni daten" />
+
+				<h:outputText value="WorkDays:" />
+				<p:inputNumber id="ditet"
+					value="#{projectBean.projectDto.daysOfWork}" decimalPlaces="0"
+					maxValue="3000" required="true"
+					requiredMessage="Ju lutem plotesoni ditet e punes"
+					validatorMessage="Ju lutem jepni nr me te madh se 0">
+					<f:validateLongRange minimum="1" />
+				</p:inputNumber>
+
+			</p:panelGrid>
 			<p:commandButton type="submit"
-				update=":employeesForm:tableStateDT growl message" value="Add project"
-				action="#{projectBean.addProject()}"
+				update=":employeesForm:tableStateDT growl message"
+				value="Add project" action="#{projectBean.addProject()}"
 				oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg1').hide()"></p:commandButton>
 		</p:dialog>
 	</h:form>
@@ -284,14 +288,11 @@
 	<!-- Page level plugin JavaScript-->
 	<script src="../resources/vendor/chart.js/Chart.min.js"></script>
 	<script src="../resources/vendor/datatables/jquery.dataTables.js"></script>
-	<script>
-		src = "../resources/vendor/datatables/dataTables.bootstrap4.js">
+	<script src="../resources/vendor/datatables/dataTables.bootstrap4.js">
+		
 	</script>
 
 	<!-- Custom scripts for all pages-->
 	<script src="../resources/js/sb-admin.min.js"></script>
-	<!-- Demo scripts for this page-->
-	<script src="../resources/js/demo/datatables-demo.js"></script>
-	<script src="../resources/js/demo/chart-area-demo.js"></script>
 </h:body>
 </html>

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
@@ -18,25 +20,25 @@ import com.project.entity.Task;
 @Component
 public class TaskDaoImpl implements TaskDao {
 
+	private static final Logger logger = LogManager.getLogger(TaskDaoImpl.class.getName());
+
 	@PersistenceContext
 	EntityManager entityManager;
 
 	@Override
 	public boolean add(Task task) {
 		try {
-			ArrayList<Project> project = (ArrayList<Project>) entityManager.createQuery(
-					"select project from Project project where project.id=:projectId and ADDDATE(:start,:daysOfWork)>ADDDATE(project.start,project.daysOfWork) and project.active=0",
-					Project.class).setParameter("projectId", task.getProject().getId())
-					.setParameter("start", task.getStart()).setParameter("daysOfWork", task.getDaysOfWork())
-					.getResultList();
-			if (project.isEmpty()) {
+			logger.debug("manager{} adding task{}",task.getEmployee().getManagedBy().getUsername(),task.getTema());
+
+			if (!conflicts(task)) {
 				entityManager.persist(task);
-				System.out.println("Task was added!");
+				logger.debug("task was added");
 				return true;
 			}
-			System.out.println("tasku nuk duhet te mbaroje para dates se mbarimit te projectit");
+			logger.debug("task was not added because there are conflicts");
 			return false;
 		} catch (Exception e) {
+			logger.error("error adding task:"+e.getMessage());
 			return false;
 		}
 	}
@@ -44,13 +46,15 @@ public class TaskDaoImpl implements TaskDao {
 	@Override
 	public boolean remove(int taskId) {
 		try {
+			Task task=findById(taskId);
+			logger.debug("manager{} deleting task{}",task.getEmployee().getManagedBy().getUsername(),task.getTema());
 			entityManager.createQuery("update Task task set task.active=1 where task.id=:id").setParameter("id", taskId)
 					.executeUpdate();
-			System.out.println("Task was removed!");
+			logger.debug("task{} was deleted",task.getTema());
 			return true;
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error deleting task"+e.getMessage());
 			return false;
 		}
 	}
@@ -58,20 +62,15 @@ public class TaskDaoImpl implements TaskDao {
 	@Override
 	public boolean update(Task task) {
 		try {
-			// log.info("Editing the user!");
-			ArrayList<Project> project = (ArrayList<Project>) entityManager.createQuery(
-					"select project from Project project where project.id=:projectId and (ADDDATE(:start,:daysOfWork)>ADDDATE(project.start,project.daysOfWork) or :start<project.start)",
-					Project.class).setParameter("projectId", task.getProject().getId())
-					.setParameter("start", task.getStart()).setParameter("daysOfWork", task.getDaysOfWork())
-					.getResultList();
-			if (project.isEmpty()) {
+			logger.debug("manager{} editing task{}",task.getEmployee().getManagedBy().getUsername(),task.getTema());
+			if (!conflicts(task)) {
 				entityManager.merge(task);
-				// log.info("User edited!");
+				logger.debug("task{} was edited",task.getTema());
 				return true;
 			}
 			return false;
 		} catch (Exception e) {
-			// log.error("User failed to add! Message " + e.getMessage());
+			logger.error("error editing task:"+e.getMessage());
 			return false;
 
 		}
@@ -80,18 +79,20 @@ public class TaskDaoImpl implements TaskDao {
 	@Override
 	public boolean existTask(String tema) {
 		try {
-
+			logger.debug("finding task not deleted by tema");
 			ArrayList<Task> task = (ArrayList<Task>) entityManager
 					.createQuery("Select task From Task task Where task.tema=:tema and task.active=0", Task.class)
 					.setParameter("tema", tema).getResultList();
 
 			if (task.isEmpty()) {
+				logger.debug("task was found");
 				return true;
 			} else
-				System.out.println("Kjo teme ekziston");
+				logger.debug("task was not found");
 			return false;
 
 		} catch (Exception e) {
+			logger.error("error finding task:"+e.getMessage());
 			return false;
 
 		}
@@ -100,12 +101,15 @@ public class TaskDaoImpl implements TaskDao {
 	@Override
 	public Task findByTema(String tema) {
 		try {
+			logger.debug("finding deleted task by tema");
 			Task task = (Task) entityManager
 					.createQuery("Select task From Task task Where task.tema=:tema and active=1", Task.class)
 					.setParameter("tema", tema).getSingleResult();
 			task.setActive(false);
+			logger.debug("task{} was found",task.getTema());
 			return task;
 		} catch (Exception e) {
+			logger.error("error finding  deleted task:"+e.getMessage());
 			return null;
 		}
 	}
@@ -113,10 +117,12 @@ public class TaskDaoImpl implements TaskDao {
 	@Override
 	public Task findById(int id) {
 		try {
+			logger.debug("finding task by id");
 			Task task = entityManager.find(Task.class, id);
+			logger.debug("task was found");
 			return task;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error finding task:"+e.getMessage());
 			return null;
 		}
 	}
@@ -124,15 +130,20 @@ public class TaskDaoImpl implements TaskDao {
 	@Override
 	public ArrayList<Task> getAllTasks(int idMenager) {
 		try {
+			logger.debug("finding tasks of the manager");
 			ArrayList<Task> tasks = (ArrayList<Task>) entityManager
 					.createQuery("Select tasks From Task tasks Where tasks.project.manager.id=:Manager and active=0",
 							Task.class)
 					.setParameter("Manager", idMenager).getResultList();
-
+			if(!tasks.isEmpty()) {
+				logger.debug("tasks of manager retrieved:"+tasks);
 			return tasks;
-
+			}
+			else {
+				return null;
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error finding tasks of manager:"+e.getMessage());
 			return null;
 		}
 
@@ -141,30 +152,20 @@ public class TaskDaoImpl implements TaskDao {
 	@Override
 	public ArrayList<Task> getAllTasksForEmployee(int idEmployee) {
 		try {
+			logger.debug("finding tasks for employee");
 			ArrayList<Task> tasks = (ArrayList<Task>) entityManager
 					.createQuery("select task from Task task where task.employee.id=:idEmployee and active=0")
 					.setParameter("idEmployee", idEmployee).getResultList();
-
-			return tasks;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-
-	}
-
-	@Override
-	public ArrayList<Task> getAllTasksFromProject(int idProject) {
-		try {
-			ArrayList<Task> tasks = (ArrayList<Task>) entityManager
-					.createQuery("select task from Task task where task.project.id=:idProject and active=0")
-					.setParameter("idProject", idProject).getResultList();
-
-			return tasks;
+			if(!tasks.isEmpty()) {
+				logger.debug("tasks retrieved:"+tasks);
+			return tasks;}
+			else {
+				logger.debug("tasks not found");
+				return null;
+			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error finding tasks of employee"+e.getMessage());
 			return null;
 		}
 
@@ -173,7 +174,7 @@ public class TaskDaoImpl implements TaskDao {
 	@Override
 	public ArrayList<Task> filter(String employeeUsername, int managerId, String projectTema) {
 		try {
-			// log.info("Filtering the tasks!");
+			logger.debug("filter list of task for menager");
 			ArrayList<Task> resultList = (ArrayList<Task>) entityManager
 					.createQuery("select task from Task task " + "where task.project.tema LIKE :tema "
 							+ "AND task.employee.username LIKE :employeeUsername "
@@ -181,11 +182,13 @@ public class TaskDaoImpl implements TaskDao {
 					.setParameter("employeeUsername", "%" + employeeUsername + "%")
 					.setParameter("tema", "%" + projectTema + "%").setParameter("userId", managerId).getResultList();
 			if (resultList.isEmpty()) {
+				logger.debug("not any task found");
 				return null;
 			}
+			logger.debug("tasks retrieved:"+resultList);
 			return resultList;
 		} catch (Exception e) {
-			// log.error("Filtering the tasks failed! Message " + e.getMessage());
+			logger.error("error finding tasks:"+e.getMessage());
 			return null;
 		}
 	}
@@ -193,19 +196,41 @@ public class TaskDaoImpl implements TaskDao {
 	@Override
 	public ArrayList<Task> filterForEmployee(String projectTema, int employeeId) {
 		try {
-			// log.info("Filtering the tasks!");
+			logger.debug("filter list of tasks for employee");
 			ArrayList<Task> resultList = (ArrayList<Task>) entityManager
 					.createQuery("select task from Task task " + "where task.tema LIKE :tema "
 							+ "and task.employee.id=:userId " + "and task.active=0")
 					.setParameter("tema", "%" + projectTema + "%").setParameter("userId", employeeId).getResultList();
 			if (resultList.isEmpty()) {
+				logger.debug("not any task found");
 				return null;
 			}
+			logger.debug("tasks retrieved:"+resultList);
 			return resultList;
 		} catch (Exception e) {
-			e.printStackTrace();
-			// log.error("Filtering the tasks failed! Message " + e.getMessage());
+			logger.error("error finding tasks:"+e.getMessage());
 			return null;
+		}
+	}
+
+	public boolean conflicts(Task task) {
+		try {
+			logger.debug("finding conflicts of task{} with project{} date"+task.getTema(),task.getProject().getTema());
+			ArrayList<Project> project = (ArrayList<Project>) entityManager.createQuery(
+					"select project from Project project where project.id=:projectId and (ADDDATE(:start,:daysOfWork)>ADDDATE(project.start,project.daysOfWork)or :start<project.start) and project.active=0",
+					Project.class).setParameter("projectId", task.getProject().getId())
+					.setParameter("start", task.getStart()).setParameter("daysOfWork", task.getDaysOfWork())
+					.getResultList();
+			if (project.isEmpty()) {
+				logger.debug("no conflicts");
+				return false;
+			} else
+				logger.debug("conflicts");
+				return true;
+
+		} catch (Exception e) {
+			logger.error("error finding conflicts:"+e.getMessage());
+			return true;
 		}
 	}
 }

@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import com.project.dao.UserDao;
-import com.project.entity.Role;
 import com.project.entity.Task;
 import com.project.entity.User;
 
@@ -19,6 +20,8 @@ import com.project.entity.User;
 @Scope("singleton")
 @Component
 public class UserDaoImpl implements UserDao {
+	
+	private static final Logger logger = LogManager.getLogger(UserDaoImpl.class.getName());
 
 	@PersistenceContext
 	EntityManager entityManager;
@@ -26,11 +29,12 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public boolean add(User newUser) {
 		try {
+			logger.debug("manager {} adding user {}.",newUser.getManagedBy().getUsername(), newUser.getUsername());
 			entityManager.persist(newUser);
-			System.out.println("User was added!");
+			logger.debug("user added succesfuly");
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error adding user:"+e.getMessage());
 			return false;
 		}
 	}
@@ -38,13 +42,15 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public boolean remove(int userId) {
 		try {
+			User user = entityManager.find(User.class, userId);
+			logger.debug("manager {} deleting user {}",user.getManagedBy().getUsername(),user.getUsername());
 			entityManager.createQuery("update User user set user.active=1 where user.id=:id").setParameter("id", userId)
 					.executeUpdate();
-			System.out.println("User was removed!");
+			logger.debug("user deleted succesfuly");
 			return true;
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error deleting user:"+e.getMessage());
 			return false;
 		}
 	}
@@ -52,17 +58,21 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public boolean taskOfUser(int userId) {
 		try {
+			User user = entityManager.find(User.class, userId);
+			logger.debug("finding stak of user {}",user.getUsername());
 			ArrayList<Task> tasks = (ArrayList<Task>) entityManager
 					.createQuery("select task from Task task where task.employee.id=:id",Task.class).setParameter("id", userId)
 					.getResultList();
-			System.out.println("User was removed!");
+			
 			if (tasks.isEmpty()) {
+				logger.debug("user has no task");
 				return true;
 			}
+			logger.debug("tasks of user retrieved" + tasks);
 			return false;
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error getting tasks of user, "+e.getMessage());
 			return false;
 		}
 	}
@@ -70,13 +80,12 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public boolean update(User user) {
 		try {
-			// log.info("Editing the user!");
+			logger.debug("manager {} is updating user{} ",user.getManagedBy().getUsername(),user.getUsername());
 			entityManager.merge(user);
-			// log.info("User edited!");
+			logger.debug("user not updated");
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
-			// log.error("User failed to add! Message " + e.getMessage());
+			logger.error("error updating user, "+e.getMessage());
 			return false;
 
 		}
@@ -85,10 +94,12 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public User findById(int id) {
 		try {
+			logger.debug("finding user");
 			User user = entityManager.find(User.class, id);
+			logger.debug("user {} found",user.getUsername());
 			return user;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error finding user:"+e.getMessage());
 			return null;
 		}
 	}
@@ -96,114 +107,78 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public ArrayList<User> getAll(int id) {
 		try {
-			/*
-			 * ArrayList<User> users = (ArrayList<User>) entityManager
-			 * .createQuery("Select user from User user Where user.managedBy=:id And active=0"
-			 * ) .setParameter("id", id).getResultList();
-			 */
-			return (ArrayList<User>) entityManager
+			logger.debug("finding all users for manager");
+			ArrayList<User> resultList = (ArrayList<User>) entityManager
 					.createQuery("select user from User user where user.managedBy=:managedBy AND active=0")
 					.setParameter("managedBy", findById(id)).getResultList();
-			/*
-			 * if(users.isEmpty()) { System.out.println("bosh"); return null; } return
-			 * users;
-			 */
+			logger.debug("all users retrieved" +resultList);
+			return resultList;
+
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error getting users:"+e.getMessage());
 			return null;
 		}
 	}
-	@Override
-	public ArrayList<User> getAllUsers(int id) {
-		try {
-			/*
-			 * ArrayList<User> users = (ArrayList<User>) entityManager
-			 * .createQuery("Select user from User user Where user.managedBy=:id And active=0"
-			 * ) .setParameter("id", id).getResultList();
-			 */
-			return (ArrayList<User>) entityManager
-					.createQuery("select user from User user where user.id=:id AND active=0").setParameter("id", id)
-					.getResultList();
-			/*
-			 * if(users.isEmpty()) { System.out.println("bosh"); return null; } return
-			 * users;
-			 */
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 
 	@Override
 	public User exist(String username, String password) {
 		try {
+			logger.debug("findind if user exist");
 			User user = (User) entityManager
 					.createQuery("Select user From User user Where user.username=:username and user.active=0", User.class)
 					.setParameter("username", username).getSingleResult();
 			BasicPasswordEncryptor encryptor = new BasicPasswordEncryptor();
 			if (encryptor.checkPassword(password, user.getPassword())) {
-				System.out.println("success");
+				logger.debug("user exist");
 				return user;
 			} else
-				System.out.println("Keni gabim passowrdin");
+				logger.debug("user dont exist");
 			return null;
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error finding user:"+e.getMessage());
 			return null;
 
 		}
 	}
 
 	@Override
-	public boolean existUser(String username) {
+	public boolean existUsername(String username) {
 		try {
-
+			logger.debug("finding user by username");
 			ArrayList<User> users = (ArrayList<User>) entityManager
 					.createQuery("Select user From User user Where user.username=:username AND user.active=0",
 							User.class)
 					.setParameter("username", username).getResultList();
 			if (users.isEmpty()) {
-				System.out.println("jo");
+				logger.debug("user not found");
 				return true;
 			}
-			System.out.println("po");
+			logger.debug("user found");
 			return false;
 
 		} catch (Exception e) {
+			logger.error("error finding user "+e.getMessage());
 			return false;
 
 		}
 	}
 
-	@Override
-	public User getLoggedUser(String username) {
-		try {
-			// log.info("Getting the user from email!");
-			return (User) entityManager
-					.createQuery("select user from User user where user.username=:username  and active=0")
-					.setParameter("username", username).getSingleResult();
-		} catch (Exception e) {
-			// log.error("User failed to retrieve from email! Message "
-			// + e.getMessage());
-			return null;
-		}
-
-	}
-
-	
 	@Override
 	public User findByUsername(String username) {
 		try {
+			logger.debug("finding deleted user");
 			User user = (User) entityManager
-					.createQuery("Select user From User user Where user.username=:tema and active=1", User.class)
+					.createQuery("Select user From User user Where user.username=:tema and user.active=1", User.class)
 					.setParameter("tema", username).getSingleResult();
 			user.setActive(false);
+			logger.debug("deleted user found");
 			return user;
 
 		} catch (Exception e) {
+			logger.debug("error finding deleted user:"+e.getMessage());
 			return null;
 		}
 	}

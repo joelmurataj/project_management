@@ -11,7 +11,6 @@ public interface TaskDao {
 	public boolean update(Task task);
 	public boolean existTask(String tema);
 	public Task findByTema(String tema);
-	public ArrayList<Task> getAllTasksFromProject(int idProject);
 	public ArrayList<Task> filter(String employeeUsername,int managerId,String projectTema);
 	public ArrayList<Task> filterForEmployee(String employeeUsername, int employeeId);
 	
