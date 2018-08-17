@@ -1,6 +1,7 @@
 package com.project.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -157,7 +158,6 @@ public class ProjectDaoImpl implements ProjectDao {
 	@Override
 	public ArrayList<Project> getAllProjects(int menagerId) {
 		try {
-			
 			logger.debug("finding all projects for menager");
 			ArrayList<Project> projects = (ArrayList<Project>) entityManager
 					.createQuery("select project from Project project where project.manager.id=:menagerId and active=0",
@@ -192,5 +192,6 @@ public class ProjectDaoImpl implements ProjectDao {
 			return null;
 		}
 	}
+	
 
 }

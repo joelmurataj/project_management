@@ -35,8 +35,7 @@
 	<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
 	<a class="navbar-brand mr-1"
-		href="http://localhost:8084/project/employee/homeEmployee.xhtml">Task
-		Management</a>
+		href="http://localhost:8084/project/employee/calendar.xhtml">Calendar</a>
 
 	<button class="btn btn-link btn-sm text-white order-1 order-sm-0"
 		id="sidebarToggle" href="#">
@@ -44,10 +43,8 @@
 	</button>
 	<!-- Navbar Search --> <h:form
 		class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
-		
-	</h:form>
 
-	<!-- Navbar -->
+	</h:form> <!-- Navbar -->
 	<ul class="navbar-nav ml-auto ml-md-0">
 
 		<li class="nav-item dropdown no-arrow"><a
@@ -67,14 +64,15 @@
 
 	</nav>
 	<div id="wrapper">
+
 		<!-- Sidebar -->
 		<ul class="sidebar navbar-nav">
 			<li class="nav-item"><a class="nav-link"> <i
 					class="fas fa-fw fa-user"></i> <span>#{userBean.userDto.username}</span>
 			</a></li>
 			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/employee/calendar.xhtml">
-					<i class="fas fa-fw fa-table"></i> <span>Calendar</span>
+				href="http://localhost:8084/project/employee/homeEmployee.xhtml">
+					<i class="fas fa-fw fa-table"></i> <span>Task management</span>
 			</a></li>
 			<li class="nav-item active"><h:form id="editForm">
 					<p:growl id="growl" sticky="true" />
@@ -117,74 +115,26 @@
 			<!-- DataTables Example -->
 			<div class="card mb-3">
 				<div class="card-header">
-					<i class="fas fa-table"></i> Tasks
+					<i class="fas fa-table"></i> Calendar
 				</div>
 				<div class="card-body">
 					<div class="table-responsive">
-						<p:dataTable id="tableStateDT" var="taskDto"
-							value="#{taskBean.taskDtoList}" widgetVar="usersTable"
-							multiViewState="true" rows="10" paginator="true"
-							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							rowsPerPageTemplate="5,10,15" selectionMode="single"
-							selection="#{taskBean.selectedTask}" rowKey="#{taskDto.id}"
-							emptyMessage="No task found with given criteria" editable="true">
-
-							<p:ajax event="rowEdit"
-								listener="#{taskBean.onRowEdit(taskDto.id)}"
-								update=":form1:growl" />
-							<p:ajax event="rowEditCancel" listener="#{taskBean.onRowCancel}"
-								update=":form1:growl" />
-							<f:facet name="header">
-								<p:outputPanel>
-									<h:outputText value="Search task tema:" />
-									<p:inputText id="globalFilter" style="width:150px"
-										placeholder="Enter keyword" value="#{taskBean.projectTema}">
-										<p:ajax event="keyup" listener="#{taskBean.filterByName()}"
-											update="tableStateDT" />
-									</p:inputText>
-								</p:outputPanel>
-							</f:facet>
-
-							<p:column headerText="Tema">
-
-								<h:outputText value="#{taskDto.tema}" />
-							</p:column>
-
-							<p:column headerText="Data e fillimit">
-								<h:outputText value="#{taskDto.start}" />
-							</p:column>
-
-							<p:column headerText="Ditet e punes:">
-
-								<h:outputText value="#{taskDto.daysOfWork}" />
-							</p:column>
-
-							<p:column headerText="Project:">
-								<h:outputText value="#{taskDto.projectName}" />
-							</p:column>
-							<p:column headerText="Status:">
-								<p:cellEditor>
-									<f:facet name="output">
-										<h:outputText value="#{taskDto.statusName}" />
-									</f:facet>
-									<f:facet name="input">
-										<h:selectOneMenu value="#{taskBean.taskDto.status}"
-											style="width:100%">
-											<f:selectItems value="#{statusDao.getAllStatus()}"
-												var="statusDto" itemLabel="#{statusDto.name}"
-												itemValue="#{statusDto.id}" />
-										</h:selectOneMenu>
-									</f:facet>
-								</p:cellEditor>
-							</p:column>
-							<p:column style="width:32px">
-								<p:rowEditor />
-							</p:column>
-						</p:dataTable>
+						<p:schedule value="#{taskBean.calendar}" draggable="false" >
+							<p:ajax event="eventSelect" 
+								listener="#{taskBean.onEventSelect}" update="eventDetails"
+								oncomplete="PF('eventDialog').show();" />
+						</p:schedule>
 					</div>
 				</div>
 			</div>
-
+			<p:dialog widgetVar="eventDialog" header="Event Details" showEffect="clip" hideEffect="clip">
+        <h:panelGrid id="eventDetails" columns="2">
+            <p:outputLabel value="#{taskBean.event.title}" />
+ 
+            <p:outputLabel value="#{taskBean.event.startDate}" />
+ 
+        </h:panelGrid>
+    </p:dialog> 
 		</h:form>
 	</div>
 
@@ -224,8 +174,8 @@
 	<!-- Page level plugin JavaScript-->
 
 	<script src="../resources/vendor/datatables/jquery.dataTables.js"></script>
-	<script
-		src = "../resources/vendor/datatables/dataTables.bootstrap4.js">
+	<script src="../resources/vendor/datatables/dataTables.bootstrap4.js">
+		
 	</script>
 
 	<!-- Custom scripts for all pages-->

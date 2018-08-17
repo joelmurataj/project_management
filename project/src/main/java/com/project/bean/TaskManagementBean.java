@@ -10,6 +10,11 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.view.ViewScoped;
 
 import org.primefaces.event.RowEditEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultScheduleEvent;
+import org.primefaces.model.DefaultScheduleModel;
+import org.primefaces.model.ScheduleEvent;
+import org.primefaces.model.ScheduleModel;
 
 import com.project.dto.ProjectDto;
 import com.project.dto.TaskDto;
@@ -25,6 +30,8 @@ public class TaskManagementBean {
 	private TaskDto selectedTask;
 	private ArrayList<TaskDto> taskDtoList;
 	private ProjectDto projectDto;
+	private ScheduleModel calendar;
+    private ScheduleEvent event = new DefaultScheduleEvent();
 	private Date now;
 	private Date finishDate;
 	private String projectTema;
@@ -42,6 +49,10 @@ public class TaskManagementBean {
 		taskDto = new TaskDto();
 		refresh();
 	}
+	 public void onEventSelect(SelectEvent selectEvent) {
+	       event= (ScheduleEvent) selectEvent.getObject();
+	       
+	    }
 
 	public void filterByName() {
 		if (userBean.getUserDto().getRoliId() == 1) {
@@ -52,22 +63,32 @@ public class TaskManagementBean {
 	}
 
 	public void refresh() {
-		
-			this.taskDtoList = taskService.getAllTasks(userBean.getUserDto());
+
+		this.taskDtoList = taskService.getAllTasks(userBean.getUserDto());
+		calendar = new DefaultScheduleModel();
+
+				for (TaskDto taskDto : taskDtoList) {
+					Date start = taskDto.getStart();
+					Calendar c = Calendar.getInstance();
+					c.setTime(start);
+					c.add(Calendar.DATE, taskDto.getDaysOfWork()); // number of days to add
+					Date end = c.getTime();
+					calendar.addEvent(new DefaultScheduleEvent(taskDto.getTema()+"("+taskDto.getProjectName()+")", start, end));
+				}
+			
 	}
+
 
 	public void addTask() {
 		TaskDto existTask = new TaskDto();
 		existTask = taskService.findByTema(taskDto.getTema());
 		if (taskService.existTask(taskDto.getTema()) && existTask == null) {
 			if (taskService.add(taskDto)) {
-				System.out.println("u shtua");
 				refresh();
 				taskDto = new TaskDto();
 				Message.addMessage(taskDto.getTema() + " :" + Message.bundle.getString("TASK_ADDED"), "info");
 
 			} else {
-				System.out.println("nuk u shtua sepse ka date me vone se data e projektit");
 				Message.addMessage(Message.bundle.getString("TASK_NOTADDED"), "warn");
 
 			}
@@ -82,7 +103,6 @@ public class TaskManagementBean {
 				Message.addMessage(existTask.getTema() + " :" + Message.bundle.getString("TASK_ADDED"), "info");
 
 			} else {
-				System.out.println("nuk u shtua sepse ka date me vone se data e projektit");
 				Message.addMessage(Message.bundle.getString("TASK_NOTADDED"), "warn");
 
 			}
@@ -262,4 +282,19 @@ public class TaskManagementBean {
 		this.projectTema = projectTema;
 	}
 
+	public ScheduleModel getCalendar() {
+		return calendar;
+	}
+
+	public void setCalendar(ScheduleModel calendar) {
+		this.calendar = calendar;
+	}
+	public ScheduleEvent getEvent() {
+		return event;
+	}
+	public void setEvent(ScheduleEvent event) {
+		this.event = event;
+	}
+
+	
 }

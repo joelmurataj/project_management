@@ -28,7 +28,7 @@ public class TaskDaoImpl implements TaskDao {
 	@Override
 	public boolean add(Task task) {
 		try {
-			logger.debug("manager{} adding task{}",task.getEmployee().getManagedBy().getUsername(),task.getTema());
+			logger.debug("adding task{}", task.getTema());
 
 			if (!conflicts(task)) {
 				entityManager.persist(task);
@@ -38,7 +38,7 @@ public class TaskDaoImpl implements TaskDao {
 			logger.debug("task was not added because there are conflicts");
 			return false;
 		} catch (Exception e) {
-			logger.error("error adding task:"+e.getMessage());
+			logger.error("error adding task:" + e.getMessage());
 			return false;
 		}
 	}
@@ -46,15 +46,15 @@ public class TaskDaoImpl implements TaskDao {
 	@Override
 	public boolean remove(int taskId) {
 		try {
-			Task task=findById(taskId);
-			logger.debug("manager{} deleting task{}",task.getEmployee().getManagedBy().getUsername(),task.getTema());
+			Task task = findById(taskId);
+			logger.debug("manager{} deleting task{}", task.getEmployee().getManagedBy().getUsername(), task.getTema());
 			entityManager.createQuery("update Task task set task.active=1 where task.id=:id").setParameter("id", taskId)
 					.executeUpdate();
-			logger.debug("task{} was deleted",task.getTema());
+			logger.debug("task{} was deleted", task.getTema());
 			return true;
 
 		} catch (Exception e) {
-			logger.error("error deleting task"+e.getMessage());
+			logger.error("error deleting task" + e.getMessage());
 			return false;
 		}
 	}
@@ -62,15 +62,15 @@ public class TaskDaoImpl implements TaskDao {
 	@Override
 	public boolean update(Task task) {
 		try {
-			logger.debug("manager{} editing task{}",task.getEmployee().getManagedBy().getUsername(),task.getTema());
+			logger.debug("manager{} editing task{}", task.getEmployee().getManagedBy().getUsername(), task.getTema());
 			if (!conflicts(task)) {
 				entityManager.merge(task);
-				logger.debug("task{} was edited",task.getTema());
+				logger.debug("task{} was edited", task.getTema());
 				return true;
 			}
 			return false;
 		} catch (Exception e) {
-			logger.error("error editing task:"+e.getMessage());
+			logger.error("error editing task:" + e.getMessage());
 			return false;
 
 		}
@@ -85,14 +85,14 @@ public class TaskDaoImpl implements TaskDao {
 					.setParameter("tema", tema).getResultList();
 
 			if (task.isEmpty()) {
-				logger.debug("task was found");
+				logger.debug("task not found");
 				return true;
 			} else
-				logger.debug("task was not found");
+				logger.debug("task found");
 			return false;
 
 		} catch (Exception e) {
-			logger.error("error finding task:"+e.getMessage());
+			logger.error("error finding task:" + e.getMessage());
 			return false;
 
 		}
@@ -106,10 +106,10 @@ public class TaskDaoImpl implements TaskDao {
 					.createQuery("Select task From Task task Where task.tema=:tema and active=1", Task.class)
 					.setParameter("tema", tema).getSingleResult();
 			task.setActive(false);
-			logger.debug("task{} was found",task.getTema());
+			logger.debug("task{} was found", task.getTema());
 			return task;
 		} catch (Exception e) {
-			logger.error("error finding  deleted task:"+e.getMessage());
+			logger.error("error finding  deleted task:" + e.getMessage());
 			return null;
 		}
 	}
@@ -122,11 +122,12 @@ public class TaskDaoImpl implements TaskDao {
 			logger.debug("task was found");
 			return task;
 		} catch (Exception e) {
-			logger.error("error finding task:"+e.getMessage());
+			logger.error("error finding task:" + e.getMessage());
 			return null;
 		}
 	}
-
+	
+	
 	@Override
 	public ArrayList<Task> getAllTasks(int idMenager) {
 		try {
@@ -135,15 +136,14 @@ public class TaskDaoImpl implements TaskDao {
 					.createQuery("Select tasks From Task tasks Where tasks.project.manager.id=:Manager and active=0",
 							Task.class)
 					.setParameter("Manager", idMenager).getResultList();
-			if(!tasks.isEmpty()) {
-				logger.debug("tasks of manager retrieved:"+tasks);
-			return tasks;
-			}
-			else {
+			if (!tasks.isEmpty()) {
+				logger.debug("tasks of manager retrieved:" + tasks);
+				return tasks;
+			} else {
 				return null;
 			}
 		} catch (Exception e) {
-			logger.error("error finding tasks of manager:"+e.getMessage());
+			logger.error("error finding tasks of manager:" + e.getMessage());
 			return null;
 		}
 
@@ -156,16 +156,16 @@ public class TaskDaoImpl implements TaskDao {
 			ArrayList<Task> tasks = (ArrayList<Task>) entityManager
 					.createQuery("select task from Task task where task.employee.id=:idEmployee and active=0")
 					.setParameter("idEmployee", idEmployee).getResultList();
-			if(!tasks.isEmpty()) {
-				logger.debug("tasks retrieved:"+tasks);
-			return tasks;}
-			else {
+			if (!tasks.isEmpty()) {
+				logger.debug("tasks retrieved:" + tasks);
+				return tasks;
+			} else {
 				logger.debug("tasks not found");
 				return null;
 			}
 
 		} catch (Exception e) {
-			logger.error("error finding tasks of employee"+e.getMessage());
+			logger.error("error finding tasks of employee" + e.getMessage());
 			return null;
 		}
 
@@ -185,10 +185,10 @@ public class TaskDaoImpl implements TaskDao {
 				logger.debug("not any task found");
 				return null;
 			}
-			logger.debug("tasks retrieved:"+resultList);
+			logger.debug("tasks retrieved:" + resultList);
 			return resultList;
 		} catch (Exception e) {
-			logger.error("error finding tasks:"+e.getMessage());
+			logger.error("error finding tasks:" + e.getMessage());
 			return null;
 		}
 	}
@@ -205,17 +205,18 @@ public class TaskDaoImpl implements TaskDao {
 				logger.debug("not any task found");
 				return null;
 			}
-			logger.debug("tasks retrieved:"+resultList);
+			logger.debug("tasks retrieved:" + resultList);
 			return resultList;
 		} catch (Exception e) {
-			logger.error("error finding tasks:"+e.getMessage());
+			logger.error("error finding tasks:" + e.getMessage());
 			return null;
 		}
 	}
 
 	public boolean conflicts(Task task) {
 		try {
-			logger.debug("finding conflicts of task{} with project{} date"+task.getTema(),task.getProject().getTema());
+			logger.debug("finding conflicts of task{} with project{} date" + task.getTema(),
+					task.getProject().getTema());
 			ArrayList<Project> project = (ArrayList<Project>) entityManager.createQuery(
 					"select project from Project project where project.id=:projectId and (ADDDATE(:start,:daysOfWork)>ADDDATE(project.start,project.daysOfWork)or :start<project.start) and project.active=0",
 					Project.class).setParameter("projectId", task.getProject().getId())
@@ -226,11 +227,12 @@ public class TaskDaoImpl implements TaskDao {
 				return false;
 			} else
 				logger.debug("conflicts");
-				return true;
+			return true;
 
 		} catch (Exception e) {
-			logger.error("error finding conflicts:"+e.getMessage());
+			logger.error("error finding conflicts:" + e.getMessage());
 			return true;
 		}
 	}
+
 }
