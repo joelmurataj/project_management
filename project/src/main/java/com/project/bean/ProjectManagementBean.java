@@ -49,28 +49,17 @@ public class ProjectManagementBean {
 		projectDto.setMenagerId(userBean.getUserDto().getId());
 		if (projectService.existProject(projectDto.getTema()) && existProject == null) {
 			if (projectService.add(projectDto)) {
-				System.out.println("u shtua");
 				refresh();
 				projectDto = new ProjectDto();
 				Message.addMessage(Message.bundle.getString("PROJECT_ADDED"), "info");
 
 			} else {
-				System.out.println("nuk u shtua");
-
 				Message.addMessage(projectDto.getTema() + " :" + Message.bundle.getString("PROJECT_NOTADDED"), "warn");
 			}
 		} else if (existProject != null) {
-			existProject.setDaysOfWork(projectDto.getDaysOfWork());
-			existProject.setStart(projectDto.getStart());
-			if (projectService.update(existProject)) {
-				refresh();
-				System.out.println("u shtua");
-				refresh();
-				projectDto = new ProjectDto();
-				Message.addMessage(Message.bundle.getString("PROJECT_ADDED"), "info");
-			}
+			Message.addMessage(Message.bundle.getString("TEMA_EXIST_DELETED"), "warn");
+
 		} else {
-			System.out.println("ky project ekziston");
 			Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "warn");
 		}
 	}
@@ -103,7 +92,6 @@ public class ProjectManagementBean {
 				project.setTema(projectDto.getTema());
 				if (projectService.update(project)) {
 					refresh();
-					System.out.println("u editua");
 					Message.addMessage(project.getTema() + " :" + Message.bundle.getString("PROJECT_EDITED"), "info");
 
 				} else {
@@ -111,8 +99,6 @@ public class ProjectManagementBean {
 
 				}
 			} else {
-				System.out.println("ky project ekziston");
-
 				Message.addMessage(project.getTema() + " :" + Message.bundle.getString("TEMA_EXIST"), "warn");
 			}
 		} else {
@@ -121,13 +107,13 @@ public class ProjectManagementBean {
 		}
 	}
 
+
 	public void onRowEdit(int projectId) {
 		ProjectDto editProject = projectService.findById(projectId);
 		if (editProject.getStatus() != projectDto.getStatus()) {
 			editProject.setStatus(projectDto.getStatus());
 			if (projectService.update(editProject)) {
 				refresh();
-				System.out.println("u editua");
 				Message.addMessage(editProject.getTema() + " :" + Message.bundle.getString("PROJECT_EDITED"), "info");
 			} else {
 				Message.addMessage(Message.bundle.getString("PROJECT_NOTEDITED"), "warn");

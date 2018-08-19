@@ -80,11 +80,12 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public boolean update(User user) {
 		try {
-			logger.debug("manager {} is updating user{} ",user.getManagedBy().getUsername(),user.getUsername());
+			logger.debug("updating user{} ",user.getUsername());
 			entityManager.merge(user);
 			logger.debug("user not updated");
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error("error updating user, "+e.getMessage());
 			return false;
 

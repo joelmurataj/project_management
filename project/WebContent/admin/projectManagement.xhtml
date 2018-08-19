@@ -44,10 +44,8 @@
 	</button>
 	<!-- Navbar Search --> <h:form
 		class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
-		
-	</h:form>
 
-	<!-- Navbar -->
+	</h:form> <!-- Navbar -->
 	<ul class="navbar-nav ml-auto ml-md-0">
 
 		<li class="nav-item dropdown no-arrow"><a
@@ -109,9 +107,10 @@
 								listener="#{projectBean.onRowCancel}" update=":form1:growl" />
 
 							<f:facet name="header">
-								<p:outputPanel style="text-align:right">
-									<p:commandButton value="Add project" type="button"
-										onclick="PF('dlg1').show();" />
+								<p:outputPanel style="text-align:right; ">
+									<p:commandLink onclick="PF('dlg1').show();" style="size:5x">
+										<i class="fas fa-plus-circle" style="font-size: 2.5em;"></i>
+									</p:commandLink>
 								</p:outputPanel>
 							</f:facet>
 
@@ -144,9 +143,9 @@
 								</p:cellEditor>
 								<p:rowEditor />
 							</p:column>
-							<p:column style="width:50px">
+							<p:column style="width:70px">
 
-								<p:commandLink style="color:red"
+								<p:commandLink style="color:red;margin-right:5px"
 									action="#{projectBean.deleteProject(projectDto.id)}"
 									update=":employeesForm:tableStateDT :form1:growl">
 									<i class="fas fa-trash-alt"></i>
@@ -166,7 +165,7 @@
 								<p:commandLink id="edit"
 									action="#{projectBean.saveProjectForEdit(projectDto.id)}"
 									update=":editForm:dlge" oncomplete="PF('dlg2').show();"
-									type="submit">
+									>
 									<i class="fas fa-pencil-alt"></i>
 								</p:commandLink>
 

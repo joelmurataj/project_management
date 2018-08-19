@@ -105,7 +105,7 @@ public class LoginBean {
 
 	public String logOut() {
 		userBean.logOut();
-		return "/login1.xhtml?faces-redirect=true";
+		return "/login.xhtml?faces-redirect=true";
 	}
 
 }

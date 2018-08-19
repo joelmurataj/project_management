@@ -46,7 +46,7 @@
 
 	<!-- Navbar Search --> <h:form
 		class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
-		
+
 	</h:form> <!-- Navbar -->
 	<ul class="navbar-nav ml-auto ml-md-0">
 
@@ -95,46 +95,48 @@
 				</div>
 
 				<div class="card-body">
-					<div >
+					<div>
 						<p:dataTable id="tableStateDT" var="taskDto"
 							value="#{taskBean.taskDtoList}" widgetVar="usersTable"
 							multiViewState="true" rows="10" paginator="true"
 							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15" rowKey="#{taskDto.id}"
 							emptyMessage="No task found with given criteria"
-							selectionMode="single" selection="#{taskBean.selectedTask}" class="table table-responsive">
+							selectionMode="single" selection="#{taskBean.selectedTask}"
+							class="table table-responsive">
 
 							<p:ajax event="rowSelect" update=":employeesForm:userDetail"
 								oncomplete="PF('userDialog').show()" />
 
 							<f:facet name="header">
-							
-								<div class="row" style="margin-left:35%">
-								
-								<p:inputText id="globalFilter" style="width:150px"
-									placeholder="Search username" value="#{taskBean.employeeName}">
 
-								</p:inputText>
-								<p:selectOneMenu id="project" value="#{taskBean.projectTema}" >
+								<div class="row" style="margin-left: 35%">
 
-									<f:selectItem itemLabel="Select Project" itemValue=""
-										noSelectionOption="true" />
-									<f:selectItems value="#{projectBean.projectDtoList}"
-										var="project" itemValue="#{project.tema}"
-										itemLabel="#{project.tema}" />
+									<p:inputText id="globalFilter" style="width:150px"
+										placeholder="Search username" value="#{taskBean.employeeName}">
 
-								</p:selectOneMenu>
-								<p:commandLink class="btn btn-primary"
-									actionListener="#{taskBean.filterByName()}"
-									update=":employeesForm:tableStateDT">
-									<i class="fas fa-search"></i>
-								</p:commandLink>
+									</p:inputText>
+									<p:selectOneMenu id="project" value="#{taskBean.projectTema}">
+
+										<f:selectItem itemLabel="Select Project" itemValue=""
+											noSelectionOption="true" />
+										<f:selectItems value="#{projectBean.projectDtoList}"
+											var="project" itemValue="#{project.tema}"
+											itemLabel="#{project.tema}" />
+
+									</p:selectOneMenu>
+									<p:commandLink class="btn btn-primary"
+										actionListener="#{taskBean.filterByName()}"
+										update=":employeesForm:tableStateDT">
+										<i class="fas fa-search"></i>
+									</p:commandLink>
 								</div>
 
 
 								<p:outputPanel style="text-align:right">
-									<p:commandButton value="Add task" type="button"
-										onclick="PF('dlg1').show();" />
+									<p:commandLink onclick="PF('dlg1').show();">
+										<i class="fas fa-plus-circle" style="font-size: 2.5em;"></i>
+									</p:commandLink>
 								</p:outputPanel>
 							</f:facet>
 
@@ -161,9 +163,9 @@
 							<p:column headerText="Status:">
 								<h:outputText id="status" value="#{taskDto.statusName}" />
 							</p:column>
-							<p:column style="width:50px">
+							<p:column style="width:70px">
 
-								<p:commandLink style="color:red"
+								<p:commandLink style="color:red;margin-right:5px"
 									action="#{taskBean.deleteTask(taskDto.id)}"
 									update=":employeesForm:tableStateDT :form1:growl">
 									<i class="fas fa-trash-alt"></i>
@@ -182,8 +184,7 @@
 
 								<p:commandLink id="edit" icon="fas fa-pencil-alt"
 									action="#{taskBean.saveTaskForEdit(taskDto.id)}"
-									update=":editForm:dlg2" oncomplete="PF('dlg2').show();"
-									type="submit">
+									update=":editForm:dlg2" oncomplete="PF('dlg2').show();">
 									<i class="fas fa-pencil-alt"></i>
 								</p:commandLink>
 							</p:column>

@@ -62,7 +62,7 @@ public class TaskDaoImpl implements TaskDao {
 	@Override
 	public boolean update(Task task) {
 		try {
-			logger.debug("manager{} editing task{}", task.getEmployee().getManagedBy().getUsername(), task.getTema());
+			logger.debug("editing task{}", task.getTema());
 			if (!conflicts(task)) {
 				entityManager.merge(task);
 				logger.debug("task{} was edited", task.getTema());
@@ -70,6 +70,7 @@ public class TaskDaoImpl implements TaskDao {
 			}
 			return false;
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error("error editing task:" + e.getMessage());
 			return false;
 

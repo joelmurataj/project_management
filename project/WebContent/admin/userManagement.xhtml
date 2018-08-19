@@ -44,10 +44,8 @@
 	</button>
 	<!-- Navbar Search --> <h:form
 		class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
-		
-	</h:form>
 
-	<!-- Navbar -->
+	</h:form> <!-- Navbar -->
 	<ul class="navbar-nav ml-auto ml-md-0">
 
 		<li class="nav-item dropdown no-arrow"><a
@@ -103,8 +101,9 @@
 								oncomplete="PF('userDialog').show()" />
 							<f:facet name="header">
 								<p:outputPanel style="text-align:right">
-									<p:commandButton value="Add user" type="button"
-										onclick="PF('dlg1').show();" />
+									<p:commandLink onclick="PF('dlg1').show();">
+										<i class="fas fa-plus-circle" style="font-size: 2.5em;"></i>
+									</p:commandLink>
 								</p:outputPanel>
 							</f:facet>
 
@@ -121,12 +120,11 @@
 
 								<h:outputText value="#{userDto.username}" />
 							</p:column>
-							<p:column style="width:50px">
+							<p:column style="width:70px">
 
-								<p:commandLink style="color:red"
+								<p:commandLink style="color:red; margin-right:5px"
 									action="#{userCrudBean.deleteUser(userDto.id)}"
-									update=":employeesForm:tableStateDT :form1:growl"
-									oncomplete="PF('usersTable').filter()">
+									update=":employeesForm:tableStateDT :form1:growl">
 									<i class="fas fa-trash-alt"></i>
 
 									<p:confirm header="konfirmim" message="Are you sure?"
@@ -142,9 +140,8 @@
 
 								</p:confirmDialog>
 
-
 								<p:commandLink id="edit" update=":editForm:dlg2"
-									oncomplete="PF('dlg2').show();" type="submit">
+									oncomplete="PF('dlg2').show();">
 									<i class="fas fa-pencil-alt"></i>
 
 									<f:setPropertyActionListener target="#{userCrudBean.userDto}"
@@ -177,7 +174,7 @@
 							<div></div>
 
 						</h:panelGroup>
-						<p:button id="edit1" value="Edit employee" outcome="UserEdit">
+						<p:button id="edit1" value="Edit employee" outcome="userEdit">
 							<f:param name="employeeId"
 								value="#{userCrudBean.selectedUser.id}" />
 
@@ -268,8 +265,7 @@
 					requiredMessage="Ju lutem plotesoni confirmPasswordin" />
 
 			</p:panelGrid>
-			<p:commandButton type="submit"
-				update=":employeesForm:tableStateDT growl message"
+			<p:commandButton type="submit" update=":employeesForm:tableStateDT growl message"
 				value="Add employee" action="#{userCrudBean.addUser()}"
 				oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlg1').hide()"></p:commandButton>
 		</p:dialog>

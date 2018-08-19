@@ -1,5 +1,7 @@
 package com.project.converters;
 
+import org.jasypt.util.password.BasicPasswordEncryptor;
+
 import com.project.dto.UserDto;
 import com.project.entity.Role;
 import com.project.entity.User;
@@ -13,7 +15,8 @@ public class UserConverter {
 				user.setEmer(userDto.getEmer());
 				user.setMbiemer(userDto.getMbiemer());
 				user.setUsername(userDto.getUsername());
-				user.setPassword(userDto.getPassword());
+				BasicPasswordEncryptor encryptor = new BasicPasswordEncryptor();
+				user.setPassword(encryptor.encryptPassword(userDto.getPassword()));
 				user.setActive(false);
 				Role roli = new Role();
 				roli.setId(2);
@@ -40,7 +43,8 @@ public class UserConverter {
 				user.setEmer(userDto.getEmer());
 				user.setMbiemer(userDto.getMbiemer());
 				user.setUsername(userDto.getUsername());
-				user.setPassword(userDto.getPassword());
+				BasicPasswordEncryptor encryptor = new BasicPasswordEncryptor();
+				user.setPassword(encryptor.encryptPassword(userDto.getPassword()));
 				user.setActive(false);
 				Role roli = new Role();
 				roli.setId(userDto.getRoliId());
@@ -76,7 +80,6 @@ public class UserConverter {
 				}
 				return userDto;
 			} else
-				System.out.println("null");
 				return null;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -31,7 +31,7 @@ public class TaskManagementBean {
 	private ArrayList<TaskDto> taskDtoList;
 	private ProjectDto projectDto;
 	private ScheduleModel calendar;
-    private ScheduleEvent event = new DefaultScheduleEvent();
+	private ScheduleEvent event = new DefaultScheduleEvent();
 	private Date now;
 	private Date finishDate;
 	private String projectTema;
@@ -49,10 +49,11 @@ public class TaskManagementBean {
 		taskDto = new TaskDto();
 		refresh();
 	}
-	 public void onEventSelect(SelectEvent selectEvent) {
-	       event= (ScheduleEvent) selectEvent.getObject();
-	       
-	    }
+
+	public void onEventSelect(SelectEvent selectEvent) {
+		event = (ScheduleEvent) selectEvent.getObject();
+
+	}
 
 	public void filterByName() {
 		if (userBean.getUserDto().getRoliId() == 1) {
@@ -67,17 +68,17 @@ public class TaskManagementBean {
 		this.taskDtoList = taskService.getAllTasks(userBean.getUserDto());
 		calendar = new DefaultScheduleModel();
 
-				for (TaskDto taskDto : taskDtoList) {
-					Date start = taskDto.getStart();
-					Calendar c = Calendar.getInstance();
-					c.setTime(start);
-					c.add(Calendar.DATE, taskDto.getDaysOfWork()); // number of days to add
-					Date end = c.getTime();
-					calendar.addEvent(new DefaultScheduleEvent(taskDto.getTema()+"("+taskDto.getProjectName()+")", start, end));
-				}
-			
-	}
+		for (TaskDto taskDto : taskDtoList) {
+			Date start = taskDto.getStart();
+			Calendar c = Calendar.getInstance();
+			c.setTime(start);
+			c.add(Calendar.DATE, taskDto.getDaysOfWork()); // number of days to add
+			Date end = c.getTime();
+			calendar.addEvent(
+					new DefaultScheduleEvent(taskDto.getTema() + "(" + taskDto.getProjectName() + ")", start, end));
+		}
 
+	}
 
 	public void addTask() {
 		TaskDto existTask = new TaskDto();
@@ -93,21 +94,9 @@ public class TaskManagementBean {
 
 			}
 		} else if (existTask != null) {
-			existTask.setDaysOfWork(taskDto.getDaysOfWork());
-			existTask.setStart(taskDto.getStart());
-			if (taskService.update(existTask)) {
-				refresh();
-				System.out.println("u shtua");
-				refresh();
-				taskDto = new TaskDto();
-				Message.addMessage(existTask.getTema() + " :" + Message.bundle.getString("TASK_ADDED"), "info");
+			Message.addMessage(Message.bundle.getString("TEMA_EXIST_DELETED"), "warn");
 
-			} else {
-				Message.addMessage(Message.bundle.getString("TASK_NOTADDED"), "warn");
-
-			}
 		} else {
-			System.out.println("ky task ekziston");
 			Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "warn");
 
 		}
@@ -141,7 +130,6 @@ public class TaskManagementBean {
 					|| taskService.existTask(taskDto.getTema()) && existTask == null) {
 				if (taskService.update(taskDto)) {
 					refresh();
-					System.out.println("u editua");
 					Message.addMessage(Message.bundle.getString("TASK_EDITED"), "info");
 
 				} else {
@@ -149,15 +137,14 @@ public class TaskManagementBean {
 
 				}
 			} else {
-				System.out.println("ky task ekziston");
 				Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "warn");
-
 			}
 		} else {
 			Message.addMessage(Message.bundle.getString("NO_CHANGES"), "info");
 
 		}
 	}
+
 
 	public void onProjectChange(int id) {
 		if (id != 0) {
@@ -176,7 +163,6 @@ public class TaskManagementBean {
 			taskEdit.setStatus(taskDto.getStatus());
 			if (taskService.update(taskEdit)) {
 				refresh();
-				System.out.println("u editua");
 				Message.addMessage(Message.bundle.getString("TASK_EDITED"), "info");
 
 			} else {
@@ -289,12 +275,13 @@ public class TaskManagementBean {
 	public void setCalendar(ScheduleModel calendar) {
 		this.calendar = calendar;
 	}
+
 	public ScheduleEvent getEvent() {
 		return event;
 	}
+
 	public void setEvent(ScheduleEvent event) {
 		this.event = event;
 	}
 
-	
 }
