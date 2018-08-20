@@ -27,10 +27,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public boolean remove(int userId) {
-		if (userDao.taskOfUser(userId)) {
-			return userDao.remove(userId);
-		} else
-			return false;
+		return userDao.remove(userId);
 	}
 
 	@Override
@@ -45,15 +42,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional
 	public ArrayList<UserDto> getAll(int id) {
-		ArrayList<UserDto> userDtoList = new ArrayList<>();
-		ArrayList<User> userList = userDao.getAll(id);
-		for (int i = 0; i < userList.size(); i++) {
-			userDtoList.add(UserConverter.toUserDto(userList.get(i)));
-		}
+		return UserConverter.toUserListDto(userDao.getAll(id));
 
-		return userDtoList;
 	}
 
 	@Override
@@ -67,6 +58,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 	}
+
 	@Override
 	public boolean existUsername(String username) {
 		return userDao.existUsername(username);

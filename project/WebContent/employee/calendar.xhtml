@@ -15,21 +15,11 @@
 	<meta name="description" content="" />
 	<meta name="author" content="" />
 
-	<title>Task Management</title>
+	<title>Task Calendar</title>
 
-	<!-- Bootstrap core CSS-->
-	<link href="../resources/vendor/bootstrap/css/bootstrap.min.css"
-		rel="stylesheet" />
-	<link rel="shortcut icon" href="#" />
-	<!-- Custom fonts for this template-->
-	<link href="../resources/vendor/fontawesome-free/css/all.min.css"
-		rel="stylesheet" type="text/css" />
-	<!-- Page level plugin CSS-->
-	<link href="../resources/vendor/datatables/dataTables.bootstrap4.css"
-		rel="stylesheet" />
-
-	<!-- Custom styles for this template-->
-	<link href="../resources/css/sb-admin.css" rel="stylesheet" />
+	<ui:insert>
+		<ui:include name="style" src="/component/styles.xhtml" />
+	</ui:insert>
 </h:head>
 <h:body>
 	<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
@@ -37,32 +27,9 @@
 	<a class="navbar-brand mr-1"
 		href="http://localhost:8084/project/employee/calendar.xhtml">Calendar</a>
 
-	<button class="btn btn-link btn-sm text-white order-1 order-sm-0"
-		id="sidebarToggle" href="#">
-		<i class="fas fa-bars"></i>
-	</button>
-	<!-- Navbar Search --> <h:form
-		class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
-
-	</h:form> <!-- Navbar -->
-	<ul class="navbar-nav ml-auto ml-md-0">
-
-		<li class="nav-item dropdown no-arrow"><a
-			class="nav-link dropdown-toggle" href="#" id="userDropdown"
-			role="button" data-toggle="dropdown" aria-haspopup="true"
-			aria-expanded="false"> <i class="fas fa-user-circle fa-fw"></i>
-		</a>
-			<div class="dropdown-menu dropdown-menu-right"
-				aria-labelledby="userDropdown">
-				<a class="dropdown-item" href="#" onclick="PF('dlg2').show();">Change
-					Password</a>
-				<div class="dropdown-divider"></div>
-				<a class="dropdown-item" href="#" data-toggle="modal"
-					data-target="#logoutModal">Logout</a>
-			</div></li>
-	</ul>
-
-	</nav>
+	<ui:insert>
+		<ui:include name="header" src="/component/header.xhtml" />
+	</ui:insert> </nav>
 	<div id="wrapper">
 
 		<!-- Sidebar -->
@@ -71,8 +38,8 @@
 					class="fas fa-fw fa-user"></i> <span>#{userBean.userDto.username}</span>
 			</a></li>
 			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/employee/homeEmployee.xhtml">
-					<i class="fas fa-fw fa-table"></i> <span>Task management</span>
+				href="http://localhost:8084/project/home.xhtml">
+					<i class="fas fa-fw fa-table"></i> <span>Home Page</span>
 			</a></li>
 			<li class="nav-item active"><h:form id="editForm">
 					<p:growl id="growl" sticky="true" />
@@ -119,56 +86,18 @@
 				</div>
 				<div class="card-body">
 					<div class="table-responsive">
-						<p:schedule value="#{taskBean.calendar}" draggable="false"/>
+						<p:schedule value="#{taskBean.calendar}" draggable="false" />
 
 					</div>
 				</div>
 			</div>
-       
+
 		</h:form>
 	</div>
 
 	<!-- /C O N T E N T -->
-
-	<!-- Logout Modal-->
-	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-					<button class="close" type="button" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">×</span>
-					</button>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-secondary" type="button"
-						data-dismiss="modal">Cancel</button>
-					<h:form id="logout">
-						<p:commandLink class="btn btn-primary" type="submit"
-							value="Log out" action="#{loginBean.logOut()}" />
-
-					</h:form>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Bootstrap core JavaScript-->
-	<script src="../resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-	<!-- Core plugin JavaScript-->
-	<script src="../resources/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-	<!-- Page level plugin JavaScript-->
-
-	<script src="../resources/vendor/datatables/jquery.dataTables.js"></script>
-	<script src="../resources/vendor/datatables/dataTables.bootstrap4.js">
-		
-	</script>
-
-	<!-- Custom scripts for all pages-->
-	<script src="../resources/js/sb-admin.min.js"></script>
+	<ui:insert>
+		<ui:include name="footer" src="/component/footer.xhtml" />
+	</ui:insert>
 </h:body>
 </html>

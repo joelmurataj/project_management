@@ -10,7 +10,6 @@ public interface UserDao {
 	public boolean remove(int userId);
 	public boolean update(User user);
 	public boolean existUsername( String username);
-	public boolean taskOfUser(int userId);
 	public User findByUsername(String username);
 	
 	public User findById(int id);

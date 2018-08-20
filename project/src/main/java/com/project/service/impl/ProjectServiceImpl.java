@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.project.converters.ProjectConverter;
 import com.project.dao.ProjectDao;
 import com.project.dto.ProjectDto;
-import com.project.entity.Project;
 import com.project.service.ProjectService;
 
 @Service("projectService")
@@ -28,10 +27,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	@Transactional
 	public boolean remove(int projectId) {
-		if (projectDao.taskOfProject(projectId)) {
-			return projectDao.remove(projectId);
-		} else
-			return false;
+		return projectDao.remove(projectId);
 	}
 
 	@Override
@@ -51,17 +47,12 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public ArrayList<ProjectDto> getAllProjects(int idMenager) {
-		ArrayList<ProjectDto> projectDtoList = new ArrayList<ProjectDto>();
-		ArrayList<Project> projectList = projectDao.getAllProjects(idMenager);
-		for (int i = 0; i < projectList.size(); i++) {
-			projectDtoList.add(ProjectConverter.toProjectDto(projectList.get(i)));
-		}
+	public ArrayList<ProjectDto> getAllProjects(int idManager) {
+		return ProjectConverter.toProjectListDto(projectDao.getAllProjects(idManager));
 
-		return projectDtoList;
 	}
 
-	@Override
+	@Override	
 	public ProjectDto findByTema(String tema) {
 		return ProjectConverter.toProjectDto(projectDao.findByTema(tema));
 	}

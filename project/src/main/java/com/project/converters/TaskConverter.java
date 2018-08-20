@@ -1,5 +1,7 @@
 package com.project.converters;
 
+import java.util.ArrayList;
+
 import com.project.dto.TaskDto;
 import com.project.entity.Project;
 import com.project.entity.Status;
@@ -82,5 +84,16 @@ public class TaskConverter {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public static ArrayList<TaskDto> toTaskListDto(ArrayList<Task> tasks) {
+		ArrayList<TaskDto> taskDto = new ArrayList<TaskDto>();
+		if (tasks != null) {
+			for (Task task : tasks) {
+				taskDto.add(toTaskDto(task));
+			}
+			return taskDto;
+		} else
+			return null;
 	}
 }

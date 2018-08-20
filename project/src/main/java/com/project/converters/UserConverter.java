@@ -1,5 +1,7 @@
 package com.project.converters;
 
+import java.util.ArrayList;
+
 import org.jasypt.util.password.BasicPasswordEncryptor;
 
 import com.project.dto.UserDto;
@@ -12,8 +14,8 @@ public class UserConverter {
 		try {
 			if (userDto != null) {
 				User user = new User();
-				user.setEmer(userDto.getEmer());
-				user.setMbiemer(userDto.getMbiemer());
+				user.setFirstName(userDto.getFirstName());
+				user.setLastName(userDto.getLastName());
 				user.setUsername(userDto.getUsername());
 				BasicPasswordEncryptor encryptor = new BasicPasswordEncryptor();
 				user.setPassword(encryptor.encryptPassword(userDto.getPassword()));
@@ -40,8 +42,8 @@ public class UserConverter {
 			if (userDto != null) {
 				User user = new User();
 				user.setId(userDto.getId());
-				user.setEmer(userDto.getEmer());
-				user.setMbiemer(userDto.getMbiemer());
+				user.setFirstName(userDto.getFirstName());
+				user.setLastName(userDto.getLastName());
 				user.setUsername(userDto.getUsername());
 				BasicPasswordEncryptor encryptor = new BasicPasswordEncryptor();
 				user.setPassword(encryptor.encryptPassword(userDto.getPassword()));
@@ -70,8 +72,8 @@ public class UserConverter {
 			if (user != null) {
 				UserDto userDto = new UserDto();
 				userDto.setId(user.getId());
-				userDto.setEmer(user.getEmer());
-				userDto.setMbiemer(user.getMbiemer());
+				userDto.setFirstName(user.getFirstName());
+				userDto.setLastName(user.getLastName());
 				userDto.setUsername(user.getUsername());
 				userDto.setPassword(user.getPassword());
 				userDto.setRoliId(user.getRole().getId());
@@ -87,5 +89,16 @@ public class UserConverter {
 		}
 
 	}
-
+	
+	public static ArrayList<UserDto> toUserListDto(ArrayList<User> users) {
+		ArrayList<UserDto> userDto = new ArrayList<UserDto>();
+		if (users != null) {
+			for (User user : users) {
+				userDto.add(toUserDto(user));
+			}
+			return userDto;
+		} else
+			return null;
+	}
+	
 }

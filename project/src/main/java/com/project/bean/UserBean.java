@@ -37,6 +37,13 @@ public class UserBean implements Serializable{
 	public void logOut() {
 		userDto = null;
 	}
+	public boolean isManager() {
+		return userDto.getRoliId()==1;
+	}
+
+	public boolean isEmployee() {
+		return userDto.getRoliId()==2;
+	}
 	
 	public UserBean() {
 		

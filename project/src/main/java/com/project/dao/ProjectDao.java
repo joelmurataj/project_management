@@ -10,7 +10,6 @@ public interface ProjectDao {
 	public boolean remove(int projectId);
 	public boolean update(Project project);
 	public boolean existProject(String tema);
-	public boolean taskOfProject(int projectId);
 	public Project findByTema(String tema);
 	
 	public Project findById(int id);

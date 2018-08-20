@@ -11,11 +11,13 @@ public class UserDto implements Serializable{
 	private int id;
 	private String username;
 	private int roliId;
-	private String emer;
-	private String mbiemer;
+	private String firstName;
+	private String lastName;
 	private String password;
 	private int managedBy;
 	private String confirmPassword;
+	private String oldPassword;
+
 	
 	
 	public String getConfirmPassword() {
@@ -59,20 +61,20 @@ public class UserDto implements Serializable{
 		this.roliId = roliId;
 	}
 
-	public String getEmer() {
-		return emer;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setEmer(String emer) {
-		this.emer = emer;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getMbiemer() {
-		return mbiemer;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setMbiemer(String mbiemer) {
-		this.mbiemer = mbiemer;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getPassword() {
@@ -83,13 +85,20 @@ public class UserDto implements Serializable{
 		this.password = password;
 	}
 
+	public String getOldPassword() {
+		return oldPassword;
+	}
+
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((emer == null) ? 0 : emer.hashCode());
-		result = prime * result + ((mbiemer == null) ? 0 : mbiemer.hashCode());
+		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		return result;
 	}
 
@@ -102,23 +111,18 @@ public class UserDto implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		UserDto other = (UserDto) obj;
-		if (emer == null) {
-			if (other.emer != null)
+		if (firstName == null) {
+			if (other.firstName != null)
 				return false;
-		} else if (!emer.equals(other.emer))
+		} else if (!firstName.equals(other.firstName))
 			return false;
-		if (mbiemer == null) {
-			if (other.mbiemer != null)
+		if (lastName == null) {
+			if (other.lastName != null)
 				return false;
-		} else if (!mbiemer.equals(other.mbiemer))
+		} else if (!lastName.equals(other.lastName))
 			return false;
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "UserDto [id=" + id + ", username=" + username + ", emer=" + emer + ", mbiemer=" + mbiemer + ", password="
-				+ password  + ", role=" + roliId + ", managedBy=" + managedBy + "]";
-	}
 	
 }

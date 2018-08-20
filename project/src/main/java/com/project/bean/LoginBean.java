@@ -89,10 +89,10 @@ public class LoginBean {
 			if (user != null) {
 				if (user.getRoliId() == 1) {
 					userBean.setUserDto(user);
-					return "admin/home?faces-redirect=true";
+					return "home?faces-redirect=true";
 				} else if (user.getRoliId() == 2) {
 					userBean.setUserDto(user);
-					return "employee/homeEmployee?faces-redirect=true";
+					return "home?faces-redirect=true";
 				}
 			}else {
 				System.out.println("User failed to log in! (User is null)");

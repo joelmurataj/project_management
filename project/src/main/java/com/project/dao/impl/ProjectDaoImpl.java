@@ -1,7 +1,6 @@
 package com.project.dao.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import com.project.dao.ProjectDao;
 import com.project.entity.Project;
 import com.project.entity.Task;
-import com.project.entity.User;
 
 @Repository(value = "projectDao")
 @Scope("singleton")
@@ -30,7 +28,7 @@ public class ProjectDaoImpl implements ProjectDao {
 	@Override
 	public boolean add(Project project) {
 		try {
-			logger.debug("manager {} adding project {}.",project.getManager().getUsername(), project.getTema());
+			logger.debug("manager {} adding project {}.", project.getManager().getUsername(), project.getTema());
 			entityManager.persist(project);
 			logger.debug("project added succesfuly");
 			return true;
@@ -44,28 +42,28 @@ public class ProjectDaoImpl implements ProjectDao {
 	public boolean remove(int projectId) {
 		try {
 			Project project = entityManager.find(Project.class, projectId);
-			logger.debug("manager {} deleting project {}",project.getManager().getUsername(), project.getTema());
-
-			entityManager.createQuery("update Project project set project.active=1 where project.id=:id")
-					.setParameter("id", projectId).executeUpdate();
-			logger.debug("project deleted succesfuly");
-			return true;
-
+			logger.debug("manager {} deleting project {}", project.getManager().getUsername(), project.getTema());
+			if (taskOfProject(projectId)) {
+				entityManager.createQuery("update Project project set project.active=1 where project.id=:id")
+						.setParameter("id", projectId).executeUpdate();
+				logger.debug("project deleted succesfuly");
+				return true;
+			} else {
+				return false;
+			}
 		} catch (Exception e) {
 			logger.error("Error deleting project:" + e.getMessage());
 			return false;
 		}
 	}
 
-	@Override
 	public boolean taskOfProject(int projectId) {
 		try {
 			Project project = entityManager.find(Project.class, projectId);
-			logger.debug("finding tasks of project {}",project.getTema());
+			logger.debug("finding tasks of project {}", project.getTema());
 			ArrayList<Task> tasks = (ArrayList<Task>) entityManager
-					.createQuery("select task from Task task where task.project.id=:id", Task.class)
+					.createQuery("select task from Task task where task.project.id=:id and task.active=0", Task.class)
 					.setParameter("id", projectId).getResultList();
-			System.out.println("User was removed!");
 			if (tasks.isEmpty()) {
 				logger.debug("project has no task");
 
@@ -92,7 +90,7 @@ public class ProjectDaoImpl implements ProjectDao {
 				logger.debug("project {} dont conflict", project.getTema());
 				return false;
 			} else {
-				logger.debug("project {} conflict with his tasks",project.getTema());
+				logger.debug("project {} conflict with his tasks", project.getTema());
 				return true;
 			}
 		} catch (Exception e) {
@@ -105,7 +103,7 @@ public class ProjectDaoImpl implements ProjectDao {
 	@Override
 	public boolean update(Project project) {
 		try {
-			logger.debug("manager{} editing project {}",project.getManager().getUsername(),project.getTema());
+			logger.debug("manager{} editing project {}", project.getManager().getUsername(), project.getTema());
 			if (!conflicts(project)) {
 				entityManager.merge(project);
 				logger.debug("project edited succesfuly");
@@ -113,7 +111,7 @@ public class ProjectDaoImpl implements ProjectDao {
 			} else
 				return false;
 		} catch (Exception e) {
-			logger.error("error editing project{}",project.getTema()+": "+e.getMessage());
+			logger.error("error editing project{}", project.getTema() + ": " + e.getMessage());
 			return false;
 
 		}
@@ -122,22 +120,18 @@ public class ProjectDaoImpl implements ProjectDao {
 	@Override
 	public boolean existProject(String tema) {
 		try {
-			logger.debug("finding project with tema {}",tema);
-			ArrayList<Project> projects = (ArrayList<Project>) entityManager
+			logger.debug("finding project with tema {}", tema);
+			Project projects = (Project) entityManager
 					.createQuery("Select project From Project project Where project.tema=:tema AND active=0",
 							Project.class)
-					.setParameter("tema", tema).getResultList();
+					.setParameter("tema", tema).getSingleResult();
 
-			if (projects.isEmpty()) {
-				logger.debug("not any project");
-				return true;
-			} else
-				logger.debug("this tema{} exist",tema);
+			logger.debug("this tema{} exist", tema);
 			return false;
 
 		} catch (Exception e) {
-			logger.error("error finding project with tema {}",tema+": "+e.getMessage());
-			return false;
+			logger.error("error finding project with tema {}", tema + ": " + e.getMessage());
+			return true;
 
 		}
 	}
@@ -147,10 +141,10 @@ public class ProjectDaoImpl implements ProjectDao {
 		try {
 			logger.debug("finding project");
 			Project project = entityManager.find(Project.class, id);
-			logger.debug("manager {} found project{}",project.getManager().getUsername(),project.getTema());
+			logger.debug("manager {} found project{}", project.getManager().getUsername(), project.getTema());
 			return project;
 		} catch (Exception e) {
-			logger.error("error finding project"+e.getMessage());
+			logger.error("error finding project" + e.getMessage());
 			return null;
 		}
 	}
@@ -167,11 +161,11 @@ public class ProjectDaoImpl implements ProjectDao {
 				logger.debug("not any project for manager");
 				return null;
 			}
-			logger.debug("projects of manager retrieved: "+projects);
+			logger.debug("projects of manager retrieved: " + projects);
 			return projects;
 
 		} catch (Exception e) {
-			logger.error("error finding projects of menager: "+e.getMessage());
+			logger.error("error finding projects of menager: " + e.getMessage());
 			return null;
 		}
 	}
@@ -188,7 +182,7 @@ public class ProjectDaoImpl implements ProjectDao {
 			logger.debug("project found");
 			return project;
 		} catch (Exception e) {
-			logger.error("error finding project"+e.getMessage());
+			logger.error("error finding project" + e.getMessage());
 			return null;
 		}
 	}

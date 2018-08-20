@@ -44,7 +44,7 @@ public class UserFilter implements Filter {
 			if (userDto.getRoliId()==1) {
 				if ((currentPath.contains("login") || currentPath
 						.contains("error.xhtml")) && !allowed(currentPath))
-					res.sendRedirect("/project/admin/projectManagement.xhtml");
+					res.sendRedirect("home.xhtml");
 				else if (currentPath.contains("employee")
 						&& !allowed(currentPath))
 					res.sendError(403);
@@ -52,7 +52,7 @@ public class UserFilter implements Filter {
 			} else if (userDto.getRoliId()==2) {
 				if ((currentPath.contains("login") || currentPath
 						.contains("error.xhtml")) && !allowed(currentPath))
-					res.sendRedirect("/employee/employeeHome.xhtml");
+					res.sendRedirect("home.xhtml");
 				else if (currentPath.contains("admin")
 						&& !allowed(currentPath))
 					res.sendError(403);

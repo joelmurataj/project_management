@@ -1,7 +1,6 @@
 package com.project.converters;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 
 import com.project.dto.ProjectDto;
 import com.project.entity.Project;
@@ -78,30 +77,15 @@ public class ProjectConverter {
 
 	}
 
-	private static java.util.Date toUtilDate(String date) {
-		SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
-
-		try {
-			Date dateFromString = format.parse(date);
-			return new java.util.Date(dateFromString.getTime());
-		} catch (Exception e) {
+	public static ArrayList<ProjectDto> toProjectListDto(ArrayList<Project> projects) {
+		ArrayList<ProjectDto> projectDto = new ArrayList<ProjectDto>();
+		if (projects != null) {
+			for (Project project : projects) {
+				projectDto.add(toProjectDto(project));
+			}
+			return projectDto;
+		} else
 			return null;
-		}
-
 	}
 
-	private static String toDate(java.sql.Timestamp date) {
-		SimpleDateFormat dateformat2 = new SimpleDateFormat("M/dd/yyyy hh:mm:ss");
-
-		try {
-
-			return dateformat2.format(date);
-
-		} catch (Exception e) {
-
-			return null;
-
-		}
-
-	}
 }
