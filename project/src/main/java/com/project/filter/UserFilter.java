@@ -45,9 +45,6 @@ public class UserFilter implements Filter {
 				if ((currentPath.contains("login") || currentPath
 						.contains("error.xhtml")) && !allowed(currentPath))
 					res.sendRedirect("home.xhtml");
-				else if (currentPath.contains("employee")
-						&& !allowed(currentPath))
-					res.sendError(403);
 
 			} else if (userDto.getRoliId()==2) {
 				if ((currentPath.contains("login") || currentPath

@@ -118,20 +118,20 @@ public class ProjectDaoImpl implements ProjectDao {
 	}
 
 	@Override
-	public boolean existProject(String tema) {
+	public Project existProject(String tema) {
 		try {
 			logger.debug("finding project with tema {}", tema);
-			Project projects = (Project) entityManager
-					.createQuery("Select project From Project project Where project.tema=:tema AND active=0",
+			Project project = (Project) entityManager
+					.createQuery("Select project From Project project Where project.tema=:tema",
 							Project.class)
 					.setParameter("tema", tema).getSingleResult();
 
 			logger.debug("this tema{} exist", tema);
-			return false;
+			return project;
 
 		} catch (Exception e) {
 			logger.error("error finding project with tema {}", tema + ": " + e.getMessage());
-			return true;
+			return null;
 
 		}
 	}
@@ -170,21 +170,6 @@ public class ProjectDaoImpl implements ProjectDao {
 		}
 	}
 
-	@Override
-	public Project findByTema(String tema) {
-		try {
-			logger.debug("finding project by tema");
-			Project project = (Project) entityManager
-					.createQuery("Select project From Project project Where project.tema=:tema and active=1",
-							Project.class)
-					.setParameter("tema", tema).getSingleResult();
-			project.setActive(false);
-			logger.debug("project found");
-			return project;
-		} catch (Exception e) {
-			logger.error("error finding project" + e.getMessage());
-			return null;
-		}
-	}
+
 
 }

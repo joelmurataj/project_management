@@ -37,8 +37,8 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public boolean existProject(String tema) {
-		return projectDao.existProject(tema);
+	public ProjectDto existProject(String tema) {
+		return ProjectConverter.toProjectDto(projectDao.existProject(tema));
 	}
 
 	@Override
@@ -50,11 +50,6 @@ public class ProjectServiceImpl implements ProjectService {
 	public ArrayList<ProjectDto> getAllProjects(int idManager) {
 		return ProjectConverter.toProjectListDto(projectDao.getAllProjects(idManager));
 
-	}
-
-	@Override	
-	public ProjectDto findByTema(String tema) {
-		return ProjectConverter.toProjectDto(projectDao.findByTema(tema));
 	}
 
 }

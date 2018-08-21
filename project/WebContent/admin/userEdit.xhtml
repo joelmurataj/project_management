@@ -8,13 +8,6 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport"
-		content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-	<meta name="description" content="" />
-	<meta name="author" content="" />
-
 	<title>User Management</title>
 
 	<ui:insert>
@@ -26,13 +19,9 @@
 
 	<a class="navbar-brand mr-1"
 		href="http://localhost:8084/project/admin/userManagement.xhtml">User
-		Management</a>
-
-	<ui:insert>
+		Management</a> <ui:insert>
 		<ui:include name="header" src="/component/header.xhtml" />
-	</ui:insert>
-
-	</nav>
+	</ui:insert> </nav>
 	<div id="wrapper">
 		<!-- Sidebar -->
 		<ul class="sidebar navbar-nav">
@@ -54,6 +43,10 @@
 				href="http://localhost:8084/project/admin/home.xhtml"> <i
 					class="fas fa-fw fa-table"></i> <span>Home Page</span>
 			</a></li>
+			<li class="nav-item"><a class="nav-link"
+				href="http://localhost:8084/project/calendar.xhtml"> <i
+					class="fas fa-fw fa-table"></i> <span>Calendar</span>
+			</a></li>
 		</ul>
 
 
@@ -70,11 +63,11 @@
 				<div class="card-body">
 					<div class="table-responsive">
 						<h:messages style="color:red" id="message"
-							infoStyle="display:none"  />
+							infoStyle="display:none" />
 						<p:panelGrid columns="2" style="width:50%;text-align:center">
 							<h:outputText value="FirstName:" />
-							<p:inputText value="#{userCrudBean.userDto.firstName}" label="firstName"
-								required="true" id="firstName"
+							<p:inputText value="#{userCrudBean.userDto.firstName}"
+								label="firstName" required="true" id="firstName"
 								validatorMessage="Ju lutem perdorni vetem shkronjam per emrin"
 								requiredMessage="Ju lutem plotesoni emrin" maxlength="45">
 								<f:validateRegex pattern="[a-zA-Z]+" />

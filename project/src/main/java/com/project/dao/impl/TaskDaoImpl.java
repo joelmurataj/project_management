@@ -78,37 +78,24 @@ public class TaskDaoImpl implements TaskDao {
 	}
 
 	@Override
-	public boolean existTask(String tema) {
+	public Task existTask(String tema) {
 		try {
 			logger.debug("finding task not deleted by tema");
 			Task task = (Task) entityManager
-					.createQuery("Select task From Task task Where task.tema=:tema and task.active=0", Task.class)
+					.createQuery("Select task From Task task Where task.tema=:tema", Task.class)
 					.setParameter("tema", tema).getSingleResult();
 
 			logger.debug("task found");
-			return false;
+			return task;
 
 		} catch (Exception e) {
 			logger.error("error finding task:" + e.getMessage());
-			return true;
-
-		}
-	}
-
-	@Override
-	public Task findByTema(String tema) {
-		try {
-			logger.debug("finding deleted task by tema");
-			Task task = (Task) entityManager
-					.createQuery("Select task From Task task Where task.tema=:tema and active=1", Task.class)
-					.setParameter("tema", tema).getSingleResult();
-			logger.debug("task{} was found", task.getTema());
-			return task;
-		} catch (Exception e) {
-			logger.error("error finding  deleted task:" + e.getMessage());
 			return null;
+
 		}
 	}
+
+
 
 	@Override
 	public Task findById(int id) {

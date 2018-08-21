@@ -10,8 +10,7 @@ public interface TaskService {
 	public boolean add(TaskDto taskDto);
 	public boolean remove(int taskId);
 	public boolean update(TaskDto taskDto);
-	public boolean existTask(String tema);
-	public TaskDto findByTema(String tema);
+	public TaskDto existTask(String tema);
 	public ArrayList<TaskDto> filter(String employeeUsername,int managerId,String projectTema);
 	public ArrayList<TaskDto> filterForEmployee(String employeeUsername, int employeeId);
 	

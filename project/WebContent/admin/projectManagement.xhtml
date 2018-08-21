@@ -20,12 +20,9 @@
 
 	<a class="navbar-brand mr-1"
 		href="http://localhost:8084/project/admin/projectManagement.xhtml">Project
-		Management</a>
-
-	<ui:insert>
+		Management</a> <ui:insert>
 		<ui:include name="header" src="/component/header.xhtml" />
-	</ui:insert>
-	</nav>
+	</ui:insert> </nav>
 	<div id="wrapper">
 		<!-- Sidebar -->
 		<ul class="sidebar navbar-nav">
@@ -41,6 +38,10 @@
 			<li class="nav-item"><a class="nav-link"
 				href="http://localhost:8084/project/home.xhtml"> <i
 					class="fas fa-fw fa-table"></i> <span>Home Page</span>
+			</a></li>
+			<li class="nav-item"><a class="nav-link"
+				href="http://localhost:8084/project/calendar.xhtml"> <i
+					class="fas fa-fw fa-table"></i> <span>Calendar</span>
 			</a></li>
 		</ul>
 
@@ -129,8 +130,7 @@
 
 								<p:commandLink id="edit"
 									action="#{projectBean.saveProjectForEdit(projectDto.id)}"
-									update=":editForm:dlge" oncomplete="PF('dlg2').show();"
-									>
+									update=":editForm:dlge" oncomplete="PF('dlg2').show();">
 									<i class="fas fa-pencil-alt"></i>
 								</p:commandLink>
 
@@ -218,7 +218,7 @@
 	</h:form>
 	<!-- /C O N T E N T -->
 
-	
+
 	<ui:insert>
 		<ui:include name="footer" src="/component/footer.xhtml" />
 	</ui:insert>

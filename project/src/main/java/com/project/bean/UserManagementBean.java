@@ -44,9 +44,8 @@ public class UserManagementBean {
 	}
 
 	public void addUser() {
-		UserDto existUser = userService.findByUsername(userDto.getUsername());
 		if (userDto.getConfirmPassword().equals(userDto.getPassword())) {
-			if (userService.existUsername(userDto.getUsername()) && existUser == null) {
+			if (userService.existUsername(userDto.getUsername()) == null) {
 				userDto.setManagedBy(userBean.getUserDto().getId());
 				userDto.setRoliId(2);
 				if (userService.add(userDto)) {
@@ -56,10 +55,11 @@ public class UserManagementBean {
 				} else {
 					Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTADDED"), "warn");
 				}
-			} else if (existUser != null) {
-				Message.addMessage(Message.bundle.getString("EMPLOYEE_EXIST_DELETED"), "warn");
-			} else {
+			} else if (!userService.existUsername(userDto.getUsername()).isActive()) {
 				Message.addMessage(Message.bundle.getString("EMPLOYEE_EXIST"), "warn");
+			} else {
+				Message.addMessage(Message.bundle.getString("EMPLOYEE_EXIST_DELETED"), "warn");
+
 			}
 		}
 	}

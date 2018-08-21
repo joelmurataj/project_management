@@ -76,6 +76,7 @@ public class TaskConverter {
 				taskDto.setDaysOfWork(task.getDaysOfWork());
 				taskDto.setStatus(task.getStatus().getId());
 				taskDto.setEmployeeId(task.getEmployee().getId());
+				taskDto.setActive(task.isActive());
 				taskDto.setProjectId(task.getProject().getId());
 				return taskDto;
 			} else

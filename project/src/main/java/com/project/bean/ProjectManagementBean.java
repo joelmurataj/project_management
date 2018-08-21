@@ -44,10 +44,8 @@ public class ProjectManagementBean {
 	}
 
 	public void addProject() {
-		ProjectDto existProject = new ProjectDto();
-		existProject = projectService.findByTema(projectDto.getTema());
 		projectDto.setMenagerId(userBean.getUserDto().getId());
-		if (projectService.existProject(projectDto.getTema()) && existProject == null) {
+		if (projectService.existProject(projectDto.getTema()) == null) {
 			if (projectService.add(projectDto)) {
 				refresh();
 				projectDto = new ProjectDto();
@@ -56,9 +54,8 @@ public class ProjectManagementBean {
 			} else {
 				Message.addMessage(projectDto.getTema() + " :" + Message.bundle.getString("PROJECT_NOTADDED"), "warn");
 			}
-		} else if (existProject != null) {
-			Message.addMessage(Message.bundle.getString("TEMA_EXIST_DELETED"), "warn");
-
+		} else if (projectService.existProject(projectDto.getTema()).isActive()) {
+			Message.addMessage(projectDto.getTema() + " :" + Message.bundle.getString("TEMA_EXIST_DELETED"), "warn");
 		} else {
 			Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "warn");
 		}
@@ -80,15 +77,14 @@ public class ProjectManagementBean {
 	}
 
 	public void editProject() {
-		ProjectDto existProject = new ProjectDto();
-		existProject = projectService.findByTema(projectDto.getTema());
 		ProjectDto project = projectService.findById(projectDto.getId());
 
 		if (!project.equals(projectDto)) {
 			project.setDaysOfWork(projectDto.getDaysOfWork());
 			project.setStart(projectDto.getStart());
-			if ((project.getTema().equals(projectDto.getTema()) && !projectService.existProject(projectDto.getTema()))
-					|| projectService.existProject(projectDto.getTema()) && existProject == null) {
+
+			if (project.getTema().equals(projectDto.getTema())
+					|| projectService.existProject(projectDto.getTema()) == null) {
 				project.setTema(projectDto.getTema());
 				if (projectService.update(project)) {
 					refresh();
@@ -98,6 +94,10 @@ public class ProjectManagementBean {
 					Message.addMessage(Message.bundle.getString("PROJECT_NOTEDITED"), "warn");
 
 				}
+
+			} else if (projectService.existProject(projectDto.getTema()).isActive()) {
+				Message.addMessage(projectDto.getTema() + " :" + Message.bundle.getString("TEMA_EXIST_DELETED"),
+						"warn");
 			} else {
 				Message.addMessage(project.getTema() + " :" + Message.bundle.getString("TEMA_EXIST"), "warn");
 			}
@@ -106,7 +106,6 @@ public class ProjectManagementBean {
 
 		}
 	}
-
 
 	public void onRowEdit(int projectId) {
 		ProjectDto editProject = projectService.findById(projectId);

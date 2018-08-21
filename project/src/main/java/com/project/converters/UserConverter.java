@@ -76,6 +76,7 @@ public class UserConverter {
 				userDto.setLastName(user.getLastName());
 				userDto.setUsername(user.getUsername());
 				userDto.setPassword(user.getPassword());
+				userDto.setActive(user.isActive());
 				userDto.setRoliId(user.getRole().getId());
 				if (user.getManagedBy() != null) {
 					userDto.setManagedBy(user.getManagedBy().getId());

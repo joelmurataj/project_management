@@ -81,9 +81,7 @@ public class TaskManagementBean {
 	}
 
 	public void addTask() {
-		TaskDto existTask = new TaskDto();
-		existTask = taskService.findByTema(taskDto.getTema());
-		if (taskService.existTask(taskDto.getTema()) && existTask == null) {
+		if (taskService.existTask(taskDto.getTema()) == null) {
 			if (taskService.add(taskDto)) {
 				refresh();
 				taskDto = new TaskDto();
@@ -93,9 +91,8 @@ public class TaskManagementBean {
 				Message.addMessage(Message.bundle.getString("TASK_NOTADDED"), "warn");
 
 			}
-		} else if (existTask != null) {
-			Message.addMessage(Message.bundle.getString("TEMA_EXIST_DELETED"), "warn");
-
+		} else if (taskService.existTask(taskDto.getTema()).isActive()) {
+			Message.addMessage(taskDto.getTema() + " :" + Message.bundle.getString("TEMA_EXIST_DELETED"), "warn");
 		} else {
 			Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "warn");
 
@@ -119,15 +116,12 @@ public class TaskManagementBean {
 	}
 
 	public void editTask() {
-		TaskDto existTask = new TaskDto();
-		existTask = taskService.findByTema(taskDto.getTema());
 		TaskDto task = taskService.findById(taskDto.getId());
 
 		if (!taskDto.equals(task)) {
 			taskDto.setId(task.getId());
 			taskDto.setStatus(task.getStatus());
-			if ((task.getTema().equals(taskDto.getTema()) && !taskService.existTask(taskDto.getTema()))
-					|| taskService.existTask(taskDto.getTema()) && existTask == null) {
+			if (task.getTema().equals(taskDto.getTema()) || taskService.existTask(taskDto.getTema()) == null) {
 				if (taskService.update(taskDto)) {
 					refresh();
 					Message.addMessage(Message.bundle.getString("TASK_EDITED"), "info");
@@ -136,6 +130,9 @@ public class TaskManagementBean {
 					Message.addMessage(Message.bundle.getString("TASK_NOTEDITED"), "warn");
 
 				}
+			} else if (taskService.existTask(taskDto.getTema()).isActive()) {
+				Message.addMessage(taskDto.getTema() + " :" + Message.bundle.getString("TEMA_EXIST_DELETED"),
+						"warn");
 			} else {
 				Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "warn");
 			}
@@ -144,7 +141,6 @@ public class TaskManagementBean {
 
 		}
 	}
-
 
 	public void onProjectChange(int id) {
 		if (id != 0) {

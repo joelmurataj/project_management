@@ -19,6 +19,7 @@ public class TaskDto implements Serializable{
 	private String usernameEmployee;
 	private String projectName;
 	private String statusName;
+	private boolean active;
 	public int getId() {
 		return id;
 	}
@@ -78,6 +79,13 @@ public class TaskDto implements Serializable{
 	}
 	public void setStatusName(String statusName) {
 		this.statusName = statusName;
+	}
+	
+	public boolean isActive() {
+		return active;
+	}
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	@Override
 	public int hashCode() {

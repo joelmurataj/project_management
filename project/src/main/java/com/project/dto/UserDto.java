@@ -17,9 +17,8 @@ public class UserDto implements Serializable{
 	private int managedBy;
 	private String confirmPassword;
 	private String oldPassword;
+	private boolean active;
 
-	
-	
 	public String getConfirmPassword() {
 		return confirmPassword;
 	}
@@ -91,6 +90,14 @@ public class UserDto implements Serializable{
 
 	public void setOldPassword(String oldPassword) {
 		this.oldPassword = oldPassword;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	@Override

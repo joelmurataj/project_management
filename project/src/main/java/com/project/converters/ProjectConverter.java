@@ -67,6 +67,7 @@ public class ProjectConverter {
 				projectDto.setStatus(project.getStatus().getId());
 				projectDto.setMenagerId(project.getManager().getId());
 				projectDto.setStatusName(project.getStatus().getName());
+				projectDto.setActive(project.isActive());
 				return projectDto;
 			} else
 				return null;

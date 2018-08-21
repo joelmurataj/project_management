@@ -60,12 +60,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean existUsername(String username) {
-		return userDao.existUsername(username);
+	public UserDto existUsername(String username) {
+		return UserConverter.toUserDto(userDao.existUsername(username));
 	}
 
-	@Override
-	public UserDto findByUsername(String username) {
-		return UserConverter.toUserDto(userDao.findByUsername(username));
-	}
 }

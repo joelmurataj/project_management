@@ -87,13 +87,8 @@ public class LoginBean {
 		if (username != null && password != null) {
 			UserDto user = userService.exist(username, password);
 			if (user != null) {
-				if (user.getRoliId() == 1) {
 					userBean.setUserDto(user);
 					return "home?faces-redirect=true";
-				} else if (user.getRoliId() == 2) {
-					userBean.setUserDto(user);
-					return "home?faces-redirect=true";
-				}
 			}else {
 				System.out.println("User failed to log in! (User is null)");
 				Message.addMessage(Message.bundle.getString("USER_NOTLOGGED"), "error");

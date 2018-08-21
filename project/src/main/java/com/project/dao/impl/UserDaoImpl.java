@@ -152,36 +152,19 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public boolean existUsername(String username) {
+	public User existUsername(String username) {
 		try {
 			logger.debug("finding user by username");
-			User users = (User) entityManager
-					.createQuery("Select user From User user Where user.username=:username AND user.active=0",
+			User user = (User) entityManager
+					.createQuery("Select user From User user Where user.username=:username",
 							User.class)
 					.setParameter("username", username).getSingleResult();
 			logger.debug("user found");
-			return false;
+			return user;
 		} catch (Exception e) {
 			logger.error("error finding user " + e.getMessage());
-			return true;
-
-		}
-	}
-
-	@Override
-	public User findByUsername(String username) {
-		try {
-			logger.debug("finding deleted user");
-			User user = (User) entityManager
-					.createQuery("Select user From User user Where user.username=:tema and user.active=1", User.class)
-					.setParameter("tema", username).getSingleResult();
-
-			logger.debug("deleted user found");
-			return user;
-
-		} catch (Exception e) {
-			logger.debug("error finding deleted user:" + e.getMessage());
 			return null;
+
 		}
 	}
 

@@ -38,18 +38,13 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public boolean existTask(String tema) {
-		return taskDao.existTask(tema);
+	public TaskDto existTask(String tema) {
+		return TaskConverter.toTaskDto(taskDao.existTask(tema));
 	}
 
 	@Override
 	public TaskDto findById(int id) {
 		return TaskConverter.toTaskDto(taskDao.findById(id));
-	}
-
-	@Override
-	public TaskDto findByTema(String tema) {
-		return TaskConverter.toTaskDto(taskDao.findByTema(tema));
 	}
 
 	@Override

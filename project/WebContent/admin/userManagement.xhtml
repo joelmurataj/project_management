@@ -20,13 +20,9 @@
 
 	<a class="navbar-brand mr-1"
 		href="http://localhost:8084/project/admin/userManagement.xhtml">User
-		Management</a>
-
-	<ui:insert>
+		Management</a> <ui:insert>
 		<ui:include name="header" src="/component/header.xhtml" />
-	</ui:insert>
-
-	</nav>
+	</ui:insert> </nav>
 	<div id="wrapper">
 		<!-- Sidebar -->
 		<ul class="sidebar navbar-nav">
@@ -42,6 +38,10 @@
 			<li class="nav-item"><a class="nav-link"
 				href="http://localhost:8084/project/home.xhtml"> <i
 					class="fas fa-fw fa-table"></i> <span>Home Page</span>
+			</a></li>
+			<li class="nav-item"><a class="nav-link"
+				href="http://localhost:8084/project/calendar.xhtml"> <i
+					class="fas fa-fw fa-table"></i> <span>Calendar</span>
 			</a></li>
 		</ul>
 
@@ -188,7 +188,7 @@
 
 		</p:dialog>
 	</h:form>
-	
+
 	<h:form id="form1">
 
 		<p:growl id="growl" life="2500" severity="info warn" />
