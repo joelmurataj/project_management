@@ -7,8 +7,6 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import com.project.dao.ProjectDao;
@@ -16,8 +14,6 @@ import com.project.entity.Project;
 import com.project.entity.Task;
 
 @Repository(value = "projectDao")
-@Scope("singleton")
-@Component
 public class ProjectDaoImpl implements ProjectDao {
 
 	private static final Logger logger = LogManager.getLogger(ProjectDaoImpl.class.getName());

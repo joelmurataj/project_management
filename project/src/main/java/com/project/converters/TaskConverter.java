@@ -97,4 +97,37 @@ public class TaskConverter {
 		} else
 			return null;
 	}
+	public static Task toTaskSearch(TaskDto taskDto) {
+		try {
+			if (taskDto != null) {
+				Task task = new Task();
+				
+				task.setActive(false);
+				User employee = new User();
+				employee.setUsername(taskDto.getUsernameEmployee());
+				task.setEmployee(employee);
+				Project project = new Project();
+				project.setTema(taskDto.getProjectName());
+				task.setProject(project);
+				return task;
+			} else
+				return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public static Task toTaskSearchByTema(TaskDto taskDto) {
+		try {
+			if (taskDto != null) {
+				Task task = new Task();
+				task.setTema(taskDto.getTema());
+				return task;
+			} else
+				return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

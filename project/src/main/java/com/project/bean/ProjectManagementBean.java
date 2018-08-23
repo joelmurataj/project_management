@@ -19,11 +19,9 @@ import com.project.utility.Message;
 public class ProjectManagementBean {
 
 	private ProjectDto projectDto;
-	private ProjectDto selectedProject;
 	private ArrayList<ProjectDto> projectDtoList;
 	private ArrayList<ProjectDto> filteredProjects;
 	private Date now = new Date();
-	private int id;
 
 	@ManagedProperty(value = "#{projectService}")
 	private ProjectService projectService;
@@ -34,9 +32,6 @@ public class ProjectManagementBean {
 	public void init() {
 		projectDto = new ProjectDto();
 		refresh();
-		if (id != 0) {
-			projectDto = projectService.findById(id);
-		}
 	}
 
 	public void refresh() {
@@ -67,13 +62,9 @@ public class ProjectManagementBean {
 			refresh();
 			Message.addMessage(Message.bundle.getString("PROJECT_DELETED"), "info");
 		} else {
-			Message.addMessage(Message.bundle.getString("PROJECT_NOTDELETED"), "warn");
+			Message.addMessage(Message.bundle.getString("TASK_EXIST"), "warn");
 
 		}
-	}
-
-	public void saveProjectForEdit(int id) {
-		projectDto = projectService.findById(id);
 	}
 
 	public void editProject() {
@@ -144,14 +135,6 @@ public class ProjectManagementBean {
 		this.projectDtoList = projectDtoList;
 	}
 
-	public ProjectDto getSelectedProject() {
-		return selectedProject;
-	}
-
-	public void setSelectedProject(ProjectDto selectedProject) {
-		this.selectedProject = selectedProject;
-	}
-
 	public ProjectService getProjectService() {
 		return projectService;
 	}
@@ -159,15 +142,7 @@ public class ProjectManagementBean {
 	public void setProjectService(ProjectService projectService) {
 		this.projectService = projectService;
 	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
+	
 	public Date getNow() {
 		return now;
 	}

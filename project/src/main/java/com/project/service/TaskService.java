@@ -11,8 +11,8 @@ public interface TaskService {
 	public boolean remove(int taskId);
 	public boolean update(TaskDto taskDto);
 	public TaskDto existTask(String tema);
-	public ArrayList<TaskDto> filter(String employeeUsername,int managerId,String projectTema);
-	public ArrayList<TaskDto> filterForEmployee(String employeeUsername, int employeeId);
+	public ArrayList<TaskDto> filter(TaskDto taskDto,int managerI);
+	public ArrayList<TaskDto> filterForEmployee(TaskDto taskDto, int employeeId);
 	
 	public TaskDto findById(int id);
 	public ArrayList<TaskDto> getAllTasks( UserDto userDto);

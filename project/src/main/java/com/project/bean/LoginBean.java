@@ -11,33 +11,14 @@ import com.project.utility.Message;
 @ManagedBean(name = "loginBean")
 @RequestScoped
 public class LoginBean {
-	private String emer;
-	private String mbiemer;
 	private String username;
 	private String password;
-	private boolean validCredentials;
 
 	@ManagedProperty(value = "#{userService}")
 	UserService userService;
 
 	@ManagedProperty(value = "#{userBean}")
 	UserBean userBean;
-
-	public String getEmer() {
-		return emer;
-	}
-
-	public void setEmer(String emer) {
-		this.emer = emer;
-	}
-
-	public String getMbiemer() {
-		return mbiemer;
-	}
-
-	public void setMbiemer(String mbiemer) {
-		this.mbiemer = mbiemer;
-	}
 
 	public String getUsername() {
 		return username;
@@ -53,14 +34,6 @@ public class LoginBean {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public boolean isValidCredentials() {
-		return validCredentials;
-	}
-
-	public void setValidCredentials(boolean validCredentials) {
-		this.validCredentials = validCredentials;
 	}
 
 	public UserService getUserService() {
@@ -90,7 +63,6 @@ public class LoginBean {
 					userBean.setUserDto(user);
 					return "home?faces-redirect=true";
 			}else {
-				System.out.println("User failed to log in! (User is null)");
 				Message.addMessage(Message.bundle.getString("USER_NOTLOGGED"), "error");
 				return "";
 			}

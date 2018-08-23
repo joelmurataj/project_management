@@ -60,12 +60,10 @@
 					class="fas fa-fw fa-table"></i> <span>Home Page</span>
 			</a></li>
 
-			<h:form rendered="#{userBean.isEmployee()}">
 				<li class="nav-item"><a class="nav-link"
-					href="http://localhost:8084/project/employee/calendar.xhtml"> <i
+					href="http://localhost:8084/project/calendar.xhtml"> <i
 						class="fas fa-fw fa-table"></i> <span>Calendar</span>
 				</a></li>
-			</h:form>
 		</ul>
 
 
@@ -73,7 +71,7 @@
 
 		<h:form id="edit">
 
-			<p:growl id="growl" life="2500" />
+			<p:growl id="growl" life="2500" severity="info"/>
 			<div class="card mb-3">
 				<div class="card-header" style="text-align: center">Change
 					Password</div>
@@ -91,11 +89,9 @@
 							<h:outputText value="NewPassword:" />
 							<p:password value="#{userCrudBean.userDto.password}"
 								label="password" required="true" id="newPassword" maxlength="45"
-								requiredMessage="Ju lutem plotesoni passwordin e ri"
+								requiredMessage="Ju lutem plotesoni passwordin e ri" feedback="true"
 								validatorMessage="passwordi duhet te kete te pakten 6 shkronja: nje shkronje te madhe,nje karakter special dhe nje numer">
 
-								<f:validateRegex
-									pattern="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{6,20})" />
 							</p:password>
 
 							<h:outputText value="ConfirmPassword:" />

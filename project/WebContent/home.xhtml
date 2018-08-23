@@ -47,8 +47,8 @@
 			</a></li>
 			<h:form rendered="#{userBean.isEmployee()}">
 				<li class="nav-item"><a class="nav-link"
-					href="http://localhost:8084/project/calendar.xhtml">
-						<i class="fas fa-fw fa-table"></i> <span>Calendar</span>
+					href="http://localhost:8084/project/calendar.xhtml"> <i
+						class="fas fa-fw fa-table"></i> <span>Calendar</span>
 				</a></li>
 			</h:form>
 		</ul>
@@ -113,6 +113,22 @@
 								</a>
 							</div>
 						</div>
+						<div class="col-xl-3 col-sm-6 mb-3">
+							<div class="card text-white bg-danger o-hidden h-100">
+								<div class="card-body">
+									<div class="card-body-icon">
+										<i class="fas fa-fw fa-life-ring"></i>
+									</div>
+									<div class="mr-5">Calendar</div>
+								</div>
+								<a class="card-footer text-white clearfix small z-1"
+									href="http://localhost:8084/project/calendar.xhtml"> <span
+									class="float-left">View Details</span> <span
+									class="float-right"> <i class="fas fa-angle-right"></i>
+								</span>
+								</a>
+							</div>
+						</div>
 
 					</div>
 
@@ -124,7 +140,7 @@
 		<!-- C O N T E N T -->
 
 		<h:form id="form1" rendered="#{userBean.isEmployee()}">
-			<p:growl id="growl" life="2500" />
+			<p:growl id="growl" life="4000" severity="info warn" />
 
 			<!-- DataTables Example -->
 			<div class="card mb-3">
@@ -150,7 +166,7 @@
 								<p:outputPanel>
 									<h:outputText value="Search task tema:" />
 									<p:inputText id="globalFilter" style="width:150px"
-										placeholder="Enter keyword" value="#{taskBean.projectTema}">
+										placeholder="Enter keyword" value="#{taskBean.taskDto.tema}">
 										<p:ajax event="keyup" listener="#{taskBean.filterByName()}"
 											update="tableStateDT" />
 									</p:inputText>

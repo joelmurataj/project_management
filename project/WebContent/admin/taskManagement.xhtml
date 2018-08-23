@@ -78,10 +78,10 @@
 								<div class="row" style="margin-left: 35%">
 
 									<p:inputText id="globalFilter" style="width:150px"
-										placeholder="Search username" value="#{taskBean.employeeName}">
+										placeholder="Search username" value="#{taskBean.taskDto.usernameEmployee}">
 
 									</p:inputText>
-									<p:selectOneMenu id="project" value="#{taskBean.projectTema}">
+									<p:selectOneMenu id="project" value="#{taskBean.taskDto.projectName}">
 
 										<f:selectItem itemLabel="Select Project" itemValue=""
 											noSelectionOption="true" />
@@ -148,9 +148,10 @@
 								</p:confirmDialog>
 
 								<p:commandLink id="edit" icon="fas fa-pencil-alt"
-									action="#{taskBean.saveTaskForEdit(taskDto.id)}"
 									update=":editForm:dlg2" oncomplete="PF('dlg2').show();">
 									<i class="fas fa-pencil-alt"></i>
+									<f:setPropertyActionListener target="#{taskBean.taskDto}"
+										value="#{taskDto}" />
 								</p:commandLink>
 							</p:column>
 
@@ -218,8 +219,8 @@
 
 					<h:outputText value="Start Date:" />
 					<p:calendar id="start" value="#{taskBean.taskDto.start}"
-						mindate="#{taskBean.now}" maxdate="#{taskBean.finishDate}"
-						required="true" requiredMessage="Ju lutem plotesoni daten" />
+						mindate="#{taskBean.projectDto.start}" maxdate="#{taskBean.finishDate}"
+						required="true" requiredMessage="Ju lutem plotesoni daten" readonlyInput="true"/>
 					<h:outputText value="WorkDays:" />
 
 					<p:inputNumber id="ditet" value="#{taskBean.taskDto.daysOfWork}"
@@ -269,7 +270,7 @@
 					requiredMessage="Ju lutem plotesoni zgjidhni projektin">
 					<p:ajax
 						listener="#{taskBean.onProjectChange(taskBean.taskDto.projectId)}"
-						update="start" />
+						update="start"/>
 					<f:selectItem itemLabel="Select Project" itemValue=""
 						noSelectionOption="true" />
 					<f:selectItems value="#{projectBean.projectDtoList}"
@@ -279,8 +280,8 @@
 
 				<h:outputText value="Start Date:" />
 				<p:calendar id="start" value="#{taskBean.taskDto.start}"
-					mindate="#{taskBean.now}" maxdate="#{taskBean.finishDate}"
-					required="true" requiredMessage="Ju lutem plotesoni daten" />
+					mindate="#{taskBean.projectDto.start}" maxdate="#{taskBean.finishDate}"
+					required="true" requiredMessage="Ju lutem plotesoni daten" readonlyInput="true" />
 
 				<h:outputText value="WorkDays:" />
 				<p:inputNumber id="ditet" value="#{taskBean.taskDto.daysOfWork}"

@@ -32,10 +32,7 @@ public class TaskManagementBean {
 	private ProjectDto projectDto;
 	private ScheduleModel calendar;
 	private ScheduleEvent event = new DefaultScheduleEvent();
-	private Date now;
 	private Date finishDate;
-	private String projectTema;
-	private String employeeName;
 
 	@ManagedProperty(value = "#{taskService}")
 	private TaskService taskService;
@@ -57,26 +54,27 @@ public class TaskManagementBean {
 
 	public void filterByName() {
 		if (userBean.getUserDto().getRoliId() == 1) {
-			this.taskDtoList = taskService.filter(employeeName, userBean.getUserDto().getId(), projectTema);
+			this.taskDtoList = taskService.filter(taskDto, userBean.getUserDto().getId());
 		} else {
-			this.taskDtoList = taskService.filterForEmployee(projectTema, userBean.getUserDto().getId());
+			this.taskDtoList = taskService.filterForEmployee(taskDto, userBean.getUserDto().getId());
 		}
 	}
 
 	public void refresh() {
+			this.taskDtoList = taskService.getAllTasks(userBean.getUserDto());
+		if (taskDtoList != null) {
+				calendar = new DefaultScheduleModel();
 
-		this.taskDtoList = taskService.getAllTasks(userBean.getUserDto());
-		calendar = new DefaultScheduleModel();
-
-		for (TaskDto taskDto : taskDtoList) {
-			Date start = taskDto.getStart();
-			Calendar c = Calendar.getInstance();
-			c.setTime(start);
-			c.add(Calendar.DATE, taskDto.getDaysOfWork()); // number of days to add
-			Date end = c.getTime();
-			calendar.addEvent(
-					new DefaultScheduleEvent(taskDto.getTema() + "(" + taskDto.getProjectName() + ")", start, end));
-		}
+				for (TaskDto taskDto : taskDtoList) {
+					Date start = taskDto.getStart();
+					Calendar c = Calendar.getInstance();
+					c.setTime(start);
+					c.add(Calendar.DATE, taskDto.getDaysOfWork()); // number of days to add
+					Date end = c.getTime();
+					calendar.addEvent(new DefaultScheduleEvent(taskDto.getTema() + "(" + taskDto.getProjectName() + ")",
+							start, end));
+				}
+			}
 
 	}
 
@@ -111,10 +109,6 @@ public class TaskManagementBean {
 		}
 	}
 
-	public void saveTaskForEdit(int id) {
-		taskDto = taskService.findById(id);
-	}
-
 	public void editTask() {
 		TaskDto task = taskService.findById(taskDto.getId());
 
@@ -131,8 +125,7 @@ public class TaskManagementBean {
 
 				}
 			} else if (taskService.existTask(taskDto.getTema()).isActive()) {
-				Message.addMessage(taskDto.getTema() + " :" + Message.bundle.getString("TEMA_EXIST_DELETED"),
-						"warn");
+				Message.addMessage(taskDto.getTema() + " :" + Message.bundle.getString("TEMA_EXIST_DELETED"), "warn");
 			} else {
 				Message.addMessage(Message.bundle.getString("TEMA_EXIST"), "warn");
 			}
@@ -145,9 +138,8 @@ public class TaskManagementBean {
 	public void onProjectChange(int id) {
 		if (id != 0) {
 			projectDto = projectService.findById(id);
-			now = projectDto.getStart();
 			Calendar c = Calendar.getInstance();
-			c.setTime(now);
+			c.setTime(projectDto.getStart());
 			c.add(Calendar.DATE, projectDto.getDaysOfWork()); // number of days to add
 			finishDate = c.getTime();
 		}
@@ -200,14 +192,6 @@ public class TaskManagementBean {
 		this.taskDtoList = taskDtoList;
 	}
 
-	public Date getNow() {
-		return now;
-	}
-
-	public void setNow(Date now) {
-		this.now = now;
-	}
-
 	public TaskService getTaskService() {
 		return taskService;
 	}
@@ -246,22 +230,6 @@ public class TaskManagementBean {
 
 	public void setFinishDate(Date finishDate) {
 		this.finishDate = finishDate;
-	}
-
-	public String getEmployeeName() {
-		return employeeName;
-	}
-
-	public void setEmployeeName(String employeeName) {
-		this.employeeName = employeeName;
-	}
-
-	public String getProjectTema() {
-		return projectTema;
-	}
-
-	public void setProjectTema(String projectTema) {
-		this.projectTema = projectTema;
 	}
 
 	public ScheduleModel getCalendar() {

@@ -57,12 +57,12 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public ArrayList<TaskDto> filter(String employeeUsername, int managerId, String projectTema) {
-		return TaskConverter.toTaskListDto(taskDao.filter(employeeUsername, managerId, projectTema));
+	public ArrayList<TaskDto> filter(TaskDto taskDto, int managerId) {
+		return TaskConverter.toTaskListDto(taskDao.filter(TaskConverter.toTaskSearch(taskDto), managerId));
 	}
 
 	@Override
-	public ArrayList<TaskDto> filterForEmployee(String taskTema, int employeeId) {
-		return TaskConverter.toTaskListDto(taskDao.filterForEmployee(taskTema, employeeId));
+	public ArrayList<TaskDto> filterForEmployee(TaskDto taskDto, int employeeId) {
+		return TaskConverter.toTaskListDto(taskDao.filterForEmployee(TaskConverter.toTaskSearchByTema(taskDto), employeeId));
 	}
 }

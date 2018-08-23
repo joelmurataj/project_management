@@ -47,11 +47,12 @@
 			<li class="nav-item"><a class="nav-link"> <i
 					class="fas fa-fw fa-user"></i> <span>#{userBean.userDto.username}</span>
 			</a></li>
-			<h:form rendered="#{userBean.isManager()}">
-				<li class="nav-item"><a class="nav-link"
+			<li class="nav-item"><a class="nav-link"
 					href="http://localhost:8084/project/home.xhtml"> <i
 						class="fas fa-fw fa-table"></i> <span>Home Page</span>
 				</a></li>
+			<h:form rendered="#{userBean.isManager()}">
+				
 				<li class="nav-item"><a class="nav-link"
 					href="http://localhost:8084/project/admin/userManagement.xhtml">
 						<i class="fas fa-fw fa-table"></i> <span>User Management</span>
@@ -65,16 +66,11 @@
 						<i class="fas fa-fw fa-table"></i> <span>Task management</span>
 				</a></li>
 			</h:form>
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/home.xhtml"> <i
-					class="fas fa-fw fa-table"></i> <span>Home Page</span>
-			</a></li>
 		</ul>
 
 		<!-- C O N T E N T -->
 
-		<h:form id="form1">
-			<p:growl id="growl" sticky="true" />
+		<h:form id="form1" rendered="#{not empty taskBean.calendar}">
 
 			<!-- DataTables Example -->
 			<div class="card mb-3">

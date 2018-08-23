@@ -51,7 +51,7 @@
 			<!-- DataTables Example -->
 			<div class="card mb-3">
 				<div class="card-header">
-					<i class="fas fa-table"></i> Users
+					<i class="fas fa-table"></i> Employees
 				</div>
 				<div class="card-body">
 					<div class="table-responsive">
@@ -120,7 +120,7 @@
 				</div>
 			</div>
 
-			<p:dialog header="User Info" widgetVar="userDialog" modal="true"
+			<p:dialog header="Employee Info" widgetVar="userDialog" modal="true"
 				showEffect="fade" hideEffect="fade" resizable="false">
 				<p:outputPanel id="userDetail" style="text-align:center;">
 					<p:panelGrid columns="2"
@@ -223,7 +223,7 @@
 				<h:outputText value="Password:" />
 				<p:password value="#{userCrudBean.userDto.password}"
 					label="Password" maxlength="45" required="true" id="Password"
-					feedback="true" inline="true"
+					feedback="true" 
 					requiredMessage="Ju lutem plotesoni passwordin"
 					validatorMessage="passwrodi duhet te kete te pakten 6 shkronja: nje shkronje te madhe,nje karakter special dhe nje numer">
 					<f:validateRegex
@@ -233,7 +233,7 @@
 				<h:outputText value="ConfirmPassword:" />
 				<p:password value="#{userCrudBean.userDto.confirmPassword}"
 					maxlength="45" label="ConfirmPassword" required="true"
-					id="ConfirmPassword" feedback="true" inline="true"
+					id="ConfirmPassword"
 					requiredMessage="Ju lutem plotesoni confirmPasswordin" />
 
 			</p:panelGrid>

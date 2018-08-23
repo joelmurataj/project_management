@@ -8,8 +8,6 @@ import javax.persistence.PersistenceContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jasypt.util.password.BasicPasswordEncryptor;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import com.project.dao.UserDao;
@@ -17,8 +15,6 @@ import com.project.entity.Task;
 import com.project.entity.User;
 
 @Repository(value = "userDao")
-@Scope("singleton")
-@Component
 public class UserDaoImpl implements UserDao {
 
 	private static final Logger logger = LogManager.getLogger(UserDaoImpl.class.getName());

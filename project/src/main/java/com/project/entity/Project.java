@@ -2,6 +2,8 @@ package com.project.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -44,6 +47,8 @@ public class Project implements Serializable{
 	@JoinColumn(name = "manager", nullable = false)
 	private User manager;
 	public Project() {}
+	@OneToMany(mappedBy = "project")
+	private Set<Task> tasks = new HashSet<>();
 
 	public int getId() {
 		return id;
@@ -99,6 +104,14 @@ public class Project implements Serializable{
 
 	public void setManager(User manager) {
 		this.manager = manager;
+	}
+
+	public Set<Task> getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(Set<Task> tasks) {
+		this.tasks = tasks;
 	}
 	
 }

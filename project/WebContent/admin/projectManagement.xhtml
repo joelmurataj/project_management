@@ -129,9 +129,10 @@
 								</p:confirmDialog>
 
 								<p:commandLink id="edit"
-									action="#{projectBean.saveProjectForEdit(projectDto.id)}"
 									update=":editForm:dlge" oncomplete="PF('dlg2').show();">
 									<i class="fas fa-pencil-alt"></i>
+									<f:setPropertyActionListener target="#{projectBean.projectDto}"
+										value="#{projectDto}" />
 								</p:commandLink>
 
 
@@ -162,7 +163,7 @@
 					<h:outputText value="Start Date:" />
 					<p:calendar id="start" value="#{projectBean.projectDto.start}"
 						mindate="#{projectBean.projectDto.start}" required="true"
-						requiredMessage="Ju lutem plotesoni daten" />
+						requiredMessage="Ju lutem plotesoni daten" readonlyInput="true"/>
 
 					<h:outputText value="WorkDays:" />
 					<p:inputNumber id="ditet"
@@ -198,7 +199,7 @@
 				<h:outputText value="Date Start:" />
 				<p:calendar id="start" value="#{projectBean.projectDto.start}"
 					mindate="#{projectBean.now}" required="true"
-					requiredMessage="Ju lutem plotesoni daten" />
+					requiredMessage="Ju lutem plotesoni daten" readonlyInput="true"/>
 
 				<h:outputText value="WorkDays:" />
 				<p:inputNumber id="ditet"

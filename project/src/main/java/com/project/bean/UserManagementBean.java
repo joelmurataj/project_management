@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.view.ViewScoped;
 
+import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 
 import com.project.dto.UserDto;
@@ -20,7 +21,7 @@ public class UserManagementBean {
 	private UserDto userDto;
 	private ArrayList<UserDto> userDtoList;
 	private UserDto selectedUser;
-	private int id;
+	private String id;
 
 	@ManagedProperty(value = "#{userService}")
 	private UserService userService;
@@ -32,15 +33,26 @@ public class UserManagementBean {
 	public void init() {
 		userDto = new UserDto();
 		refresh();
-
 	}
 
 	public void refresh() {
-		if (id != 0) {
-			userDto = userService.findById(id);
-		} else {
-			this.userDtoList = userService.getAll(userBean.getUserDto().getId());
+		this.userDtoList = userService.getAll(userBean.getUserDto().getId());
+	}
+
+	public void loadUser() {
+		try {
+			if (id != null) {
+				userDto = userService.findById(Integer.parseInt(id));
+				if (userDto != null) {
+					if (userDto.getRoliId() == 1 || userDto.isActive()) {
+						userDto = null;
+					}
+				}
+			}
+		} catch (NumberFormatException e) {
+			userDto = null;
 		}
+
 	}
 
 	public void addUser() {
@@ -78,58 +90,59 @@ public class UserManagementBean {
 
 	public String editUser() {
 		UserDto user = new UserDto();
-		if (userDto.getId() != 0) {
+		if (id != null) {
+			user = userService.findById(Integer.parseInt(id));
+		} else {
 			user = userService.findById(userDto.getId());
 		}
-		if (id != 0) {
-			user = userService.findById(id);
-		}
-		if (user != null) {
-			if (user.getRoliId() == 2) {
-				if (!userDto.equals(user)) {
-					user.setFirstName(userDto.getFirstName());
-					user.setLastName(userDto.getLastName());
-					if (userService.update(user)) {
-						refresh();
-						Message.addFlushMessage(Message.bundle.getString("EMPLOYEE_EDIT"), "info");
-						return "userManagement?faces-redirect=true";
+		if (!userDto.equals(user)) {
+			user.setFirstName(userDto.getFirstName());
+			user.setLastName(userDto.getLastName());
+			if (userService.update(user)) {
+				refresh();
+				Message.addFlushMessage(Message.bundle.getString("EMPLOYEE_EDIT"), "info");
+				return "userManagement?faces-redirect=true";
 
-					} else {
-						Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTEDITED"), "warn");
-
-					}
-
-				} else {
-					Message.addFlushMessage(Message.bundle.getString("NO_CHANGES"), "warn");
-					return "userManagement?faces-redirect=true";
-				}
 			} else {
-				Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTEDITED1"), "error");
+				Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTEDITED"), "warn");
 			}
-
 		} else {
-			Message.addMessage(Message.bundle.getString("EMPLOYEE_NOTEXIST"), "error");
+			Message.addFlushMessage(Message.bundle.getString("NO_CHANGES"), "warn");
+			return "userManagement?faces-redirect=true";
 		}
+
 		return "";
 	}
 
-	public void changePassword() {
-		BasicPasswordEncryptor encryptor = new BasicPasswordEncryptor();
+	public String changePassword() {
+		try {
+			BasicPasswordEncryptor encryptor = new BasicPasswordEncryptor();
+			if (userDto.getConfirmPassword().equals(userDto.getPassword())) {
+				if (encryptor.checkPassword(userDto.getOldPassword(), userBean.getUserDto().getPassword())) {
+					if (!encryptor.checkPassword(userDto.getPassword(), userBean.getUserDto().getPassword())) {
 
-		if (userDto.getConfirmPassword().equals(userDto.getPassword())) {
-			if (encryptor.checkPassword(userDto.getOldPassword(), userBean.getUserDto().getPassword())) {
-				userBean.getUserDto().setPassword(userDto.getPassword());
-				if (userService.update(userBean.getUserDto())) {
-					Message.addMessage(Message.bundle.getString("PASSWORD_CHANGED"), "info");
+						userBean.getUserDto().setPassword(userDto.getPassword());
+						if (userService.update(userBean.getUserDto())) {
+							Message.addFlushMessage(Message.bundle.getString("PASSWORD_CHANGED"), "info");
+							return "home?faces-redirect=true";
 
-				} else
-					Message.addMessage(Message.bundle.getString("PASSWORD_NOTCHANGED"), "warn");
-			} else {
-				Message.addMessage(Message.bundle.getString("PASSWORD_NOTEQUAL1"), "error");
-			}
+						} else
+							Message.addMessage(Message.bundle.getString("PASSWORD_NOTCHANGED"), "warn");
+					} else {
+						Message.addMessage(Message.bundle.getString("NO_CHANGES"), "warn");
 
-		} else
-			Message.addMessage(Message.bundle.getString("PASSWORD_NOTEQUAL"), "error");
+					}
+				} else {
+					Message.addMessage(Message.bundle.getString("PASSWORD_NOTEQUAL1"), "error");
+				}
+
+			} else
+				Message.addMessage(Message.bundle.getString("PASSWORD_NOTEQUAL"), "error");
+
+			return "";
+		} catch (EncryptionOperationNotPossibleException e) {
+			return "";
+		}
 
 	}
 	// GETTERS AND SETTERS
@@ -174,15 +187,11 @@ public class UserManagementBean {
 		this.selectedUser = selectedUser;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

@@ -10,8 +10,8 @@ public interface TaskDao {
 	public boolean remove(int taskId);
 	public boolean update(Task task);
 	public Task existTask(String tema);
-	public ArrayList<Task> filter(String employeeUsername,int managerId,String projectTema);
-	public ArrayList<Task> filterForEmployee(String employeeUsername, int employeeId);
+	public ArrayList<Task> filter(Task task,int managerId);
+	public ArrayList<Task> filterForEmployee(Task task, int employeeId);
 	
 	public Task findById(int id);
 	public ArrayList<Task> getAllTasks(int idMenager);

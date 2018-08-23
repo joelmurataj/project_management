@@ -7,8 +7,6 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import com.project.dao.TaskDao;
@@ -16,8 +14,6 @@ import com.project.entity.Project;
 import com.project.entity.Task;
 
 @Repository(value = "taskDao")
-@Scope("singleton")
-@Component
 public class TaskDaoImpl implements TaskDao {
 
 	private static final Logger logger = LogManager.getLogger(TaskDaoImpl.class.getName());
@@ -155,15 +151,15 @@ public class TaskDaoImpl implements TaskDao {
 	}
 
 	@Override
-	public ArrayList<Task> filter(String employeeUsername, int managerId, String projectTema) {
+	public ArrayList<Task> filter(Task task, int managerId) {
 		try {
 			logger.debug("filter list of task for menager");
 			ArrayList<Task> resultList = (ArrayList<Task>) entityManager
 					.createQuery("select task from Task task " + "where task.project.tema LIKE :tema "
 							+ "AND task.employee.username LIKE :employeeUsername "
 							+ "and task.project.manager.id=:userId " + "and task.active=0")
-					.setParameter("employeeUsername", "%" + employeeUsername + "%")
-					.setParameter("tema", "%" + projectTema + "%").setParameter("userId", managerId).getResultList();
+					.setParameter("employeeUsername", "%" + task.getEmployee().getUsername() + "%")
+					.setParameter("tema", "%" + task.getProject().getTema() + "%").setParameter("userId", managerId).getResultList();
 			if (resultList.isEmpty()) {
 				logger.debug("any task found");
 				return null;
@@ -178,13 +174,13 @@ public class TaskDaoImpl implements TaskDao {
 	}
 
 	@Override
-	public ArrayList<Task> filterForEmployee(String taskTema, int employeeId) {
+	public ArrayList<Task> filterForEmployee(Task task, int employeeId) {
 		try {
 			logger.debug("filter list of tasks for employee");
 			ArrayList<Task> resultList = (ArrayList<Task>) entityManager
 					.createQuery("select task from Task task " + "where task.tema LIKE :tema "
 							+ "and task.employee.id=:userId " + "and task.active=0")
-					.setParameter("tema", "%" + taskTema + "%").setParameter("userId", employeeId).getResultList();
+					.setParameter("tema", "%" + task.getTema() + "%").setParameter("userId", employeeId).getResultList();
 			if (resultList.isEmpty()) {
 				logger.debug("not any task found");
 				return null;

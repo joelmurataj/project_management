@@ -52,11 +52,13 @@
 
 		<!-- C O N T E N T -->
 		<f:metadata>
-			<f:viewParam name="employeeId" value="#{userCrudBean.id}" />
-			<f:event type="preRenderView" listener="#{userCrudBean.refresh()}" />
+			<f:viewParam id="parameter" name="employeeId"
+				value="#{userCrudBean.id}" required="true"
+				requiredMessage="Ju lutem kontrolloni parametrat"/>
+			<f:event type="preRenderView" listener="#{userCrudBean.loadUser()}" />
 		</f:metadata>
-		<h:form id="edit">
-			<p:growl id="growl" sticky="true" />
+		<h:form id="edit" rendered="#{not empty userCrudBean.userDto}">
+			<p:growl id="growl" life="2500" severity="info" />
 			<div class="card mb-3">
 				<div class="card-header" style="text-align: center">Edit
 					Employee</div>
@@ -68,7 +70,7 @@
 							<h:outputText value="FirstName:" />
 							<p:inputText value="#{userCrudBean.userDto.firstName}"
 								label="firstName" required="true" id="firstName"
-								validatorMessage="Ju lutem perdorni vetem shkronjam per emrin"
+								validatorMessage="Ju lutem perdorni vetem shkronja per emrin"
 								requiredMessage="Ju lutem plotesoni emrin" maxlength="45">
 								<f:validateRegex pattern="[a-zA-Z]+" />
 							</p:inputText>
@@ -86,10 +88,12 @@
 				</div>
 			</div>
 
-
 			<p:commandButton type="submit" value="Edit employee"
 				action="#{userCrudBean.editUser()}" update="message"></p:commandButton>
 		</h:form>
+		<h:outputText value="Kontrollo parametrat" style="color:red;font-size:30px"
+			rendered="#{empty userCrudBean.userDto}"></h:outputText>
+
 	</div>
 
 
