@@ -1,6 +1,6 @@
 package com.project.bean;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -19,9 +19,10 @@ import com.project.utility.Message;
 public class UserManagementBean {
 
 	private UserDto userDto;
-	private ArrayList<UserDto> userDtoList;
+	private List<UserDto> userDtoList;
 	private UserDto selectedUser;
 	private String id;
+	private String hide;
 
 	@ManagedProperty(value = "#{userService}")
 	private UserService userService;
@@ -46,6 +47,8 @@ public class UserManagementBean {
 				if (userDto != null) {
 					if (userDto.getRoliId() == 1 || userDto.isActive()) {
 						userDto = null;
+					} else {
+						// do nothing
 					}
 				}
 			}
@@ -89,7 +92,7 @@ public class UserManagementBean {
 	}
 
 	public String editUser() {
-		UserDto user = new UserDto();
+		UserDto user;
 		if (id != null) {
 			user = userService.findById(Integer.parseInt(id));
 		} else {
@@ -119,15 +122,16 @@ public class UserManagementBean {
 			BasicPasswordEncryptor encryptor = new BasicPasswordEncryptor();
 			if (userDto.getConfirmPassword().equals(userDto.getPassword())) {
 				if (encryptor.checkPassword(userDto.getOldPassword(), userBean.getUserDto().getPassword())) {
-					if (!encryptor.checkPassword(userDto.getPassword(), userBean.getUserDto().getPassword())) {
-
-						userBean.getUserDto().setPassword(userDto.getPassword());
-						if (userService.update(userBean.getUserDto())) {
-							Message.addFlushMessage(Message.bundle.getString("PASSWORD_CHANGED"), "info");
-							return "home?faces-redirect=true";
-
-						} else
+					if (!userDto.getOldPassword().equals(userDto.getPassword())) {
+						UserDto user=userService.findById(userBean.getUserDto().getId());
+						user.setPassword(userDto.getPassword());
+						if (userService.update(user)) {
+							userBean.getUserDto().setPassword(userDto.getPassword());
+							Message.addMessage(Message.bundle.getString("PASSWORD_CHANGED"), "info");
+							userDto=new UserDto();
+						} else {
 							Message.addMessage(Message.bundle.getString("PASSWORD_NOTCHANGED"), "warn");
+						}
 					} else {
 						Message.addMessage(Message.bundle.getString("NO_CHANGES"), "warn");
 
@@ -136,8 +140,9 @@ public class UserManagementBean {
 					Message.addMessage(Message.bundle.getString("PASSWORD_NOTEQUAL1"), "error");
 				}
 
-			} else
+			} else {
 				Message.addMessage(Message.bundle.getString("PASSWORD_NOTEQUAL"), "error");
+			}
 
 			return "";
 		} catch (EncryptionOperationNotPossibleException e) {
@@ -159,11 +164,11 @@ public class UserManagementBean {
 		this.userDto = userDto;
 	}
 
-	public ArrayList<UserDto> getUserDtoList() {
+	public List<UserDto> getUserDtoList() {
 		return userDtoList;
 	}
 
-	public void setUserDtoList(ArrayList<UserDto> userDtoList) {
+	public void setUserDtoList(List<UserDto> userDtoList) {
 		this.userDtoList = userDtoList;
 	}
 
@@ -195,4 +200,12 @@ public class UserManagementBean {
 		this.id = id;
 	}
 
+	public String getHide() {
+		return hide;
+	}
+
+	public void setHide(String hide) {
+		this.hide = hide;
+	}
+	
 }

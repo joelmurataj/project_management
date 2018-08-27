@@ -1,6 +1,7 @@
 package com.project.dao.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,7 +29,7 @@ public class ProjectDaoImpl implements ProjectDao {
 			entityManager.persist(project);
 			logger.debug("project added succesfuly");
 			return true;
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			logger.error("Error adding project:" + e.getMessage());
 			return false;
 		}
@@ -47,7 +48,7 @@ public class ProjectDaoImpl implements ProjectDao {
 			} else {
 				return false;
 			}
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			logger.error("Error deleting project:" + e.getMessage());
 			return false;
 		}
@@ -104,9 +105,10 @@ public class ProjectDaoImpl implements ProjectDao {
 				entityManager.merge(project);
 				logger.debug("project edited succesfuly");
 				return true;
-			} else
+			} else {
 				return false;
-		} catch (Exception e) {
+			}
+		} catch (RuntimeException e) {
 			logger.error("error editing project{}", project.getTema() + ": " + e.getMessage());
 			return false;
 
@@ -117,9 +119,8 @@ public class ProjectDaoImpl implements ProjectDao {
 	public Project existProject(String tema) {
 		try {
 			logger.debug("finding project with tema {}", tema);
-			Project project = (Project) entityManager
-					.createQuery("Select project From Project project Where project.tema=:tema",
-							Project.class)
+			Project project = entityManager
+					.createQuery("Select project From Project project Where project.tema=:tema", Project.class)
 					.setParameter("tema", tema).getSingleResult();
 
 			logger.debug("this tema{} exist", tema);
@@ -146,26 +147,26 @@ public class ProjectDaoImpl implements ProjectDao {
 	}
 
 	@Override
-	public ArrayList<Project> getAllProjects(int menagerId) {
+	public List<Project> getAllProjects(int menagerId) {
 		try {
 			logger.debug("finding all projects for menager");
 			ArrayList<Project> projects = (ArrayList<Project>) entityManager
 					.createQuery("select project from Project project where project.manager.id=:menagerId and active=0",
 							Project.class)
 					.setParameter("menagerId", menagerId).getResultList();
-			if (projects.isEmpty()) {
+			if (projects != null) {
 				logger.debug("not any project for manager");
-				return null;
+				return projects;
+			} else {
+				logger.debug("projects of manager retrieved: " + projects);
+				return projects;
 			}
-			logger.debug("projects of manager retrieved: " + projects);
-			return projects;
 
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			logger.error("error finding projects of menager: " + e.getMessage());
 			return null;
 		}
+
 	}
-
-
 
 }

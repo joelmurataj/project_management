@@ -36,7 +36,4 @@ public class UserBean implements Serializable{
 		return userDto.getRoliId()==2;
 	}
 	
-	public UserBean() {
-		
-	}
 }

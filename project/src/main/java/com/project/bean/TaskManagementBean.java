@@ -1,19 +1,16 @@
 package com.project.bean;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.view.ViewScoped;
 
-import org.primefaces.event.RowEditEvent;
-import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
-import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 
 import com.project.dto.ProjectDto;
@@ -28,11 +25,14 @@ public class TaskManagementBean {
 
 	private TaskDto taskDto;
 	private TaskDto selectedTask;
-	private ArrayList<TaskDto> taskDtoList;
+	private List<TaskDto> taskDtoList;
 	private ProjectDto projectDto;
 	private ScheduleModel calendar;
-	private ScheduleEvent event = new DefaultScheduleEvent();
-	private Date finishDate;
+	private Date minDate;
+	private Date maxDate;
+	private String color;
+	private String color1;
+	private boolean done;
 
 	@ManagedProperty(value = "#{taskService}")
 	private TaskService taskService;
@@ -47,11 +47,6 @@ public class TaskManagementBean {
 		refresh();
 	}
 
-	public void onEventSelect(SelectEvent selectEvent) {
-		event = (ScheduleEvent) selectEvent.getObject();
-
-	}
-
 	public void filterByName() {
 		if (userBean.getUserDto().getRoliId() == 1) {
 			this.taskDtoList = taskService.filter(taskDto, userBean.getUserDto().getId());
@@ -61,26 +56,35 @@ public class TaskManagementBean {
 	}
 
 	public void refresh() {
-			this.taskDtoList = taskService.getAllTasks(userBean.getUserDto());
+		this.taskDtoList = taskService.getAllTasks(userBean.getUserDto());
 		if (taskDtoList != null) {
-				calendar = new DefaultScheduleModel();
+			calendar = new DefaultScheduleModel();
+			for (TaskDto task : taskDtoList) {
+				Date start = task.getStart();
+				Calendar c = Calendar.getInstance();
+				c.setTime(start);
+				c.add(Calendar.DATE, task.getDaysOfWork()); // number of days to add
+				Date end = c.getTime();
 
-				for (TaskDto taskDto : taskDtoList) {
-					Date start = taskDto.getStart();
-					Calendar c = Calendar.getInstance();
-					c.setTime(start);
-					c.add(Calendar.DATE, taskDto.getDaysOfWork()); // number of days to add
-					Date end = c.getTime();
-					calendar.addEvent(new DefaultScheduleEvent(taskDto.getTema() + "(" + taskDto.getProjectName() + ")",
-							start, end));
+				if (task.getStatusColor().equals("red")) {
+					color = task.getStatusColor();
+					calendar.addEvent(new DefaultScheduleEvent(task.getTema() + "(" + task.getProjectName() + ")",
+							task.getStart(), end, "red-class"));
+				} else {
+					color1 = task.getStatusColor();
+					calendar.addEvent(new DefaultScheduleEvent(task.getTema() + "(" + task.getProjectName() + ")",
+							task.getStart(), end, "green-class"));
 				}
+
 			}
+		}
 
 	}
 
 	public void addTask() {
 		if (taskService.existTask(taskDto.getTema()) == null) {
 			if (taskService.add(taskDto)) {
+				done = true;
 				refresh();
 				taskDto = new TaskDto();
 				Message.addMessage(taskDto.getTema() + " :" + Message.bundle.getString("TASK_ADDED"), "info");
@@ -115,6 +119,7 @@ public class TaskManagementBean {
 		if (!taskDto.equals(task)) {
 			taskDto.setId(task.getId());
 			taskDto.setStatus(task.getStatus());
+			taskDto.setProjectId(task.getProjectId());
 			if (task.getTema().equals(taskDto.getTema()) || taskService.existTask(taskDto.getTema()) == null) {
 				if (taskService.update(taskDto)) {
 					refresh();
@@ -132,16 +137,6 @@ public class TaskManagementBean {
 		} else {
 			Message.addMessage(Message.bundle.getString("NO_CHANGES"), "info");
 
-		}
-	}
-
-	public void onProjectChange(int id) {
-		if (id != 0) {
-			projectDto = projectService.findById(id);
-			Calendar c = Calendar.getInstance();
-			c.setTime(projectDto.getStart());
-			c.add(Calendar.DATE, projectDto.getDaysOfWork()); // number of days to add
-			finishDate = c.getTime();
 		}
 	}
 
@@ -163,9 +158,16 @@ public class TaskManagementBean {
 		}
 	}
 
-	public void onRowCancel(RowEditEvent event) {
+	public void onRowCancel() {
 		Message.addMessage(Message.bundle.getString("CANCELED"), "info");
 
+	}
+	public String onComplete() {
+		System.out.println(done);
+		if(done) {
+			return "PF('dlg1').hide()";
+		}
+		return "";
 	}
 
 	public TaskDto getTaskDto() {
@@ -184,11 +186,11 @@ public class TaskManagementBean {
 		this.selectedTask = selectedTask;
 	}
 
-	public ArrayList<TaskDto> getTaskDtoList() {
+	public List<TaskDto> getTaskDtoList() {
 		return taskDtoList;
 	}
 
-	public void setTaskDtoList(ArrayList<TaskDto> taskDtoList) {
+	public void setTaskDtoList(List<TaskDto> taskDtoList) {
 		this.taskDtoList = taskDtoList;
 	}
 
@@ -224,14 +226,6 @@ public class TaskManagementBean {
 		this.projectDto = projectDto;
 	}
 
-	public Date getFinishDate() {
-		return finishDate;
-	}
-
-	public void setFinishDate(Date finishDate) {
-		this.finishDate = finishDate;
-	}
-
 	public ScheduleModel getCalendar() {
 		return calendar;
 	}
@@ -240,12 +234,48 @@ public class TaskManagementBean {
 		this.calendar = calendar;
 	}
 
-	public ScheduleEvent getEvent() {
-		return event;
+	public Date getMinDate() {
+		if (taskDto.getProjectId() != 0) {
+			projectDto = projectService.findById(taskDto.getProjectId());
+			minDate = projectDto.getStart();
+		}
+		return minDate;
 	}
 
-	public void setEvent(ScheduleEvent event) {
-		this.event = event;
+	public Date getMaxDate() {
+		if (taskDto.getProjectId() != 0) {
+			projectDto = projectService.findById(taskDto.getProjectId());
+			Calendar c = Calendar.getInstance();
+			c.setTime(projectDto.getStart());
+			c.add(Calendar.DATE, projectDto.getDaysOfWork()); // number of days to add
+			maxDate = c.getTime();
+		}
+		return maxDate;
 	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public String getColor1() {
+		return color1;
+	}
+
+	public void setColor1(String color1) {
+		this.color1 = color1;
+	}
+
+	public boolean isDone() {
+		return done;
+	}
+
+	public void setDone(boolean done) {
+		this.done = done;
+	}
+	
 
 }

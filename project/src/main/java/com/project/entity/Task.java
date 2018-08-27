@@ -36,7 +36,7 @@ public class Task implements Serializable{
 	private int daysOfWork;
 	@Column(name = "active", nullable = false)
 	private boolean active;
-	@ManyToOne( fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "status", nullable = false)
 	private Status status;
 	@ManyToOne( fetch = FetchType.LAZY)
@@ -95,5 +95,4 @@ public class Task implements Serializable{
 		this.project = project;
 	}
 	
-	public Task() {}
 }

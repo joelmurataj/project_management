@@ -6,8 +6,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 public class Message {
+	private Message() {}
 
-	 public final static ResourceBundle bundle = ResourceBundle.getBundle("com.project.message");
+	public final static ResourceBundle bundle = ResourceBundle.getBundle("com.project.message");
 
 	 public static void addMessage(String summary, String type) {
 

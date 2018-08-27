@@ -1,6 +1,6 @@
 package com.project.service.impl;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -47,7 +47,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public ArrayList<ProjectDto> getAllProjects(int idManager) {
+	public List<ProjectDto> getAllProjects(int idManager) {
 		return ProjectConverter.toProjectListDto(projectDao.getAllProjects(idManager));
 
 	}

@@ -32,7 +32,20 @@
     <servlet-name>Faces Servlet</servlet-name>
     <url-pattern>*.xhtml</url-pattern>
   </servlet-mapping>
-  <error-page>
-<location>/project/error.xhtml</location>
+  <welcome-file-list>
+    <welcome-file>/login.xhtml</welcome-file>
+   </welcome-file-list>
+   <error-page>
+    <exception-type> org.hibernate.exception.JDBCConnectionException</exception-type>
+    <location>/error?faces-redirect=true</location>
 </error-page>
+  	<error-page>
+  		<error-code>500</error-code>
+		<location>/error.xhtml</location>
+	</error-page>
+	
+	<error-page>
+		<error-code>403</error-code>
+		<location>/403error.xhtml</location>
+	</error-page>
 </web-app>

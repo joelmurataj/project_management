@@ -44,19 +44,17 @@ public class CustomExceptionHandler extends ExceptionHandlerWrapper{
 	            try {
 	 
 	                //redirect error page
+	            	System.out.println("fut");
 	                requestMap.put("exceptionMessage", t.getMessage());
-	                nav.handleNavigation(fc, null, "/error.xhtml");
+	                nav.handleNavigation(fc, null, "/error?faces-redirect=true");
 	                fc.renderResponse();
-	 
-	                // remove the comment below if you want to report the error in a jsf error message
-	                //JsfUtil.addErrorMessage(t.getMessage());
 	 
 	            } finally {
 	                //remove it from queue
 	                i.remove();
 	            }
 	        }
-	        //parent hanle
+	        //parent handle
 	        getWrapped().handle();
 		  }
 }

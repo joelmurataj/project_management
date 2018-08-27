@@ -35,15 +35,13 @@ public class User implements Serializable{
 	private String password;
 	@Column(name = "active", nullable = false)
 	private boolean active;
-	@ManyToOne( fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "employee_role", nullable = false)
 	private Role role;
 	@ManyToOne( fetch = FetchType.LAZY)
 	@JoinColumn(name = "managed_by")
 	private User managedBy;
 	
-	public User() {}
-
 	public int getId() {
 		return id;
 	}

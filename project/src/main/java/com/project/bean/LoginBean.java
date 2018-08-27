@@ -52,10 +52,6 @@ public class LoginBean {
 		this.userBean = userBean;
 	}
 
-	public LoginBean() {
-
-	}
-
 	public String logIn() {
 		if (username != null && password != null) {
 			UserDto user = userService.exist(username, password);

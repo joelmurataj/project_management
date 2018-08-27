@@ -1,6 +1,6 @@
 package com.project.service.impl;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -48,7 +48,7 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public ArrayList<TaskDto> getAllTasks(UserDto userDto) {
+	public List<TaskDto> getAllTasks(UserDto userDto) {
 		if (userDto.getRoliId() == 1) {
 			return TaskConverter.toTaskListDto(taskDao.getAllTasks(userDto.getId()));
 		} else
@@ -57,12 +57,12 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public ArrayList<TaskDto> filter(TaskDto taskDto, int managerId) {
+	public List<TaskDto> filter(TaskDto taskDto, int managerId) {
 		return TaskConverter.toTaskListDto(taskDao.filter(TaskConverter.toTaskSearch(taskDto), managerId));
 	}
 
 	@Override
-	public ArrayList<TaskDto> filterForEmployee(TaskDto taskDto, int employeeId) {
+	public List<TaskDto> filterForEmployee(TaskDto taskDto, int employeeId) {
 		return TaskConverter.toTaskListDto(taskDao.filterForEmployee(TaskConverter.toTaskSearchByTema(taskDto), employeeId));
 	}
 }

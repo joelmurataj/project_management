@@ -40,13 +40,12 @@ public class Project implements Serializable{
 	private int daysOfWork;
 	@Column(name = "active", nullable = false)
 	private boolean active;
-	@ManyToOne( fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "status", nullable = false)
 	private Status status;
 	@ManyToOne( fetch = FetchType.LAZY)
 	@JoinColumn(name = "manager", nullable = false)
 	private User manager;
-	public Project() {}
 	@OneToMany(mappedBy = "project")
 	private Set<Task> tasks = new HashSet<>();
 

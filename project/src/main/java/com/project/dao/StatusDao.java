@@ -1,10 +1,10 @@
 package com.project.dao;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.project.entity.Status;
 
 public interface StatusDao {
 
-	public ArrayList<Status> getAllStatus();
+	public List<Status> getAllStatus();
 }

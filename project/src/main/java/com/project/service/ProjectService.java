@@ -1,6 +1,6 @@
 package com.project.service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.project.dto.ProjectDto;
 
@@ -13,5 +13,5 @@ public interface ProjectService {
 	public ProjectDto existProject( String tema);
 	
 	public ProjectDto findById(int id);
-	public ArrayList<ProjectDto> getAllProjects(int idMenager);
+	public List<ProjectDto> getAllProjects(int idMenager);
 }

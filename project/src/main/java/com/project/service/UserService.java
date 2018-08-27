@@ -1,6 +1,6 @@
 package com.project.service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.project.dto.UserDto;
 
@@ -12,6 +12,6 @@ public interface UserService {
 	public UserDto existUsername( String username);
 	
 	public UserDto findById(int id);
-	public ArrayList<UserDto> getAll(int id);
+	public List<UserDto> getAll(int id);
 	public UserDto exist(String username, String password);
 }

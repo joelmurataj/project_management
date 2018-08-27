@@ -8,47 +8,19 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-	<title>User Management</title>
 
 	<ui:insert>
 		<ui:include name="style" src="/component/styles.xhtml" />
 	</ui:insert>
 </h:head>
 <h:body>
-	<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
-
-	<a class="navbar-brand mr-1"
-		href="http://localhost:8084/project/admin/userManagement.xhtml">User
-		Management</a> <ui:insert>
+	 <ui:insert>
 		<ui:include name="header" src="/component/header.xhtml" />
-	</ui:insert> </nav>
+	</ui:insert>
 	<div id="wrapper">
-		<!-- Sidebar -->
-		<ul class="sidebar navbar-nav">
-
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/admin/userManagement.xhtml">
-					<i class="fas fa-fw fa-table"></i> <span>User Management</span>
-			</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/admin/projectManagement.xhtml">
-					<i class="fas fa-fw fa-table"></i> <span>Project management</span>
-			</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/admin/taskManagement.xhtml">
-					<i class="fas fa-fw fa-table"></i> <span>Task management</span>
-			</a></li>
-
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/admin/home.xhtml"> <i
-					class="fas fa-fw fa-table"></i> <span>Home Page</span>
-			</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/calendar.xhtml"> <i
-					class="fas fa-fw fa-table"></i> <span>Calendar</span>
-			</a></li>
-		</ul>
-
+		<ui:insert>
+			<ui:include name="sidebar" src="/component/sideBar.xhtml" />
+		</ui:insert>
 
 		<!-- C O N T E N T -->
 		<f:metadata>
@@ -69,14 +41,14 @@
 						<p:panelGrid columns="2" style="width:50%;text-align:center">
 							<h:outputText value="FirstName:" />
 							<p:inputText value="#{userCrudBean.userDto.firstName}"
-								label="firstName" required="true" id="firstName"
+								label="firstName" required="true" id="firstName1"
 								validatorMessage="Ju lutem perdorni vetem shkronja per emrin"
 								requiredMessage="Ju lutem plotesoni emrin" maxlength="45">
 								<f:validateRegex pattern="[a-zA-Z]+" />
 							</p:inputText>
 							<h:outputText value="LastName:" />
 							<p:inputText value="#{userCrudBean.userDto.lastName}"
-								label="lastName" required="true" id="lastName"
+								label="lastName" required="true" id="lastName1"
 								requiredMessage="Ju lutem plotesoni mbiemrin"
 								validatorMessage="Ju lutem perdorni vetem shkronja per mbiemrin"
 								maxlength="45">

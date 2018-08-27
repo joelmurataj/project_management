@@ -1,6 +1,6 @@
 package com.project.service.impl;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ArrayList<UserDto> getAll(int id) {
+	public List<UserDto> getAll(int id) {
 		return UserConverter.toUserListDto(userDao.getAll(id));
 
 	}

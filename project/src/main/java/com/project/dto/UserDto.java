@@ -14,22 +14,11 @@ public class UserDto implements Serializable{
 	private String firstName;
 	private String lastName;
 	private String password;
-	private int managedBy;
 	private String confirmPassword;
-	private String oldPassword;
+	private int managedBy;
 	private boolean active;
-
-	public String getConfirmPassword() {
-		return confirmPassword;
-	}
-
-	public void setConfirmPassword(String confirmPassword) {
-		this.confirmPassword = confirmPassword;
-	}
-
-	public String getUsername() {
-		return username;
-	}
+	private String oldPassword;
+	private String role;
 
 	public void setUsername(String username) {
 		this.username = username;
@@ -51,6 +40,12 @@ public class UserDto implements Serializable{
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+
+	public String getUsername() {
+		return username;
+	}
+
 
 	public int getRoliId() {
 		return roliId;
@@ -84,14 +79,6 @@ public class UserDto implements Serializable{
 		this.password = password;
 	}
 
-	public String getOldPassword() {
-		return oldPassword;
-	}
-
-	public void setOldPassword(String oldPassword) {
-		this.oldPassword = oldPassword;
-	}
-
 	public boolean isActive() {
 		return active;
 	}
@@ -99,6 +86,34 @@ public class UserDto implements Serializable{
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
+
+	public String getOldPassword() {
+		return oldPassword;
+	}
+
+
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 
 	@Override
 	public int hashCode() {

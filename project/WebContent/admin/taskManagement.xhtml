@@ -9,47 +9,21 @@
 
 <h:head>
 
-	<title>Task Management</title>
-
 	<ui:insert>
 		<ui:include name="style" src="/component/styles.xhtml" />
 	</ui:insert>
 </h:head>
 <h:body>
 
-	<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
-
-	<a class="navbar-brand mr-1"
-		href="http://localhost:8084/project/admin/taskManagement.xhtml">Task
-		Management</a> <ui:insert>
+	 <ui:insert>
 		<ui:include name="header" src="/component/header.xhtml" />
-	</ui:insert> </nav>
+	</ui:insert> 
 	<div id="wrapper">
-		<!-- Sidebar -->
-		<ul class="sidebar navbar-nav">
-
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/admin/userManagement.xhtml">
-					<i class="fas fa-fw fa-table"></i> <span>User management</span>
-			</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/admin/projectManagement.xhtml">
-					<i class="fas fa-fw fa-table"></i> <span>Project management</span>
-			</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/home.xhtml"> <i
-					class="fas fa-fw fa-table"></i> <span>Home Page</span>
-			</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/calendar.xhtml"> <i
-					class="fas fa-fw fa-table"></i> <span>Calendar</span>
-			</a></li>
-		</ul>
-
-
+		<ui:insert>
+			<ui:include name="sidebar" src="/component/sideBar.xhtml" />
+		</ui:insert>
+		
 		<!-- C O N T E N T -->
-
-
 
 		<h:form id="employeesForm">
 			<!-- DataTables Example -->
@@ -78,10 +52,12 @@
 								<div class="row" style="margin-left: 35%">
 
 									<p:inputText id="globalFilter" style="width:150px"
-										placeholder="Search username" value="#{taskBean.taskDto.usernameEmployee}">
+										placeholder="Search username"
+										value="#{taskBean.taskDto.usernameEmployee}">
 
 									</p:inputText>
-									<p:selectOneMenu id="project" value="#{taskBean.taskDto.projectName}">
+									<p:selectOneMenu id="project"
+										value="#{taskBean.taskDto.projectName}">
 
 										<f:selectItem itemLabel="Select Project" itemValue=""
 											noSelectionOption="true" />
@@ -105,7 +81,7 @@
 								</p:outputPanel>
 							</f:facet>
 
-							<p:column headerText="Tema">
+							<p:column headerText="Tema" style="background-color:#{taskDto.statusColor}">
 								<h:outputText value="#{taskDto.tema}" />
 							</p:column>
 
@@ -147,8 +123,8 @@
 
 								</p:confirmDialog>
 
-								<p:commandLink id="edit" icon="fas fa-pencil-alt"
-									update=":editForm:dlg2" oncomplete="PF('dlg2').show();">
+								<p:commandLink id="edit" update=":editForm:dlg2"
+									oncomplete="PF('dlg2').show();">
 									<i class="fas fa-pencil-alt"></i>
 									<f:setPropertyActionListener target="#{taskBean.taskDto}"
 										value="#{taskDto}" />
@@ -201,26 +177,15 @@
 						required="true" id="tema" maxlength="45"
 						requiredMessage="Ju lutem plotesoni temen">
 					</p:inputText>
-
-
 					<h:outputText value="Project:" />
-					<p:selectOneMenu id="project" value="#{taskBean.taskDto.projectId}"
-						style="width:150px" required="true"
-						requiredMessage="Ju lutem zgjidhni projektin">
-						<p:ajax
-							listener="#{taskBean.onProjectChange(taskBean.taskDto.projectId)}"
-							update="start" />
-						<f:selectItem itemLabel="Select Project" itemValue=""
-							noSelectionOption="true" />
-						<f:selectItems value="#{projectBean.projectDtoList}"
-							var="projectDto" itemValue="#{projectDto.id}"
-							itemLabel="#{projectDto.tema}" />
-					</p:selectOneMenu>
+					<h:outputText value="#{taskBean.taskDto.projectName}" />
 
 					<h:outputText value="Start Date:" />
 					<p:calendar id="start" value="#{taskBean.taskDto.start}"
-						mindate="#{taskBean.projectDto.start}" maxdate="#{taskBean.finishDate}"
-						required="true" requiredMessage="Ju lutem plotesoni daten" readonlyInput="true"/>
+						mindate="#{taskBean.minDate}" maxdate="#{taskBean.maxDate}"
+						required="true" requiredMessage="Ju lutem plotesoni daten"
+						readonlyInput="true">
+					</p:calendar>
 					<h:outputText value="WorkDays:" />
 
 					<p:inputNumber id="ditet" value="#{taskBean.taskDto.daysOfWork}"
@@ -268,9 +233,7 @@
 				<p:selectOneMenu id="project" value="#{taskBean.taskDto.projectId}"
 					style="width:150px" required="true"
 					requiredMessage="Ju lutem plotesoni zgjidhni projektin">
-					<p:ajax
-						listener="#{taskBean.onProjectChange(taskBean.taskDto.projectId)}"
-						update="start"/>
+					<p:ajax update="start" />
 					<f:selectItem itemLabel="Select Project" itemValue=""
 						noSelectionOption="true" />
 					<f:selectItems value="#{projectBean.projectDtoList}"
@@ -280,8 +243,9 @@
 
 				<h:outputText value="Start Date:" />
 				<p:calendar id="start" value="#{taskBean.taskDto.start}"
-					mindate="#{taskBean.projectDto.start}" maxdate="#{taskBean.finishDate}"
-					required="true" requiredMessage="Ju lutem plotesoni daten" readonlyInput="true" />
+					mindate="#{taskBean.minDate}" maxdate="#{taskBean.maxDate}"
+					required="true" requiredMessage="Ju lutem plotesoni daten"
+					readonlyInput="true" />
 
 				<h:outputText value="WorkDays:" />
 				<p:inputNumber id="ditet" value="#{taskBean.taskDto.daysOfWork}"

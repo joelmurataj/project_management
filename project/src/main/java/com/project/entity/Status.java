@@ -25,6 +25,9 @@ public class Status implements Serializable{
 	private String name;
 	@Column(name = "active", nullable = false)
 	private boolean active;
+	@Column(name = "color")
+	private String color;
+	
 	public int getId() {
 		return id;
 	}
@@ -44,6 +47,11 @@ public class Status implements Serializable{
 	public void setActive(boolean active) {
 		this.active = active;
 	}
-	public Status() {}
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
+	}
 	
 }

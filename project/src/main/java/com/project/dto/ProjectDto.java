@@ -17,6 +17,7 @@ public class ProjectDto implements Serializable {
 	private int menagerId;
 	private String statusName;
 	private boolean active;
+	private String statusColor;
 
 	public int getId() {
 		return id;
@@ -111,9 +112,17 @@ public class ProjectDto implements Serializable {
 		if (tema == null) {
 			if (other.tema != null)
 				return false;
-		} else if (!tema.equals(other.tema))
+		} else if (!tema.equals(other.tema)) 
 			return false;
 		return true;
+	}
+
+	public String getStatusColor() {
+		return statusColor;
+	}
+
+	public void setStatusColor(String statusColor) {
+		this.statusColor = statusColor;
 	}
 
 }

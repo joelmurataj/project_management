@@ -1,6 +1,6 @@
 package com.project.dao;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.project.entity.Project;
 
@@ -12,5 +12,5 @@ public interface ProjectDao {
 	public Project existProject(String tema);
 	
 	public Project findById(int id);
-	public ArrayList<Project> getAllProjects(int menagerId);
+	public List<Project> getAllProjects(int menagerId);
 }

@@ -19,6 +19,7 @@ public class TaskDto implements Serializable{
 	private String usernameEmployee;
 	private String projectName;
 	private String statusName;
+	private String statusColor;
 	private boolean active;
 	public int getId() {
 		return id;
@@ -86,6 +87,13 @@ public class TaskDto implements Serializable{
 	}
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	
+	public String getStatusColor() {
+		return statusColor;
+	}
+	public void setStatusColor(String statusColor) {
+		this.statusColor = statusColor;
 	}
 	@Override
 	public int hashCode() {

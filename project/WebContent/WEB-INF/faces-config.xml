@@ -15,8 +15,6 @@
         </resource-bundle>
     </application>
     <factory>
-        <exception-handler-factory>
-            com.project.utility.CustomExceptionHandlerFactory
-        </exception-handler-factory>
-</factory>
+        <exception-handler-factory>com.project.utility.CustomExceptionHandlerFactory</exception-handler-factory>
+    </factory>
 </faces-config>

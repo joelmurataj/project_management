@@ -1,14 +1,11 @@
 package com.project.bean;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.view.ViewScoped;
-
-import org.primefaces.event.RowEditEvent;
 
 import com.project.dto.ProjectDto;
 import com.project.service.ProjectService;
@@ -19,9 +16,8 @@ import com.project.utility.Message;
 public class ProjectManagementBean {
 
 	private ProjectDto projectDto;
-	private ArrayList<ProjectDto> projectDtoList;
-	private ArrayList<ProjectDto> filteredProjects;
-	private Date now = new Date();
+	private List<ProjectDto> projectDtoList;
+	private List<ProjectDto> filteredProjects;
 
 	@ManagedProperty(value = "#{projectService}")
 	private ProjectService projectService;
@@ -115,7 +111,7 @@ public class ProjectManagementBean {
 		}
 	}
 
-	public void onRowCancel(RowEditEvent event) {
+	public void onRowCancel() {
 		Message.addMessage(Message.bundle.getString("CANCELED"), "info");
 	}
 
@@ -127,11 +123,11 @@ public class ProjectManagementBean {
 		this.projectDto = projectDto;
 	}
 
-	public ArrayList<ProjectDto> getProjectDtoList() {
+	public List<ProjectDto> getProjectDtoList() {
 		return projectDtoList;
 	}
 
-	public void setProjectDtoList(ArrayList<ProjectDto> projectDtoList) {
+	public void setProjectDtoList(List<ProjectDto> projectDtoList) {
 		this.projectDtoList = projectDtoList;
 	}
 
@@ -143,15 +139,11 @@ public class ProjectManagementBean {
 		this.projectService = projectService;
 	}
 	
-	public Date getNow() {
-		return now;
-	}
-
-	public ArrayList<ProjectDto> getFilteredProjects() {
+	public List<ProjectDto> getFilteredProjects() {
 		return filteredProjects;
 	}
 
-	public void setFilteredProjects(ArrayList<ProjectDto> filteredProjects) {
+	public void setFilteredProjects(List<ProjectDto> filteredProjects) {
 		this.filteredProjects = filteredProjects;
 	}
 

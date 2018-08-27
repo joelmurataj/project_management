@@ -15,7 +15,8 @@
 	<meta name="description" content="" />
 	<meta name="author" content="" />
 
-	<title>Task Calendar</title>
+	<title>Trollo</title>
+
 
 	<!-- Bootstrap core CSS-->
 	<link href="resources/vendor/bootstrap/css/bootstrap.min.css"
@@ -30,43 +31,32 @@
 
 	<!-- Custom styles for this template-->
 	<link href="resources/css/sb-admin.css" rel="stylesheet" />
+	<style type="text/css">
+.emp2 .fc-event-skin {
+	background-color: red;
+}
+.ui-widget-content a {
+  color: green;
+}
+ .red-class{
+       background-color: #{taskBean.color} !important;
+ }
+ .green-class{
+       background-color: #{taskBean.color1} !important;
+ }
+
+</style>
 </h:head>
+
 <h:body>
-	<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
-
-	<a class="navbar-brand mr-1"
-		href="http://localhost:8084/project/employee/calendar.xhtml">Calendar</a>
-
 	<ui:insert>
 		<ui:include name="header" src="/component/header.xhtml" />
-	</ui:insert> </nav>
+	</ui:insert>
 	<div id="wrapper">
 
-		<!-- Sidebar -->
-		<ul class="sidebar navbar-nav">
-			<li class="nav-item"><a class="nav-link"> <i
-					class="fas fa-fw fa-user"></i> <span>#{userBean.userDto.username}</span>
-			</a></li>
-			<li class="nav-item"><a class="nav-link"
-					href="http://localhost:8084/project/home.xhtml"> <i
-						class="fas fa-fw fa-table"></i> <span>Home Page</span>
-				</a></li>
-			<h:form rendered="#{userBean.isManager()}">
-				
-				<li class="nav-item"><a class="nav-link"
-					href="http://localhost:8084/project/admin/userManagement.xhtml">
-						<i class="fas fa-fw fa-table"></i> <span>User Management</span>
-				</a></li>
-				<li class="nav-item"><a class="nav-link"
-					href="http://localhost:8084/project/admin/projectManagement.xhtml">
-						<i class="fas fa-fw fa-table"></i> <span>Project management</span>
-				</a></li>
-				<li class="nav-item"><a class="nav-link"
-					href="http://localhost:8084/project/admin/taskManagement.xhtml">
-						<i class="fas fa-fw fa-table"></i> <span>Task management</span>
-				</a></li>
-			</h:form>
-		</ul>
+		<ui:insert>
+			<ui:include name="sidebar" src="/component/sideBar.xhtml" />
+		</ui:insert>
 
 		<!-- C O N T E N T -->
 
@@ -79,7 +69,8 @@
 				</div>
 				<div class="card-body">
 					<div class="table-responsive">
-						<p:schedule value="#{taskBean.calendar}" draggable="false" />
+						<p:schedule value="#{taskBean.calendar}" draggable="false">
+						</p:schedule>
 
 					</div>
 				</div>

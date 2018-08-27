@@ -1,6 +1,7 @@
 package com.project.dao.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,7 +26,6 @@ public class TaskDaoImpl implements TaskDao {
 	public boolean add(Task task) {
 		try {
 			logger.debug("adding task{}", task.getTema());
-
 			if (!conflicts(task)) {
 				entityManager.persist(task);
 				logger.debug("task was added");
@@ -33,7 +33,7 @@ public class TaskDaoImpl implements TaskDao {
 			}
 			logger.debug("task was not added because there are conflicts");
 			return false;
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			logger.error("error adding task:" + e.getMessage());
 			return false;
 		}
@@ -49,7 +49,7 @@ public class TaskDaoImpl implements TaskDao {
 			logger.debug("task{} was deleted", task.getTema());
 			return true;
 
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			logger.error("error deleting task" + e.getMessage());
 			return false;
 		}
@@ -65,8 +65,7 @@ public class TaskDaoImpl implements TaskDao {
 				return true;
 			}
 			return false;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (RuntimeException e) {
 			logger.error("error editing task:" + e.getMessage());
 			return false;
 
@@ -77,7 +76,7 @@ public class TaskDaoImpl implements TaskDao {
 	public Task existTask(String tema) {
 		try {
 			logger.debug("finding task not deleted by tema");
-			Task task = (Task) entityManager
+			Task task = entityManager
 					.createQuery("Select task From Task task Where task.tema=:tema", Task.class)
 					.setParameter("tema", tema).getSingleResult();
 
@@ -107,7 +106,7 @@ public class TaskDaoImpl implements TaskDao {
 	}
 
 	@Override
-	public ArrayList<Task> getAllTasks(int idMenager) {
+	public List<Task> getAllTasks(int idMenager) {
 		try {
 			logger.debug("finding tasks of the manager");
 			ArrayList<Task> tasks = (ArrayList<Task>) entityManager
@@ -121,7 +120,7 @@ public class TaskDaoImpl implements TaskDao {
 				logger.debug("any task found");
 				return null;
 			}
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			logger.error("error finding tasks of manager:" + e.getMessage());
 			return null;
 		}
@@ -129,21 +128,21 @@ public class TaskDaoImpl implements TaskDao {
 	}
 
 	@Override
-	public ArrayList<Task> getAllTasksForEmployee(int idEmployee) {
+	public List<Task> getAllTasksForEmployee(int idEmployee) {
 		try {
 			logger.debug("finding tasks for employee");
 			ArrayList<Task> tasks = (ArrayList<Task>) entityManager
 					.createQuery("select task from Task task where task.employee.id=:idEmployee and active=0")
 					.setParameter("idEmployee", idEmployee).getResultList();
 			if (!tasks.isEmpty()) {
-				logger.debug("tasks retrieved:" + tasks);
+				logger.debug("tasks retrieved for employee:" + tasks);
 				return tasks;
 			} else {
 				logger.debug("tasks not found");
 				return null;
 			}
 
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			logger.error("error finding tasks of employee" + e.getMessage());
 			return null;
 		}
@@ -151,7 +150,7 @@ public class TaskDaoImpl implements TaskDao {
 	}
 
 	@Override
-	public ArrayList<Task> filter(Task task, int managerId) {
+	public List<Task> filter(Task task, int managerId) {
 		try {
 			logger.debug("filter list of task for menager");
 			ArrayList<Task> resultList = (ArrayList<Task>) entityManager
@@ -174,7 +173,7 @@ public class TaskDaoImpl implements TaskDao {
 	}
 
 	@Override
-	public ArrayList<Task> filterForEmployee(Task task, int employeeId) {
+	public List<Task> filterForEmployee(Task task, int employeeId) {
 		try {
 			logger.debug("filter list of tasks for employee");
 			ArrayList<Task> resultList = (ArrayList<Task>) entityManager
@@ -199,7 +198,7 @@ public class TaskDaoImpl implements TaskDao {
 			logger.debug("finding conflicts of task{} with project{} date" + task.getTema(),
 					task.getProject().getTema());
 			ArrayList<Project> project = (ArrayList<Project>) entityManager.createQuery(
-					"select project from Project project where project.id=:projectId and (ADDDATE(:start,:daysOfWork)>ADDDATE(project.start,project.daysOfWork)or :start<project.start) and project.active=0",
+					"select project from Project project where project.id=:projectId and ADDDATE(:start,:daysOfWork)>ADDDATE(project.start,project.daysOfWork) and project.active=0",
 					Project.class).setParameter("projectId", task.getProject().getId())
 					.setParameter("start", task.getStart()).setParameter("daysOfWork", task.getDaysOfWork())
 					.getResultList();

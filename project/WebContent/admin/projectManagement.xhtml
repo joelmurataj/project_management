@@ -9,46 +9,26 @@
 
 <h:head>
 
-	<title>Project Management</title>
-
 	<ui:insert>
 		<ui:include name="style" src="/component/styles.xhtml" />
 	</ui:insert>
+	<h:form rendered="#{userBean.isEmployee()}">
+			<ui:include name="style" src="/component/styles1.xhtml" />
+	
+	</h:form>
 </h:head>
 <h:body>
-	<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-	<a class="navbar-brand mr-1"
-		href="http://localhost:8084/project/admin/projectManagement.xhtml">Project
-		Management</a> <ui:insert>
+	<ui:insert>
 		<ui:include name="header" src="/component/header.xhtml" />
-	</ui:insert> </nav>
+	</ui:insert>
+	
 	<div id="wrapper">
-		<!-- Sidebar -->
-		<ul class="sidebar navbar-nav">
-
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/admin/userManagement.xhtml">
-					<i class="fas fa-fw fa-table"></i> <span>User management</span>
-			</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/admin/taskManagement.xhtml">
-					<i class="fas fa-fw fa-table"></i> <span>Task management</span>
-			</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/home.xhtml"> <i
-					class="fas fa-fw fa-table"></i> <span>Home Page</span>
-			</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/calendar.xhtml"> <i
-					class="fas fa-fw fa-table"></i> <span>Calendar</span>
-			</a></li>
-		</ul>
-
+		<ui:insert>
+			<ui:include name="sidebar" src="/component/sideBar.xhtml" />
+		</ui:insert>
 
 		<!-- C O N T E N T -->
-
-
 
 		<h:form id="employeesForm">
 			<!-- DataTables Example -->
@@ -80,7 +60,7 @@
 								</p:outputPanel>
 							</f:facet>
 
-							<p:column headerText="Tema">
+							<p:column headerText="Tema" style="background-color:#{projectDto.statusColor}">
 
 								<h:outputText value="#{projectDto.tema}" />
 							</p:column>
@@ -128,8 +108,8 @@
 
 								</p:confirmDialog>
 
-								<p:commandLink id="edit"
-									update=":editForm:dlge" oncomplete="PF('dlg2').show();">
+								<p:commandLink id="edit" update=":editForm1:dlge"
+									oncomplete="PF('dlg2').show();">
 									<i class="fas fa-pencil-alt"></i>
 									<f:setPropertyActionListener target="#{projectBean.projectDto}"
 										value="#{projectDto}" />
@@ -144,7 +124,7 @@
 
 		</h:form>
 	</div>
-	<h:form id="editForm">
+	<h:form id="editForm1">
 		<p:dialog header="Edit project" widgetVar="dlg2" minHeight="40"
 			id="dlge" modal="true">
 			<p:outputPanel id="dlg2">
@@ -163,7 +143,7 @@
 					<h:outputText value="Start Date:" />
 					<p:calendar id="start" value="#{projectBean.projectDto.start}"
 						mindate="#{projectBean.projectDto.start}" required="true"
-						requiredMessage="Ju lutem plotesoni daten" readonlyInput="true"/>
+						requiredMessage="Ju lutem plotesoni daten" readonlyInput="true" />
 
 					<h:outputText value="WorkDays:" />
 					<p:inputNumber id="ditet"
@@ -198,8 +178,8 @@
 
 				<h:outputText value="Date Start:" />
 				<p:calendar id="start" value="#{projectBean.projectDto.start}"
-					mindate="#{projectBean.now}" required="true"
-					requiredMessage="Ju lutem plotesoni daten" readonlyInput="true"/>
+					mindate="today" required="true"
+					requiredMessage="Ju lutem plotesoni daten" readonlyInput="true" />
 
 				<h:outputText value="WorkDays:" />
 				<p:inputNumber id="ditet"

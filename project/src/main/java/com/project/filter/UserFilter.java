@@ -1,4 +1,5 @@
 package com.project.filter;
+
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -21,53 +22,44 @@ import com.project.bean.UserBean;
 @WebFilter(filterName = "/UserFilter", urlPatterns = { "/*" })
 public class UserFilter implements Filter {
 
-	public UserFilter() {
-
-	}
-
 	public void destroy() {
 
 	}
 
-	public void doFilter(ServletRequest request, ServletResponse response,
-			FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
+		
+			HttpServletResponse res = (HttpServletResponse) response;
+			HttpSession session = ((HttpServletRequest) request).getSession(false);
+			UserBean userBean = (session != null) ? (UserBean) session.getAttribute("userBean") : null;
+			UserDto userDto = (userBean != null) ? userBean.getUserDto() : null;
+			String currentPath = ((HttpServletRequest) request).getRequestURL().toString();
 
-		HttpServletResponse res = (HttpServletResponse) response;
-		HttpSession session = ((HttpServletRequest) request).getSession(false);
-		UserBean userBean = (session != null) ? (UserBean) session
-				.getAttribute("userBean") : null;
-		UserDto userDto = (userBean != null) ? userBean.getUserDto() : null;
-		String currentPath = ((HttpServletRequest) request).getRequestURL()
-				.toString();
-
-		if (userDto != null) {
-			if (userDto.getRoliId()==1) {
-				if ((currentPath.contains("login") || currentPath
-						.contains("error.xhtml")) && !allowed(currentPath))
+			if (userDto != null) {
+				if ((currentPath.contains("login.xhtml") || currentPath.contains("403error.xhtml"))
+						&& !allowed(currentPath)) {
 					res.sendRedirect("home.xhtml");
+				} else if (userBean.getUserDto().getId() == 2) {
+					if (currentPath.contains("admin")  && !allowed(currentPath)) {
+						res.sendError(403);
+					}
+					else {
+						chain.doFilter(request, response);
 
-			} else if (userDto.getRoliId()==2) {
-				if ((currentPath.contains("login") || currentPath
-						.contains("error.xhtml")) && !allowed(currentPath))
-					res.sendRedirect("home.xhtml");
-				else if (currentPath.contains("admin")
-						&& !allowed(currentPath))
-					res.sendError(403);
-
+					}
+				} else {
+					chain.doFilter(request, response);
+				}
 			} else {
-				chain.doFilter(request, response);
-			}
-			chain.doFilter(request, res);
+				if (!currentPath.contains("login") && !allowed(currentPath))
 
-		} else {
-			if (!currentPath.contains("login") && !allowed(currentPath))
-
-			{
-				res.sendRedirect("/project/login.xhtml");
-			} else {
-				chain.doFilter(request, response);
+				{
+					res.sendRedirect("/project/login.xhtml");
+				} else {
+					chain.doFilter(request, response);
+				}
 			}
-		}
+		
 
 	}
 
@@ -76,8 +68,7 @@ public class UserFilter implements Filter {
 	}
 
 	private boolean allowed(String path) {
-		return path.contains("javax.faces.resource") || path.contains(".png")
-				|| path.contains("resources");
+		return path.contains("javax.faces.resource") || path.contains(".png") || path.contains("resources");
 	}
 
 }

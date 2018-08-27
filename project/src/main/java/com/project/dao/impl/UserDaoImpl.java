@@ -1,6 +1,7 @@
 package com.project.dao.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,7 +30,7 @@ public class UserDaoImpl implements UserDao {
 			entityManager.persist(newUser);
 			logger.debug("user added succesfuly");
 			return true;
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			logger.error("Error adding user:" + e.getMessage());
 			return false;
 		}
@@ -45,10 +46,11 @@ public class UserDaoImpl implements UserDao {
 						.setParameter("id", userId).executeUpdate();
 				logger.debug("user deleted succesfuly");
 				return true;
-			} else
+			} else {
 				return false;
+			}
 
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			logger.error("Error deleting user:" + e.getMessage());
 			return false;
 		}
@@ -82,8 +84,7 @@ public class UserDaoImpl implements UserDao {
 			entityManager.merge(user);
 			logger.debug("user not updated");
 			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (RuntimeException e) {
 			logger.error("error updating user, " + e.getMessage());
 			return false;
 
@@ -104,7 +105,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public ArrayList<User> getAll(int id) {
+	public List<User> getAll(int id) {
 		try {
 			logger.debug("finding all users for manager");
 			ArrayList<User> resultList = (ArrayList<User>) entityManager
@@ -118,7 +119,7 @@ public class UserDaoImpl implements UserDao {
 				return resultList;
 			}
 
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			logger.error("Error getting users:" + e.getMessage());
 			return null;
 		}
@@ -128,7 +129,7 @@ public class UserDaoImpl implements UserDao {
 	public User exist(String username, String password) {
 		try {
 			logger.debug("findind if user exist");
-			User user = (User) entityManager
+			User user = entityManager
 					.createQuery("Select user From User user Where user.username=:username and user.active=0",
 							User.class)
 					.setParameter("username", username).getSingleResult();
@@ -151,9 +152,8 @@ public class UserDaoImpl implements UserDao {
 	public User existUsername(String username) {
 		try {
 			logger.debug("finding user by username");
-			User user = (User) entityManager
-					.createQuery("Select user From User user Where user.username=:username",
-							User.class)
+			User user = entityManager
+					.createQuery("Select user From User user Where user.username=:username", User.class)
 					.setParameter("username", username).getSingleResult();
 			logger.debug("user found");
 			return user;

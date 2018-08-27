@@ -9,42 +9,19 @@
 
 <h:head>
 
-	<title>User Management</title>
-
 	<ui:insert>
 		<ui:include name="style" src="/component/styles.xhtml" />
 	</ui:insert>
 </h:head>
 <h:body>
-	<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
-
-	<a class="navbar-brand mr-1"
-		href="http://localhost:8084/project/admin/userManagement.xhtml">User
-		Management</a> <ui:insert>
+	<ui:insert>
 		<ui:include name="header" src="/component/header.xhtml" />
-	</ui:insert> </nav>
+	</ui:insert>
 	<div id="wrapper">
-		<!-- Sidebar -->
-		<ul class="sidebar navbar-nav">
 
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/admin/projectManagement.xhtml">
-					<i class="fas fa-fw fa-table"></i> <span>Project management</span>
-			</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/admin/taskManagement.xhtml">
-					<i class="fas fa-fw fa-table"></i> <span>Task management</span>
-			</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/home.xhtml"> <i
-					class="fas fa-fw fa-table"></i> <span>Home Page</span>
-			</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/calendar.xhtml"> <i
-					class="fas fa-fw fa-table"></i> <span>Calendar</span>
-			</a></li>
-		</ul>
-
+		<ui:insert>
+			<ui:include name="sidebar" src="/component/sideBar.xhtml" />
+		</ui:insert>
 
 		<!-- C O N T E N T -->
 		<h:form id="employeesForm">
@@ -223,8 +200,7 @@
 				<h:outputText value="Password:" />
 				<p:password value="#{userCrudBean.userDto.password}"
 					label="Password" maxlength="45" required="true" id="Password"
-					feedback="true" 
-					requiredMessage="Ju lutem plotesoni passwordin"
+					feedback="true" requiredMessage="Ju lutem plotesoni passwordin"
 					validatorMessage="passwrodi duhet te kete te pakten 6 shkronja: nje shkronje te madhe,nje karakter special dhe nje numer">
 					<f:validateRegex
 						pattern="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{6,20})" />

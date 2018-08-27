@@ -8,70 +8,25 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport"
-		content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-	<meta name="description" content="" />
-	<meta name="author" content="" />
-
-	<title>User Management</title>
-
-	<!-- Bootstrap core CSS-->
-	<link href="resources/vendor/bootstrap/css/bootstrap.min.css"
-		rel="stylesheet" />
-	<link rel="shortcut icon" href="#" />
-	<!-- Custom fonts for this template-->
-	<link href="resources/vendor/fontawesome-free/css/all.min.css"
-		rel="stylesheet" type="text/css" />
-	<!-- Page level plugin CSS-->
-	<link href="resources/vendor/datatables/dataTables.bootstrap4.css"
-		rel="stylesheet" />
-
-	<!-- Custom styles for this template-->
-	<link href="resources/css/sb-admin.css" rel="stylesheet" />
+	<ui:insert>
+		<ui:include name="style" src="/component/styles1.xhtml" />
+	</ui:insert>
 </h:head>
 <h:body>
-	<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
-
-	<a class="navbar-brand mr-1"
-		href="http://localhost:8084/project/profile.xhtml">Profile</a> <ui:insert>
+	<ui:insert>
 		<ui:include name="header" src="/component/header.xhtml" />
-	</ui:insert> </nav>
+	</ui:insert>
 	<div id="wrapper">
-		<!-- Sidebar -->
-		<ul class="sidebar navbar-nav">
-			<h:form rendered="#{userBean.isManager()}">
-				<li class="nav-item"><a class="nav-link"
-					href="http://localhost:8084/project/admin/userManagement.xhtml">
-						<i class="fas fa-fw fa-table"></i> <span>User Management</span>
-				</a></li>
-				<li class="nav-item"><a class="nav-link"
-					href="http://localhost:8084/project/admin/projectManagement.xhtml">
-						<i class="fas fa-fw fa-table"></i> <span>Project management</span>
-				</a></li>
-				<li class="nav-item"><a class="nav-link"
-					href="http://localhost:8084/project/admin/taskManagement.xhtml">
-						<i class="fas fa-fw fa-table"></i> <span>Task management</span>
-				</a></li>
-			</h:form>
-			<li class="nav-item"><a class="nav-link"
-				href="http://localhost:8084/project/home.xhtml"> <i
-					class="fas fa-fw fa-table"></i> <span>Home Page</span>
-			</a></li>
-
-				<li class="nav-item"><a class="nav-link"
-					href="http://localhost:8084/project/calendar.xhtml"> <i
-						class="fas fa-fw fa-table"></i> <span>Calendar</span>
-				</a></li>
-		</ul>
+		<ui:insert>
+			<ui:include name="sidebar" src="/component/sideBar.xhtml" />
+		</ui:insert>
 
 
 		<!-- C O N T E N T -->
 
 		<h:form id="edit">
 
-			<p:growl id="growl" life="2500" severity="info"/>
+			<p:growl id="growl" life="2500" severity="info" />
 			<div class="card mb-3">
 				<div class="card-header" style="text-align: center">Change
 					Password</div>
@@ -89,9 +44,11 @@
 							<h:outputText value="NewPassword:" />
 							<p:password value="#{userCrudBean.userDto.password}"
 								label="password" required="true" id="newPassword" maxlength="45"
-								requiredMessage="Ju lutem plotesoni passwordin e ri" feedback="true"
+								requiredMessage="Ju lutem plotesoni passwordin e ri"
+								feedback="true"
 								validatorMessage="passwordi duhet te kete te pakten 6 shkronja: nje shkronje te madhe,nje karakter special dhe nje numer">
-
+								<f:validateRegex
+									pattern="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{6,20})" />
 							</p:password>
 
 							<h:outputText value="ConfirmPassword:" />
@@ -113,21 +70,5 @@
 
 	<!-- /C O N T E N T -->
 
-
-	<!-- Bootstrap core JavaScript-->
-	<script src="resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-	<!-- Core plugin JavaScript-->
-	<script src="resources/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-	<!-- Page level plugin JavaScript-->
-	<script src="resources/vendor/chart.js/Chart.min.js"></script>
-	<script src="resources/vendor/datatables/jquery.dataTables.js"></script>
-	<script src="resources/vendor/datatables/dataTables.bootstrap4.js">
-		
-	</script>
-
-	<!-- Custom scripts for all pages-->
-	<script src="resources/js/sb-admin.min.js"></script>
 </h:body>
 </html>
