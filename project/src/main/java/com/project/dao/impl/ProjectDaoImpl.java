@@ -54,7 +54,7 @@ public class ProjectDaoImpl implements ProjectDao {
 		}
 	}
 
-	public boolean taskOfProject(int projectId) {
+	private boolean taskOfProject(int projectId) {
 		try {
 			Project project = entityManager.find(Project.class, projectId);
 			logger.debug("finding tasks of project {}", project.getTema());
@@ -76,7 +76,7 @@ public class ProjectDaoImpl implements ProjectDao {
 		}
 	}
 
-	public boolean conflicts(Project project) {
+	private boolean conflicts(Project project) {
 		try {
 			logger.debug("finding task with conflict date with project {}", project.getTema());
 			ArrayList<Task> task = (ArrayList<Task>) entityManager.createQuery(

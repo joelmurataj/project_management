@@ -22,7 +22,7 @@ public class ProjectManagementBean {
 	@ManagedProperty(value = "#{projectService}")
 	private ProjectService projectService;
 	@ManagedProperty(value = "#{userBean}")
-	UserBean userBean;
+	private UserBean userBean;
 
 	@PostConstruct
 	public void init() {
@@ -138,7 +138,7 @@ public class ProjectManagementBean {
 	public void setProjectService(ProjectService projectService) {
 		this.projectService = projectService;
 	}
-	
+
 	public List<ProjectDto> getFilteredProjects() {
 		return filteredProjects;
 	}

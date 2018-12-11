@@ -2,6 +2,8 @@ package com.project.service.impl;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +17,7 @@ import com.project.service.UserService;
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
-	@Autowired
+	@Inject
 	private UserDao userDao;
 
 	@Override

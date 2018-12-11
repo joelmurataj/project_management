@@ -18,10 +18,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
 @Entity
-@Table(name="project")
-public class Project implements Serializable{
+@Table(name = "project")
+public class Project implements Serializable {
 
 	/**
 	 * 
@@ -36,18 +35,41 @@ public class Project implements Serializable{
 	@Temporal(TemporalType.DATE)
 	@Column(name = "date_start", nullable = false)
 	private Date start;
-	@Column(name = "daysOfWork",length = 5)
+	@Column(name = "daysOfWork", length = 5)
 	private int daysOfWork;
 	@Column(name = "active", nullable = false)
 	private boolean active;
 	@ManyToOne
 	@JoinColumn(name = "status", nullable = false)
 	private Status status;
-	@ManyToOne( fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "manager", nullable = false)
 	private User manager;
+	
 	@OneToMany(mappedBy = "project")
 	private Set<Task> tasks = new HashSet<>();
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Project other = (Project) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
 
 	public int getId() {
 		return id;
@@ -112,5 +134,5 @@ public class Project implements Serializable{
 	public void setTasks(Set<Task> tasks) {
 		this.tasks = tasks;
 	}
-	
+
 }

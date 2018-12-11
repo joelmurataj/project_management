@@ -1,6 +1,8 @@
 package com.project.bean;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -13,6 +15,7 @@ import org.jasypt.util.password.BasicPasswordEncryptor;
 import com.project.dto.UserDto;
 import com.project.service.UserService;
 import com.project.utility.Message;
+import com.project.utility.PageResources;
 
 @ManagedBean(name = "userCrudBean")
 @ViewScoped
@@ -62,7 +65,10 @@ public class UserManagementBean {
 		if (userDto.getConfirmPassword().equals(userDto.getPassword())) {
 			if (userService.existUsername(userDto.getUsername()) == null) {
 				userDto.setManagedBy(userBean.getUserDto().getId());
-				userDto.setRoliId(2);
+				Map<String, Integer> map = new HashMap<>();
+				map.put("manager", 1);
+				map.put("employee", 2);
+				userDto.setRoliId(map.get("manager"));
 				if (userService.add(userDto)) {
 					refresh();
 					userDto = new UserDto();
@@ -76,6 +82,9 @@ public class UserManagementBean {
 				Message.addMessage(Message.bundle.getString("EMPLOYEE_EXIST_DELETED"), "warn");
 
 			}
+		} else {
+			Message.addMessage(Message.bundle.getString("PASSWORD_NOTEQUAL"), "warn");
+
 		}
 	}
 
@@ -111,7 +120,7 @@ public class UserManagementBean {
 			}
 		} else {
 			Message.addFlushMessage(Message.bundle.getString("NO_CHANGES"), "warn");
-			return "userManagement?faces-redirect=true";
+			return PageResources.USER_MANAGEMNT;
 		}
 
 		return "";
@@ -123,12 +132,12 @@ public class UserManagementBean {
 			if (userDto.getConfirmPassword().equals(userDto.getPassword())) {
 				if (encryptor.checkPassword(userDto.getOldPassword(), userBean.getUserDto().getPassword())) {
 					if (!userDto.getOldPassword().equals(userDto.getPassword())) {
-						UserDto user=userService.findById(userBean.getUserDto().getId());
+						UserDto user = userService.findById(userBean.getUserDto().getId());
 						user.setPassword(userDto.getPassword());
 						if (userService.update(user)) {
 							userBean.getUserDto().setPassword(userDto.getPassword());
 							Message.addMessage(Message.bundle.getString("PASSWORD_CHANGED"), "info");
-							userDto=new UserDto();
+							userDto = new UserDto();
 						} else {
 							Message.addMessage(Message.bundle.getString("PASSWORD_NOTCHANGED"), "warn");
 						}
@@ -207,5 +216,5 @@ public class UserManagementBean {
 	public void setHide(String hide) {
 		this.hide = hide;
 	}
-	
+
 }
